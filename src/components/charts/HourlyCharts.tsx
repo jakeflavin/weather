@@ -20,7 +20,7 @@ import {
 } from 'recharts'
 import type { Band, HourRow } from '../../lib/series'
 import { uvBand } from '../../lib/weatherCode'
-import { ChartFrame, Legend, NightBands, Tip } from './base'
+import { ChartFrame, Legend, NightBands, NowLine, Tip } from './base'
 import {
   CHART_MARGIN,
   type ChartColors,
@@ -60,13 +60,6 @@ const gridProps = (colors: ChartColors) => ({
   domain: ['dataMin', 'dataMax'] as [string, string],
   scale: 'time' as const,
 })
-
-/** The vertical "you are here" rule, drawn on every hourly chart. */
-function NowLine({ now, colors }: { now: number; colors: ChartColors }) {
-  return (
-    <ReferenceLine x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" ifOverflow="hidden" />
-  )
-}
 
 // ------------------------------------------------------------------ temperature
 
@@ -223,7 +216,7 @@ export function PrecipitationChart({ rows, bands, now, units, height = 190 }: Ho
               maxBarSize={8}
               isAnimationActive={false}
             />
-            <NowLine now={now} colors={colors} />
+            <NowLine now={now} colors={colors} yAxisId="prob" />
             <Tooltip
               cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<HourRow>((row) => {
@@ -404,7 +397,7 @@ export function HumidityChart({ rows, bands, now, units, height = 170 }: HourlyP
               connectNulls
               isAnimationActive={false}
             />
-            <NowLine now={now} colors={colors} />
+            <NowLine now={now} colors={colors} yAxisId="rh" />
             <Tooltip
               cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {
@@ -493,7 +486,7 @@ export function CloudPressureChart({ rows, bands, now, units, height = 170 }: Ho
               connectNulls
               isAnimationActive={false}
             />
-            <NowLine now={now} colors={colors} />
+            <NowLine now={now} colors={colors} yAxisId="cloud" />
             <Tooltip
               cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {

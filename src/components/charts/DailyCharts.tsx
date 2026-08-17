@@ -20,7 +20,7 @@ import {
 } from 'recharts'
 import type { AqiRow, DayRow } from '../../lib/series'
 import { aqiBand, weatherCode } from '../../lib/weatherCode'
-import { ChartFrame, Legend, Tip } from './base'
+import { ChartFrame, Legend, NowLine, Tip } from './base'
 import {
   CHART_MARGIN,
   type ChartColors,
@@ -160,7 +160,7 @@ export function DailyTrendChart({
               activeDot={{ r: 2.5, strokeWidth: 0 }}
               isAnimationActive={false}
             />
-            <ReferenceLine yAxisId="t" x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" />
+            <NowLine now={now} colors={colors} yAxisId="t" />
             <Tooltip
               cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<TrendRow>((row) => {
@@ -237,7 +237,15 @@ interface DaylightRow {
  * under a visible span. The y axis is reversed so midnight is at the top and the bars hang
  * the way a day does.
  */
-export function DaylightChart({ rows, height = 190 }: { rows: DayRow[]; height?: number }) {
+export function DaylightChart({
+  rows,
+  now,
+  height = 190,
+}: {
+  rows: DayRow[]
+  now: number
+  height?: number
+}) {
   const colors = useChartColors()
 
   const data: DaylightRow[] = rows
@@ -285,6 +293,7 @@ export function DaylightChart({ rows, height = 190 }: { rows: DayRow[]; height?:
                 <Cell key={row.t} fillOpacity={row.past ? 0.22 : 0.45} />
               ))}
             </Bar>
+            <NowLine now={now} colors={colors} />
             <Tooltip
               cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<DaylightRow>((row) => {
@@ -367,7 +376,7 @@ export function AqiChart({ rows, now, height = 170 }: { rows: AqiRow[]; now: num
               connectNulls
               isAnimationActive={false}
             />
-            <ReferenceLine x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" />
+            <NowLine now={now} colors={colors} />
             <Tooltip
               cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<AqiRow>((row) => {

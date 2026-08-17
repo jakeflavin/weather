@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ReferenceArea } from 'recharts'
+import { ReferenceArea, ReferenceLine } from 'recharts'
 import type { Band } from '../../lib/series'
 import type { ChartColors } from './theme'
 
@@ -22,6 +22,36 @@ export function NightBands({ bands, colors }: { bands: Band[]; colors: ChartColo
         />
       ))}
     </>
+  )
+}
+
+/**
+ * The "you are here" rule, drawn on every chart that has a time axis.
+ *
+ * It carries a label because an unexplained dashed line is a puzzle: the reader has to
+ * infer what it marks. `ifOverflow="hidden"` keeps it from being clamped to an edge on the
+ * charts whose window starts at the current hour, where drawing it would be a lie.
+ */
+export function NowLine({
+  now,
+  colors,
+  yAxisId,
+}: {
+  now: number
+  colors: ChartColors
+  /** Required on the dual-axis charts; Recharts needs to know which scale to sit on. */
+  yAxisId?: string
+}) {
+  return (
+    <ReferenceLine
+      x={now}
+      yAxisId={yAxisId}
+      stroke={colors.text}
+      strokeWidth={1}
+      strokeDasharray="2 2"
+      ifOverflow="hidden"
+      label={{ value: 'Now', position: 'top', fill: colors.dim, fontSize: 10 }}
+    />
   )
 }
 

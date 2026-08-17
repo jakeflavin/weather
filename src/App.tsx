@@ -433,7 +433,7 @@ function Dashboard({
         </Panel>
 
         <Panel title="Daylight" note={todayRow ? `${duration(todayRow.daylight)} today` : undefined}>
-          <DaylightChart rows={days} height={214} />
+          <DaylightChart rows={days} now={now} height={214} />
           {todayRow?.sunrise && todayRow.sunset && (
             <div className="stats" style={{ marginTop: 16 }}>
               <Stat
