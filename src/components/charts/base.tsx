@@ -28,9 +28,9 @@ export function NightBands({ bands, colors }: { bands: Band[]; colors: ChartColo
 /**
  * The "you are here" rule, drawn on every chart that has a time axis.
  *
- * It carries a label because an unexplained dashed line is a puzzle: the reader has to
- * infer what it marks. `ifOverflow="hidden"` keeps it from being clamped to an edge on the
- * charts whose window starts at the current hour, where drawing it would be a lie.
+ * `ifOverflow="hidden"` keeps it from being clamped to an edge on the charts whose window
+ * does not contain the current hour — the UV chart plots daylight only, and pinning the
+ * rule to sunrise would claim it is now morning.
  */
 export function NowLine({
   now,
@@ -50,7 +50,6 @@ export function NowLine({
       strokeWidth={1}
       strokeDasharray="2 2"
       ifOverflow="hidden"
-      label={{ value: 'Now', position: 'top', fill: colors.dim, fontSize: 10 }}
     />
   )
 }

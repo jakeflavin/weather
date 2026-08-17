@@ -74,8 +74,7 @@ export function axisProps(colors: ChartColors) {
   } as const
 }
 
-/* Top margin leaves room for the 'Now' label above the indicator rule. */
-export const CHART_MARGIN = { top: 16, right: 4, bottom: 0, left: 4 }
+export const CHART_MARGIN = { top: 6, right: 4, bottom: 0, left: 4 }
 
 /** Hour ticks at a readable density: every 3rd hour, and always on the hour. */
 export function hourTicks(rows: { t: number }[], every = 3): number[] {
