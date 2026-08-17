@@ -1,213 +1,214 @@
 /*
- * Weather — an instrument printout.
+ * Weather — Atlassian Design System skin, matching fibo.
  *
- * The look is deliberately unlike the other apps in the workspace: no cards, no shadows,
- * no rounded corners, no illustration. Panels are separated by hairlines, which is done by
- * painting the grid container in the rule colour and letting a 1px gap show through, so
- * every rule in the layout is exactly one device pixel and always aligned.
+ * Tokens, type scale and shadows are lifted from fibo's `styles.css` so the two apps read
+ * as siblings: full-bleed chrome, structure from 1px dividers rather than floating cards,
+ * quiet sentence-case section headers, and blue as the only interactive accent.
  *
- * Type is monospaced throughout for anything numeric, with tabular figures on, so columns
- * of readings line up down the page and a changing number never reflows its neighbours.
+ * What weather adds on top is a data palette. One colour per measured quantity, held
+ * constant everywhere that quantity appears — the same rule fibo applies to its per-player
+ * identity colours: those hues are content, not chrome, and never leak into controls.
  */
 
-:root {
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-
-  /* Paper and ink. */
-  --bg: #f2f1ed;
-  --panel: #fbfaf7;
-  --panel-2: #f6f5f1;
-  --ink: #16181c;
-  --ink-2: #5d6068;
-  --ink-3: #91949c;
-  --rule: #d8d6cf;
-  --rule-soft: #e6e4dd;
-  --grid: #e9e7e0;
-  --night: rgba(22, 24, 28, 0.045);
-  --focus: #16181c;
-
-  /* One colour per measured quantity, held constant everywhere it appears. */
-  --s-temp: #d2542a;
-  --s-feels: #9a8f86;
-  --s-precip: #2565c7;
-  --s-snow: #5a91c4;
-  --s-wind: #1d7f6e;
-  --s-humidity: #6a4fc4;
-  --s-cloud: #8d9099;
-  --s-pressure: #a8842a;
-  --s-uv: #b03a7d;
-  --s-aqi: #3f7a4a;
-
-  /* Level ramps for UV and air quality. */
-  --l0: #3f8f5c;
-  --l1: #b08a1e;
-  --l2: #c9702c;
-  --l3: #c4483f;
-  --l4: #8e4bb0;
-  --l5: #7a3040;
-
-  color-scheme: light;
-}
-
+:root,
 :root[data-theme='dark'] {
-  --bg: #08090b;
-  --panel: #101216;
-  --panel-2: #14171c;
-  --ink: #e9e7e2;
-  --ink-2: #9ba0a9;
-  --ink-3: #6b7079;
-  --rule: #23262c;
-  --rule-soft: #1a1d22;
-  --grid: #1c1f25;
-  --night: rgba(255, 255, 255, 0.035);
-  --focus: #e9e7e2;
+  --font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  --font-body: 14px;
+  --font-small: 12px;
+  --font-lozenge: 11px;
 
-  --s-temp: #ff7a45;
-  --s-feels: #8b8279;
-  --s-precip: #5793ff;
-  --s-snow: #7fb6e8;
-  --s-wind: #35b8a0;
-  --s-humidity: #9b82ff;
-  --s-cloud: #7d838d;
-  --s-pressure: #d8bb55;
-  --s-uv: #e56bad;
-  --s-aqi: #59b374;
+  --bg: #18191a; /* elevation.surface.sunken */
+  --surface: #242528; /* elevation.surface.raised */
+  --surface-hi: rgba(206, 206, 217, 0.07); /* color.background.neutral */
+  --line: rgba(227, 228, 242, 0.12); /* color.border */
+  --line-strong: #7e8188; /* color.border.bold */
+  --text: #cecfd2; /* color.text */
+  --dim: #96999e; /* color.text.subtlest */
+  --accent: #669df1; /* color.background.brand.bold */
+  --accent-ink: #1f1f21; /* color.text.inverse */
+  --accent-dim: #1c2b42; /* color.background.selected */
+  --accent-hover: #8fb8f6;
+  --success: #b3df72;
+  --danger: #fd9891;
+  --warn: #fbc828;
 
-  --l0: #4fb072;
-  --l1: #d4ab35;
-  --l2: #e08b45;
-  --l3: #e4685c;
-  --l4: #b06fd0;
-  --l5: #a54d63;
+  --shadow-card: 0 1px 1px rgba(1, 4, 4, 0.5), 0 0 1px rgba(1, 4, 4, 0.5);
+  --shadow-float:
+    0 0 0 1px rgba(189, 189, 189, 0.12), 0 8px 12px rgba(1, 4, 4, 0.36),
+    0 0 1px rgba(1, 4, 4, 0.5);
+
+  /* Chart furniture: the gridlines and the night wash behind hourly series. */
+  --chart-grid: rgba(227, 228, 242, 0.1);
+  --night: rgba(255, 255, 255, 0.04);
+
+  /* Data palette — content, not chrome. Never used on a control. */
+  --s-temp: #f79a3e;
+  --s-feels: #8c8f97;
+  --s-precip: #6ba5ff;
+  --s-snow: #8fd3f4;
+  --s-wind: #4bc0a8;
+  --s-humidity: #b18bff;
+  --s-cloud: #8a8d95;
+  --s-pressure: #e2c04a;
+  --s-aqi: #94d67f;
+
+  /* Level ramp for UV and AQI bands, from the ADS semantic hues. */
+  --l0: #b3df72;
+  --l1: #fbc828;
+  --l2: #fea362;
+  --l3: #f87168;
+  --l4: #b8acf6;
+  --l5: #ef5c48;
 
   color-scheme: dark;
 }
 
-*,
-*::before,
-*::after {
+:root[data-theme='light'] {
+  --bg: #f8f8f8;
+  --surface: #ffffff;
+  --surface-hi: rgba(5, 21, 36, 0.06);
+  --line: rgba(11, 18, 14, 0.14);
+  --line-strong: #7d818a;
+  --text: #292a2e;
+  --dim: #6b6e76;
+  --accent: #1868db;
+  --accent-ink: #ffffff;
+  --accent-dim: #e9f2fe;
+  --accent-hover: #1558bc;
+  --success: #4c6b1f;
+  --danger: #ae2e24;
+  --warn: #9e4c00;
+
+  --shadow-card: 0 1px 1px rgba(30, 31, 33, 0.25), 0 0 1px rgba(30, 31, 33, 0.31);
+  --shadow-float: 0 8px 12px rgba(30, 31, 33, 0.15), 0 0 1px rgba(30, 31, 33, 0.31);
+
+  --chart-grid: rgba(11, 18, 14, 0.1);
+  --night: rgba(9, 30, 66, 0.05);
+
+  --s-temp: #b65c02;
+  --s-feels: #8c8f97;
+  --s-precip: #1868db;
+  --s-snow: #227d9b;
+  --s-wind: #1f846b;
+  --s-humidity: #5e4db2;
+  --s-cloud: #6b6e76;
+  --s-pressure: #946f00;
+  --s-aqi: #4c6b1f;
+
+  --l0: #4c6b1f;
+  --l1: #946f00;
+  --l2: #a54800;
+  --l3: #c9372c;
+  --l4: #5e4db2;
+  --l5: #ae2e24;
+
+  color-scheme: light;
+}
+
+* {
   box-sizing: border-box;
 }
 
 html,
-body {
+body,
+#root {
   margin: 0;
-  padding: 0;
+  min-height: 100%;
 }
 
 body {
   background: var(--bg);
-  color: var(--ink);
+  color: var(--text);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: var(--font-body);
+  line-height: 1.43;
   -webkit-font-smoothing: antialiased;
-  font-variant-numeric: tabular-nums;
 }
 
 button,
 input,
-select {
+summary {
   font: inherit;
   color: inherit;
 }
 
 :focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
-/* ---------------------------------------------------------------- primitives */
-
-/* Every micro-label in the app: the caption above a number or a chart. */
-.label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.mono {
-  font-family: var(--font-mono);
+/* Numbers are tabular wherever they are compared, which is nearly everywhere. */
+.num {
   font-variant-numeric: tabular-nums;
 }
 
-.unit {
-  font-size: 0.62em;
-  color: var(--ink-3);
-  margin-left: 0.15em;
-  letter-spacing: 0;
+.dim {
+  color: var(--dim);
 }
 
-.muted {
-  color: var(--ink-2);
-}
-
-.faint {
-  color: var(--ink-3);
-}
-
-/* ------------------------------------------------------------------- shell */
+/* ─────────────────────────────────────────────────────────────── app bar */
 
 .app {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 
-.masthead {
+.appbar {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 16px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--rule);
-  padding-top: max(10px, env(safe-area-inset-top));
+  min-height: 48px;
+  padding: 6px 16px;
+  padding-top: max(6px, env(safe-area-inset-top));
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
 
-.masthead__mark {
-  font-family: var(--font-mono);
-  font-size: 12px;
+.appbar__brand {
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
-.masthead__spacer {
+.appbar__spacer {
   flex: 1;
 }
 
-.masthead__tools {
+.appbar__tools {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-/* Segmented toggles (units, theme, ranges) — one row of hairline-joined cells. */
+/* Joined segmented control: 30px cells inside a 1px group border (ADS §2). */
 .segmented {
   display: inline-flex;
-  border: 1px solid var(--rule);
-  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface);
 }
 
 .segmented button {
   appearance: none;
   background: none;
   border: 0;
-  border-left: 1px solid var(--rule);
-  padding: 4px 9px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  border-left: 1px solid var(--line);
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--dim);
   cursor: pointer;
 }
 
@@ -216,98 +217,109 @@ select {
 }
 
 .segmented button:hover {
-  color: var(--ink);
-  background: var(--panel-2);
+  background: var(--surface-hi);
+  color: var(--text);
 }
 
-.segmented button[aria-pressed='true'],
-.segmented button[aria-selected='true'] {
-  color: var(--panel);
-  background: var(--ink);
+.segmented button[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
 }
 
-.icon-button {
+.button {
   appearance: none;
-  border: 1px solid var(--rule);
-  background: var(--panel);
-  color: var(--ink-2);
-  padding: 4px 9px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: var(--font-small);
+  font-weight: 500;
   cursor: pointer;
 }
 
-.icon-button:hover:not(:disabled) {
-  color: var(--ink);
-  background: var(--panel-2);
+.button:hover:not(:disabled) {
+  background: var(--surface-hi);
 }
 
-.icon-button:disabled {
-  opacity: 0.45;
+.button:disabled {
+  color: var(--dim);
   cursor: default;
 }
 
-/* --------------------------------------------------------------- location */
+.button--subtle {
+  border-color: transparent;
+  background: none;
+}
+
+.button--subtle:hover:not(:disabled) {
+  background: var(--surface-hi);
+}
+
+/* ────────────────────────────────────────────────────────── location bar */
 
 .locbar {
   display: flex;
-  align-items: stretch;
-  gap: 0;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
-  background: var(--panel);
-  border-bottom: 1px solid var(--rule);
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
 
 .search {
   position: relative;
-  flex: 1 1 320px;
-  min-width: 220px;
+  flex: 1 1 300px;
+  min-width: 240px;
+  max-width: 460px;
   display: flex;
   align-items: center;
-  border-right: 1px solid var(--rule);
 }
 
 .search input {
   width: 100%;
-  border: 0;
-  background: none;
-  padding: 9px 12px 9px 34px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.02em;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  padding: 0 34px 0 32px;
+  font-size: var(--font-body);
 }
 
 .search input::placeholder {
-  color: var(--ink-3);
+  color: var(--dim);
+}
+
+.search input:hover {
+  background: var(--surface-hi);
 }
 
 .search input:focus {
   outline: none;
-}
-
-.search:focus-within {
-  background: var(--panel-2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--surface);
 }
 
 .search__glyph {
   position: absolute;
-  left: 13px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-3);
+  left: 10px;
+  color: var(--dim);
   pointer-events: none;
+  display: flex;
 }
 
 .search__kbd {
   position: absolute;
-  right: 10px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--ink-3);
-  border: 1px solid var(--rule);
-  padding: 0 4px;
+  right: 8px;
+  font-size: var(--font-lozenge);
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0 5px;
   pointer-events: none;
 }
 
@@ -315,24 +327,21 @@ select {
   display: none;
 }
 
+/* Overlay elevation: shadow, not a hard border (ADS §4). */
 .results {
   position: absolute;
-  top: 100%;
-  left: -1px;
-  right: -1px;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
   z-index: 40;
   margin: 0;
-  padding: 0;
+  padding: 4px 0;
   list-style: none;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  border-top: 0;
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
   max-height: 320px;
   overflow-y: auto;
-}
-
-.results li + li {
-  border-top: 1px solid var(--rule-soft);
 }
 
 .results button {
@@ -344,130 +353,273 @@ select {
   border: 0;
   background: none;
   padding: 8px 12px;
+  min-height: 32px;
   cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--font-body);
 }
 
 .results button:hover,
 .results [data-active='true'] button {
-  background: var(--panel-2);
+  background: var(--surface-hi);
 }
 
 .results__meta {
   margin-left: auto;
-  font-size: 10px;
-  color: var(--ink-3);
+  font-size: var(--font-small);
+  color: var(--dim);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .results__empty {
-  padding: 10px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-3);
+  padding: 8px 12px;
+  font-size: var(--font-small);
+  color: var(--dim);
 }
 
-/* Saved locations, as a scrolling row of hairline-separated cells. */
-.saved {
+/* Saved places, as ADS chips. */
+.chips {
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.saved::-webkit-scrollbar {
+.chips::-webkit-scrollbar {
   display: none;
 }
 
-.saved__item {
-  display: flex;
+.chip {
+  display: inline-flex;
   align-items: center;
-  border-right: 1px solid var(--rule);
-}
-
-.saved__item button {
-  appearance: none;
-  border: 0;
-  background: none;
-  padding: 9px 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-2);
-  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
   white-space: nowrap;
 }
 
-.saved__item button:hover {
-  color: var(--ink);
-  background: var(--panel-2);
+.chip button {
+  appearance: none;
+  border: 0;
+  background: none;
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: var(--font-small);
+  color: var(--dim);
+  cursor: pointer;
 }
 
-.saved__item[data-current='true'] button {
-  color: var(--ink);
+.chip button:hover {
+  color: var(--text);
+}
+
+.chip[data-current='true'] {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.chip[data-current='true'] button {
+  color: var(--text);
   font-weight: 600;
 }
 
-.saved__item[data-current='true'] {
-  box-shadow: inset 0 -2px 0 var(--ink);
-}
-
-.saved__drop {
+.chip__remove {
   padding: 0 8px 0 2px !important;
-  color: var(--ink-3) !important;
 }
 
-/* ------------------------------------------------------------------- grid */
+/* ───────────────────────────────────────────────────────────────── hero */
 
 /*
- * The hairline grid. The container's background is the rule colour and the gap is 1px, so
- * the "borders" between panels are the backdrop showing through — always 1px, never
- * doubled, and they disappear correctly when panels reflow at narrow widths.
+ * The answer to "what is it like out there", at the top, at display size, with nothing
+ * competing. Everything below is detail in support of this block — that ordering is the
+ * page's hierarchy, so the hero deliberately gets more air than any panel.
  */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 40px;
+  padding: 24px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.hero__place {
+  min-width: 200px;
+}
+
+.hero__name {
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.hero__meta {
+  font-size: var(--font-small);
+  color: var(--dim);
+  margin-top: 2px;
+}
+
+.hero__temp {
+  display: flex;
+  align-items: flex-start;
+  font-size: clamp(48px, 8vw, 68px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__temp sup {
+  font-size: 0.32em;
+  font-weight: 500;
+  color: var(--dim);
+  margin-top: 0.28em;
+}
+
+.hero__cond {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hero__summary {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.hero__detail {
+  font-size: var(--font-small);
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Two or three facts that change what you do today, pulled out of the panels below. */
+.hero__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.flag {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.flag__label {
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
+/* ADS lozenge: a tinted pill carrying the quantity's own colour, as fibo tags do. */
+.flag__value {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+  padding: 2px 8px;
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--flag, var(--text));
+  background: color-mix(in srgb, var(--flag, var(--line-strong)) 16%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────── section band */
+
+/*
+ * A section is one continuous raised block: its heading sits on the same surface as the
+ * panels it introduces, with no rule between them. The separation between sections is the
+ * sunken background showing through the gap instead.
+ *
+ * The earlier arrangement — heading on its own sunken strip, hairline, then the panels —
+ * read as a divider that happened to have words on it, because the only thing the heading
+ * touched was the band above it.
+ */
+.section,
+.disclosure {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: 12px;
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 16px 12px;
+}
+
+.section__title {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section__note {
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
+/*
+ * Bento.
+ *
+ * Wrapping flex rather than grid, deliberately. A grid of `auto-fit` tracks still strands
+ * the last row — five tiles in a four-track grid leaves three empty tracks — whereas flex
+ * items grow into whatever space is left, so the final row always fills. That holds at
+ * every width and for any number of tiles, which is what "no empty space" actually
+ * requires. The 1px gap over a `--line` background draws every divider in the layout.
+ */
+.bento {
+  display: flex;
+  flex-wrap: wrap;
   gap: 1px;
-  background: var(--rule);
-  border-bottom: 1px solid var(--rule);
+  background: var(--line);
 }
 
 .panel {
-  background: var(--panel);
-  padding: 14px 16px 12px;
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  /* Grow to fill the row, never shrink below a readable chart width. */
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--surface);
 }
 
-.panel--flush {
-  padding-bottom: 4px;
+.panel--wide {
+  flex-basis: 100%;
 }
 
 .panel__head {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  margin-bottom: 10px;
-  min-height: 15px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .panel__title {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--font-small);
   font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--ink);
+  color: var(--dim);
+  margin: 0;
 }
 
 .panel__note {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  letter-spacing: 0.04em;
+  font-size: var(--font-small);
+  color: var(--dim);
   margin-left: auto;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .panel__body {
@@ -475,151 +627,97 @@ select {
   min-height: 0;
 }
 
-/* Column spans, collapsing to full width on small screens. */
-.c2 { grid-column: span 2; }
-.c3 { grid-column: span 3; }
-.c4 { grid-column: span 4; }
-.c5 { grid-column: span 5; }
-.c6 { grid-column: span 6; }
-.c7 { grid-column: span 7; }
-.c8 { grid-column: span 8; }
-.c9 { grid-column: span 9; }
-.c12 { grid-column: span 12; }
+/* ────────────────────────────────────────────────────────────── readouts */
 
-/* --------------------------------------------------------------- readouts */
-
-/* The headline block: place, condition, and the temperature at display size. */
-.now {
+/* Flex, not grid, for the same reason the bento is: a trailing stat grows into the space
+   left over instead of stranding empty cells beside it. */
+.stats {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 24px 32px;
+  gap: 16px 24px;
 }
 
-.now__place {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
-
-.now__sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  letter-spacing: 0.06em;
-  margin-top: 2px;
-}
-
-.now__temp {
-  display: flex;
-  align-items: flex-start;
-  font-family: var(--font-mono);
-  font-size: clamp(56px, 11vw, 92px);
-  font-weight: 300;
-  line-height: 0.86;
-  letter-spacing: -0.03em;
-}
-
-.now__temp sup {
-  font-size: 0.26em;
-  font-weight: 500;
-  color: var(--ink-3);
-  margin-top: 0.35em;
-  letter-spacing: 0;
-}
-
-.now__cond {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-}
-
-.now__glyph {
-  font-size: 15px;
-  color: var(--ink-2);
-}
-
-/* Compact key/value stack used inside the metric strip. */
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+/* 120px basis so all eight condition readings fit one row from ~1130px up, and split
+   evenly (four and four, or two and two) below that. A trailing row of flex items always
+   divides the full width between them, so no row ends part-filled. */
+.stats > * {
+  flex: 1 1 120px;
   min-width: 0;
 }
 
+.stat__label {
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
 .stat__value {
-  font-family: var(--font-mono);
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .stat__value--sm {
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.stat__unit {
+  font-size: 0.65em;
+  font-weight: 500;
+  color: var(--dim);
+  margin-left: 2px;
 }
 
 .stat__note {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-3);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: var(--font-small);
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
 }
 
-.stat__spark {
-  margin-top: 2px;
-}
-
-/* A thin level meter, used for UV, AQI, humidity and cloud cover. */
 .meter {
-  height: 3px;
-  background: var(--grid);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-hi);
   position: relative;
-  margin-top: 5px;
+  margin-top: 6px;
+  overflow: hidden;
 }
 
 .meter__fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: var(--ink);
+  border-radius: 2px;
+  background: var(--accent);
 }
 
-/* ------------------------------------------------------------------ table */
+/* ──────────────────────────────────────────────────────────────── table */
 
 .table-wrap {
   overflow-x: auto;
-  margin: 0 -16px;
-  padding: 0 16px;
+  max-height: 460px;
+  overflow-y: auto;
 }
 
 table.data {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--font-small);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 table.data th {
   text-align: right;
-  font-weight: 500;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  padding: 0 0 6px 14px;
-  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+  color: var(--dim);
+  padding: 0 0 8px 16px;
+  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
-  background: var(--panel);
+  background: var(--surface);
+  z-index: 1;
 }
 
 table.data th:first-child,
@@ -628,50 +726,86 @@ table.data td:first-child {
   padding-left: 0;
   position: sticky;
   left: 0;
-  background: var(--panel);
+  background: var(--surface);
 }
 
 table.data td {
   text-align: right;
-  padding: 4px 0 4px 14px;
-  border-bottom: 1px solid var(--rule-soft);
-  color: var(--ink-2);
+  padding: 6px 0 6px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--dim);
 }
 
 table.data td:first-child,
 table.data td.strong {
-  color: var(--ink);
+  color: var(--text);
 }
 
 table.data tbody tr:hover td {
-  background: var(--panel-2);
-}
-
-table.data tr[data-night='true'] td:first-child {
-  color: var(--ink-3);
+  background: var(--surface-hi);
 }
 
 table.data tr[data-daybreak='true'] td {
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line-strong);
 }
 
-/* -------------------------------------------------------------- day rows */
-
-/* The multi-day strip: one row per day, temperature range drawn as a bar. */
-.days {
+/* Reference data is collapsed by default — it is the least of the hierarchy. */
+.disclosure > summary {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 16px;
+  font-size: var(--font-body);
+  font-weight: 600;
+  background: var(--surface);
+}
+
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure > summary:hover {
+  background: var(--surface-hi);
+}
+
+.disclosure > summary::before {
+  content: '›';
+  display: inline-block;
+  color: var(--dim);
+  transition: transform 0.12s ease;
+}
+
+.disclosure[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.disclosure__note {
+  margin-left: auto;
+  font-size: var(--font-small);
+  font-weight: 400;
+  color: var(--dim);
+}
+
+/* ──────────────────────────────────────────────────────────────── days */
+
+/* Capped so a 23-row list does not stretch its row and leave the panel beside it half
+   empty; the daily-range chart above already carries the whole window at a glance. */
+.days {
+  max-height: 330px;
+  overflow-y: auto;
 }
 
 .day {
   display: grid;
-  grid-template-columns: 62px 18px minmax(64px, 1fr) 38px minmax(90px, 1.4fr) 38px 52px;
+  grid-template-columns: 62px 20px minmax(70px, 1fr) 34px minmax(80px, 1.3fr) 34px 56px;
   align-items: center;
-  gap: 10px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--rule-soft);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--font-small);
+  font-variant-numeric: tabular-nums;
 }
 
 .day:last-child {
@@ -679,24 +813,21 @@ table.data tr[data-daybreak='true'] td {
 }
 
 .day[data-past='true'] {
-  opacity: 0.5;
+  color: var(--dim);
 }
 
 .day[data-today='true'] .day__name {
   font-weight: 600;
 }
 
-.day__name {
-  letter-spacing: 0.05em;
-}
-
 .day__glyph {
-  color: var(--ink-2);
+  color: var(--dim);
   text-align: center;
 }
 
-.day__cond {
-  color: var(--ink-2);
+.day__cond,
+.day__low {
+  color: var(--dim);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -707,32 +838,29 @@ table.data tr[data-daybreak='true'] td {
   text-align: right;
 }
 
-.day__low {
-  color: var(--ink-3);
-}
-
-/* The range bar: a full-width track with the day's min–max span painted on it, all days
-   sharing one scale so the bars are comparable down the column. */
+/* One shared scale across every row, so the bars are comparable down the column. */
 .range {
   position: relative;
-  height: 4px;
-  background: var(--grid);
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-hi);
 }
 
 .range__span {
   position: absolute;
   top: 0;
   bottom: 0;
+  border-radius: 3px;
   background: linear-gradient(90deg, var(--s-precip), var(--s-temp));
-  opacity: 0.85;
 }
 
 .range__now {
   position: absolute;
-  top: -2px;
-  bottom: -2px;
-  width: 1px;
-  background: var(--ink);
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--text);
 }
 
 .day__precip {
@@ -741,178 +869,183 @@ table.data tr[data-daybreak='true'] td {
 }
 
 .day__precip[data-zero='true'] {
-  color: var(--ink-3);
+  color: var(--dim);
 }
 
-/* ------------------------------------------------------------------ chart */
+/* ─────────────────────────────────────────────────────────────── charts */
 
 .chart {
   width: 100%;
 }
 
 .chart text {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  fill: var(--ink-3);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: var(--dim);
 }
 
 .chart .recharts-cartesian-axis-line,
 .chart .recharts-cartesian-axis-tick-line {
-  stroke: var(--rule);
+  stroke: var(--line);
 }
 
-.chart .recharts-cartesian-grid line {
-  stroke: var(--grid);
-}
-
+/* Tooltip: an ADS overlay — raised surface, soft radius, float shadow, no hard border. */
 .tip {
-  background: var(--panel);
-  border: 1px solid var(--ink);
-  padding: 7px 9px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  min-width: 128px;
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
+  padding: 10px 12px;
+  min-width: 150px;
+  font-size: var(--font-small);
+  font-variant-numeric: tabular-nums;
 }
 
 .tip__head {
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 5px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+  color: var(--text);
+  font-size: var(--font-small);
+  margin-bottom: 8px;
 }
 
 .tip__row {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  min-height: 20px;
 }
 
-.tip__row span:first-child {
-  color: var(--ink-2);
+.tip__row > span:first-of-type {
+  color: var(--dim);
 }
 
-.tip__row span:last-child {
+.tip__row > span:last-of-type {
   margin-left: auto;
-  color: var(--ink);
+  color: var(--text);
+  font-weight: 500;
 }
 
 .tip__swatch {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
   flex: none;
 }
 
-/* Legend rendered by hand rather than by Recharts, to keep the type consistent. */
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 14px;
-  margin-top: 6px;
+  gap: 4px 16px;
+  margin-top: 8px;
 }
 
 .legend__item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  gap: 6px;
+  font-size: var(--font-small);
+  color: var(--dim);
 }
 
 .legend__key {
-  width: 10px;
+  width: 12px;
   height: 2px;
+  border-radius: 1px;
   flex: none;
 }
 
 .legend__key[data-shape='dash'] {
-  background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 6px);
+  background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 8px);
 }
 
 .legend__key[data-shape='box'] {
-  height: 7px;
-  width: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
 }
 
-/* --------------------------------------------------------- states, footer */
+/* ────────────────────────────────────────────────────── states & footer */
 
 .notice {
+  margin: 0;
   padding: 40px 16px;
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-2);
+  color: var(--dim);
+  font-size: var(--font-body);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
 }
 
 .notice__title {
-  color: var(--ink);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 11px;
-  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
-/* The loading state is the layout itself, drawn empty — no spinner. */
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.75; }
-}
-
-.skeleton {
-  background: var(--grid);
-  animation: pulse 1.6s ease-in-out infinite;
+.notice--error .notice__title {
+  color: var(--danger);
 }
 
 .footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  color: var(--ink-3);
-  background: var(--panel);
+  gap: 4px 20px;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  font-size: var(--font-small);
+  color: var(--dim);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
 }
 
 .footer a {
-  color: var(--ink-2);
+  color: var(--accent);
+  text-decoration: none;
 }
 
 .footer a:hover {
-  color: var(--ink);
+  text-decoration: underline;
 }
 
-/* ------------------------------------------------------------ breakpoints */
-
-@media (max-width: 1080px) {
-  .c2, .c3 { grid-column: span 4; }
-  .c4 { grid-column: span 6; }
-  /* c5 always pairs with a c7, which has already gone full width — so it must too, or it
-     leaves half a row empty. */
-  .c5, .c7, .c8, .c9 { grid-column: span 12; }
+.footer__spacer {
+  flex: 1;
 }
 
-@media (max-width: 720px) {
-  .c2, .c3, .c4, .c5, .c6 { grid-column: span 12; }
+/* ────────────────────────────────────────────────────────── narrow view */
 
-  .masthead {
+@media (max-width: 600px) {
+  /* The tool groups need a full row of their own here; letting them wrap beside the brand
+     leaves it floating against a two-line block. */
+  .appbar {
     flex-wrap: wrap;
     gap: 8px;
   }
 
-  .now {
-    gap: 16px 24px;
+  .appbar__spacer {
+    display: none;
+  }
+
+  .appbar__tools {
+    width: 100%;
+  }
+
+  .appbar__tools .button {
+    margin-left: auto;
+  }
+
+  .hero {
+    gap: 12px 24px;
+    padding: 20px 16px;
+  }
+
+  .hero__flags {
+    margin-left: 0;
+    width: 100%;
   }
 
   .day {
-    grid-template-columns: 52px 16px 34px minmax(60px, 1fr) 34px 44px;
+    grid-template-columns: 56px 20px 30px minmax(60px, 1fr) 30px 50px;
+    gap: 8px;
   }
 
   .day__cond {

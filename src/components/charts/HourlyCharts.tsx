@@ -64,7 +64,7 @@ const gridProps = (colors: ChartColors) => ({
 /** The vertical "you are here" rule, drawn on every hourly chart. */
 function NowLine({ now, colors }: { now: number; colors: ChartColors }) {
   return (
-    <ReferenceLine x={now} stroke={colors.ink} strokeWidth={1} strokeDasharray="2 2" ifOverflow="hidden" />
+    <ReferenceLine x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" ifOverflow="hidden" />
   )
 }
 
@@ -103,7 +103,7 @@ export function TemperatureChart({ rows, bands, now, units, height = 190 }: Hour
               label={{
                 value: `${num(freezing)}${u.temp}`,
                 position: 'insideLeft',
-                fill: colors['ink-3'],
+                fill: colors.dim,
                 fontSize: 9,
               }}
               ifOverflow="hidden"
@@ -132,7 +132,7 @@ export function TemperatureChart({ rows, bands, now, units, height = 190 }: Hour
             />
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {
                 return (
                   <Tip
@@ -165,7 +165,7 @@ export function TemperatureChart({ rows, bands, now, units, height = 190 }: Hour
         items={[
           { label: `Temperature ${u.temp}`, color: colors['s-temp'] },
           { label: 'Feels like', color: colors['s-feels'], shape: 'dash' },
-          { label: 'Night', color: colors.grid, shape: 'box' },
+          { label: 'Night', color: colors['chart-grid'], shape: 'box' },
         ]}
       />
     </>
@@ -225,7 +225,7 @@ export function PrecipitationChart({ rows, bands, now, units, height = 190 }: Ho
             />
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ fill: colors.grid, fillOpacity: 0.5 }}
+              cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<HourRow>((row) => {
                 return (
                   <Tip
@@ -321,7 +321,7 @@ export function WindChart({ rows, bands, now, units, height = 190 }: HourlyProps
             />
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {
                 return (
                   <Tip
@@ -406,7 +406,7 @@ export function HumidityChart({ rows, bands, now, units, height = 170 }: HourlyP
             />
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {
                 return (
                   <Tip
@@ -495,7 +495,7 @@ export function CloudPressureChart({ rows, bands, now, units, height = 170 }: Ho
             />
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<HourRow>((row) => {
                 return (
                   <Tip
@@ -548,8 +548,8 @@ export function UvChart({ rows, now, units: _units, height = 150 }: HourlyProps)
               width={22}
               domain={[0, (max: number) => Math.max(3, Math.ceil(max))]}
             />
-            <ReferenceLine y={3} stroke={colors.rule} strokeDasharray="2 2" />
-            <ReferenceLine y={8} stroke={colors.rule} strokeDasharray="2 2" />
+            <ReferenceLine y={3} stroke={colors.line} strokeDasharray="2 2" />
+            <ReferenceLine y={8} stroke={colors.line} strokeDasharray="2 2" />
             <Bar dataKey="uv" maxBarSize={10} isAnimationActive={false}>
               {daylight.map((row) => (
                 <Cell key={row.t} fill={levelColor(colors, uvBand(row.uv).level)} />
@@ -557,7 +557,7 @@ export function UvChart({ rows, now, units: _units, height = 150 }: HourlyProps)
             </Bar>
             <NowLine now={now} colors={colors} />
             <Tooltip
-              cursor={{ fill: colors.grid, fillOpacity: 0.5 }}
+              cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<HourRow>((row) => {
                 const band = uvBand(row.uv)
                 return (

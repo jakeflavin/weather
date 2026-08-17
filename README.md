@@ -61,9 +61,23 @@ Three decisions worth knowing about:
 
 ## Design
 
-Deliberately unlike the other apps in this workspace: an instrument printout. Hairline
-rules instead of cards, no shadows or rounded corners, monospaced tabular figures so
-columns of readings line up, and one fixed colour per measured quantity — temperature is
-always the same orange, precipitation always the same blue — wherever it appears.
+Shares fibo's Atlassian Design System skin, so the two apps read as siblings: full-bleed
+chrome with structure from 1px dividers rather than floating cards, system sans at three
+sizes, quiet sentence-case section headers, and blue as the only interactive accent.
+Tokens and shadows are lifted directly from fibo's `styles.css`.
+
+What weather adds is a data palette — one colour per measured quantity, held constant
+everywhere that quantity appears. That follows the same rule fibo applies to its per-player
+identity colours: those hues are content, not chrome, and never appear on a control.
+
+Two layout rules do most of the work:
+
+- **Sections carry the hierarchy.** The page is a hero answering "what is it like out
+  there", then four bands of panels. A section's heading sits on the same surface as the
+  panels it introduces, with the sunken background showing only in the gap *between*
+  sections — a heading on its own strip above a rule reads as a divider, not a title.
+- **Rows always fill.** Panels are flex items, not grid tracks, so a row that does not
+  divide evenly grows its members instead of stranding empty cells. A grid of `auto-fit`
+  tracks cannot do this: five tiles in a four-track grid leaves three holes.
 
 Data from [Open-Meteo](https://open-meteo.com), free for non-commercial use under CC BY 4.0.

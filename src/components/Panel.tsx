@@ -1,33 +1,33 @@
 import type { ReactNode } from 'react'
 
 /**
- * A cell in the hairline grid. The rules between panels come from the grid's background
- * showing through a 1px gap, so a panel draws no border of its own.
+ * A tile in a section's bento.
+ *
+ * There are only two widths on purpose. A tile takes one column of the auto-fitting grid,
+ * and `wide` takes the whole row. Anything more expressive — a span of 5 out of 12, say —
+ * reintroduces the half-empty rows that fixed column counts produce when the viewport
+ * lands between breakpoints.
  */
 export function Panel({
   title,
   note,
-  span = 4,
-  flush = false,
+  wide = false,
   children,
 }: {
   title?: string
-  /** Right-aligned annotation in the header — a range, a unit, a timestamp. */
   note?: ReactNode
-  span?: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 12
-  /** Trims the bottom padding for panels whose content is a chart with its own axis gutter. */
-  flush?: boolean
+  wide?: boolean
   children: ReactNode
 }) {
   return (
-    <section className={`panel c${span}${flush ? ' panel--flush' : ''}`}>
+    <article className={wide ? 'panel panel--wide' : 'panel'}>
       {(title || note) && (
         <header className="panel__head">
-          {title && <h2 className="panel__title">{title}</h2>}
+          {title && <h3 className="panel__title">{title}</h3>}
           {note && <span className="panel__note">{note}</span>}
         </header>
       )}
       <div className="panel__body">{children}</div>
-    </section>
+    </article>
   )
 }

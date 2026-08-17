@@ -10,12 +10,14 @@ import { formatFullDate, formatHour, formatHourShort, formatWeekday } from '../.
  * one recompute whenever the theme flips.
  */
 const TOKENS = [
-  'ink',
-  'ink-2',
-  'ink-3',
-  'rule',
-  'grid',
-  'panel',
+  'text',
+  'dim',
+  'line',
+  'line-strong',
+  'surface',
+  'surface-hi',
+  'accent',
+  'chart-grid',
   'night',
   's-temp',
   's-feels',
@@ -25,7 +27,6 @@ const TOKENS = [
   's-humidity',
   's-cloud',
   's-pressure',
-  's-uv',
   's-aqi',
   'l0',
   'l1',
@@ -66,8 +67,8 @@ export function levelColor(colors: ChartColors, level: number): string {
 /** Axis defaults, so every chart in the app shares one tick treatment. */
 export function axisProps(colors: ChartColors) {
   return {
-    stroke: colors.rule,
-    tick: { fill: colors['ink-3'], fontSize: 9 },
+    stroke: colors.line,
+    tick: { fill: colors.dim, fontSize: 11 },
     tickLine: false,
     axisLine: false,
   } as const

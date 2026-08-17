@@ -38,7 +38,9 @@ export function Tip({ heading, rows }: { heading: string; rows: TipRow[] }) {
       <div className="tip__head">{heading}</div>
       {rows.map((row) => (
         <div className="tip__row" key={row.label}>
-          {row.color && <i className="tip__swatch" style={{ background: row.color }} />}
+          {/* The swatch keeps its space when a row has no series colour, so the labels in
+              a tooltip stay in one column. */}
+          <i className="tip__swatch" style={{ background: row.color ?? 'transparent' }} />
           <span>{row.label}</span>
           <span>{row.value}</span>
         </div>

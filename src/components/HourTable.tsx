@@ -30,12 +30,12 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
         <thead>
           <tr>
             <th scope="col">Hour</th>
-            <th scope="col">Cond</th>
+            <th scope="col">Sky</th>
             <th scope="col">Temp {u.temp}</th>
             <th scope="col">Feels</th>
             <th scope="col">Dew</th>
             <th scope="col">RH %</th>
-            <th scope="col">Prob %</th>
+            <th scope="col">Chance %</th>
             <th scope="col">Precip {u.precip}</th>
             <th scope="col">Cloud %</th>
             <th scope="col">Wind {u.speed}</th>
@@ -47,11 +47,7 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr
-              key={row.t}
-              data-night={!row.isDay}
-              data-daybreak={index > 0 && row.hour === 0}
-            >
+            <tr key={row.t} data-daybreak={index > 0 && row.hour === 0}>
               <td>
                 {row.hour === 0 || index === 0 ? `${formatWeekday(row.t)} ` : ''}
                 {formatHour(row.t)}

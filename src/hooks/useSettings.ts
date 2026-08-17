@@ -27,7 +27,7 @@ export function useSettings() {
       document.documentElement.dataset.theme = resolved
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute('content', resolved === 'dark' ? '#08090b' : '#f2f1ed')
+        ?.setAttribute('content', resolved === 'dark' ? '#18191a' : '#f8f8f8')
     }
     apply()
     media.addEventListener('change', apply)

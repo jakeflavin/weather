@@ -102,7 +102,10 @@ export function LocationBar({
     <div className="locbar">
       <div className="search">
         <span className="search__glyph" aria-hidden="true">
-          ⌕
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="M10.5 10.5 14 14" strokeLinecap="round" />
+          </svg>
         </span>
         <input
           ref={inputRef}
@@ -134,7 +137,7 @@ export function LocationBar({
                 <li key={place.id} role="option" aria-selected={index === active} data-active={index === active}>
                   <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => choose(location)}>
                     <span>{place.name}</span>
-                    <span className="faint">{[place.admin1, place.country].filter(Boolean).join(', ')}</span>
+                    <span className="dim">{[place.admin1, place.country].filter(Boolean).join(', ')}</span>
                     <span className="results__meta">
                       {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
                     </span>
@@ -149,34 +152,29 @@ export function LocationBar({
         )}
       </div>
 
-      <div className="saved">
-        <span className="saved__item">
-          <button type="button" onClick={onLocate} disabled={locating} title="Use your current position">
-            {locating ? '◌ Locating…' : '⌖ Locate'}
-          </button>
-        </span>
+      <button type="button" className="button" onClick={onLocate} disabled={locating}>
+        {locating ? 'Locating…' : 'Use my location'}
+      </button>
 
-        <span className="saved__item" data-current={!isSaved}>
-          <button
-            type="button"
-            onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}
-            title={isSaved ? 'Remove from saved' : 'Save this location'}
-          >
-            {isSaved ? '★ Saved' : '☆ Save'}
-          </button>
-        </span>
+      <button
+        type="button"
+        className="button button--subtle"
+        onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}
+      >
+        {isSaved ? 'Saved' : 'Save'}
+      </button>
 
+      <div className="chips">
         {saved.map((location) => (
-          <span className="saved__item" key={location.id} data-current={location.id === current.id}>
+          <span className="chip" key={location.id} data-current={location.id === current.id}>
             <button type="button" onClick={() => onSelect(location)}>
               {describe(location)}
             </button>
             <button
               type="button"
-              className="saved__drop"
+              className="chip__remove"
               onClick={() => onRemove(location.id)}
               aria-label={`Remove ${location.name}`}
-              title="Remove"
             >
               ×
             </button>

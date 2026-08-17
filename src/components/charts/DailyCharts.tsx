@@ -143,7 +143,7 @@ export function DailyTrendChart({
               dataKey="apparentRange"
               stroke="none"
               fill={colors['s-feels']}
-              fillOpacity={0.1}
+              fillOpacity={0.14}
               connectNulls
               activeDot={false}
               isAnimationActive={false}
@@ -155,14 +155,14 @@ export function DailyTrendChart({
               stroke={colors['s-temp']}
               strokeWidth={1.4}
               fill={colors['s-temp']}
-              fillOpacity={0.13}
+              fillOpacity={0.09}
               connectNulls
               activeDot={{ r: 2.5, strokeWidth: 0 }}
               isAnimationActive={false}
             />
-            <ReferenceLine yAxisId="t" x={now} stroke={colors.ink} strokeWidth={1} strokeDasharray="2 2" />
+            <ReferenceLine yAxisId="t" x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<TrendRow>((row) => {
                 return (
                   <Tip
@@ -286,7 +286,7 @@ export function DaylightChart({ rows, height = 190 }: { rows: DayRow[]; height?:
               ))}
             </Bar>
             <Tooltip
-              cursor={{ fill: colors.grid, fillOpacity: 0.5 }}
+              cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<DaylightRow>((row) => {
                 const clock = (hours: number) =>
                   `${String(Math.floor(hours)).padStart(2, '0')}:${String(Math.round((hours % 1) * 60)).padStart(2, '0')}`
@@ -367,9 +367,9 @@ export function AqiChart({ rows, now, height = 170 }: { rows: AqiRow[]; now: num
               connectNulls
               isAnimationActive={false}
             />
-            <ReferenceLine x={now} stroke={colors.ink} strokeWidth={1} strokeDasharray="2 2" />
+            <ReferenceLine x={now} stroke={colors.text} strokeWidth={1} strokeDasharray="2 2" />
             <Tooltip
-              cursor={{ stroke: colors['ink-3'], strokeWidth: 1 }}
+              cursor={{ stroke: colors.dim, strokeWidth: 1 }}
               content={rowTip<AqiRow>((row) => {
                 const band = aqiBand(row.usAqi)
                 return (
@@ -460,14 +460,14 @@ export function PollutantChart({
             />
             <YAxis {...axisProps(colors)} type="category" dataKey="name" width={44} />
             {/* The guideline itself: bars crossing this line are over the limit. */}
-            <ReferenceLine x={100} stroke={colors['ink-3']} strokeDasharray="2 2" />
+            <ReferenceLine x={100} stroke={colors.dim} strokeDasharray="2 2" />
             <Bar dataKey="pct" maxBarSize={12} isAnimationActive={false}>
               {data.map((row) => (
                 <Cell key={row.name} fill={row.pct > 100 ? colors.l3 : colors['s-aqi']} fillOpacity={0.8} />
               ))}
             </Bar>
             <Tooltip
-              cursor={{ fill: colors.grid, fillOpacity: 0.5 }}
+              cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<PollutantRow>((row) => {
                 return (
                   <Tip

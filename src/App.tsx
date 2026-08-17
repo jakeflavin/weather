@@ -4,7 +4,8 @@ import { LocationBar } from './components/LocationBar'
 import { DayList } from './components/DayList'
 import { HourTable } from './components/HourTable'
 import { Panel } from './components/Panel'
-import { Meter, Stat } from './components/Readouts'
+import { Section } from './components/Section'
+import { Flag, Meter, Stat } from './components/Readouts'
 import {
   CloudPressureChart,
   HumidityChart,
@@ -76,18 +77,13 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="masthead">
-        <span className="masthead__mark">Weather</span>
-        <span className="masthead__spacer" />
-        <div className="masthead__tools">
+      <header className="appbar">
+        <span className="appbar__brand">Weather</span>
+        <span className="appbar__spacer" />
+        <div className="appbar__tools">
           <div className="segmented" role="group" aria-label="Hourly range">
             {RANGES.map((value) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={range === value}
-                onClick={() => setRange(value)}
-              >
+              <button key={value} type="button" aria-pressed={range === value} onClick={() => setRange(value)}>
                 {value}h
               </button>
             ))}
@@ -102,17 +98,17 @@ export default function App() {
           <div className="segmented" role="group" aria-label="Theme">
             {(['light', 'system', 'dark'] as Theme[]).map((value) => (
               <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
-                {value === 'light' ? '☀' : value === 'dark' ? '☾' : 'Auto'}
+                {value === 'light' ? 'Light' : value === 'dark' ? 'Dark' : 'Auto'}
               </button>
             ))}
           </div>
           <button
             type="button"
-            className="icon-button"
+            className="button"
             onClick={() => queryClient.invalidateQueries()}
             disabled={fetching}
           >
-            {fetching ? 'Loading' : 'Refresh'}
+            {fetching ? 'Refreshing…' : 'Refresh'}
           </button>
         </div>
       </header>
@@ -136,17 +132,17 @@ export default function App() {
 
       {forecast.isPending && !forecast.data && (
         <p className="notice">
-          <span className="notice__title">Reading instruments</span>
+          <span className="notice__title">Loading</span>
           Fetching the forecast for {describe(current)}.
         </p>
       )}
 
       {forecast.isError && (
-        <div className="notice" role="alert">
-          <div className="notice__title">No data</div>
+        <div className="notice notice--error" role="alert">
+          <span className="notice__title">No data</span>
           {forecast.error instanceof Error ? forecast.error.message : 'The forecast request failed.'}
           <div style={{ marginTop: 12 }}>
-            <button type="button" className="icon-button" onClick={() => forecast.refetch()}>
+            <button type="button" className="button" onClick={() => forecast.refetch()}>
               Try again
             </button>
           </div>
@@ -173,8 +169,8 @@ export default function App() {
             Open-Meteo
           </a>
         </span>
-        <span>Keys · / search · u units · t theme · r refresh</span>
-        <span className="masthead__spacer" />
+        <span>Shortcuts · / search · u units · t theme · r refresh</span>
+        <span className="footer__spacer" />
         <span>
           {forecast.data
             ? `${forecast.data.timezone} · ${forecast.data.timezone_abbreviation}`
@@ -225,7 +221,12 @@ function Dashboard({
   const todayRow = days.find((row) => row.day === today)
   const wet = nextWetHour(hours, now)
   const yesterday = changeVsYesterday(hours, now)
-  const uv = uvBand(hours.find((row) => row.t >= now - 3600_000)?.uv ?? todayRow?.uvMax)
+  // The tile bands the reading it shows; the day's peak is what matters for planning, so
+  // it rides along as a note and drives the hero flag. Banding "now" against the peak
+  // would label an overnight 0.0 as "Moderate".
+  const uvNow = hours.find((row) => row.t >= now - 3600_000)?.uv ?? 0
+  const uv = uvBand(uvNow)
+  const uvPeak = uvBand(todayRow?.uvMax)
   const aqi = aqiBand(airCurrent?.us_aqi)
   const currentAqiRow = airRows.find((row) => row.t >= now - 3600_000) ?? airRows[airRows.length - 1]
   const visibility = hours.find((row) => row.t >= now - 3600_000)?.visibility
@@ -237,228 +238,247 @@ function Dashboard({
 
   const hourly = { rows: window, bands, now, units }
 
+
+  // The hero carries at most three flags: what changes what you do today. Rain first,
+  // then UV, then air quality — each only when it is actually worth acting on.
+  const flags: { label: string; value: string; color: string }[] = []
+  if (wet) {
+    flags.push({
+      label: 'Rain expected',
+      value: `${num(wet.precipProb)}% at ${formatHour(wet.t)}`,
+      color: colors['s-precip'],
+    })
+  }
+  if (uvPeak.level >= 2) {
+    flags.push({ label: 'UV peak today', value: uvPeak.label, color: levelColor(colors, uvPeak.level) })
+  }
+  if (aqi.level >= 1) {
+    flags.push({ label: 'Air quality', value: aqi.label, color: levelColor(colors, aqi.level) })
+  }
+  if (!flags.length && todayRow) {
+    flags.push({
+      label: 'Today',
+      value: `${num(toTemp(todayRow.tempMin ?? 0, units))}–${num(toTemp(todayRow.tempMax ?? 0, units))}${u.temp}`,
+      color: colors['s-temp'],
+    })
+  }
+
   return (
-    <main className="grid">
-      <Panel span={7} note={`Updated ${sinceLabel(Date.now() - updatedAt)}`}>
-        <div className="now">
-          <div>
-            <div className="now__place">{place}</div>
-            <div className="now__sub">
-              {formatWeekday(now)} {formatHour(now)} local
-              {isDefaultPlace ? ' · default location' : ''}
-            </div>
-          </div>
-          <div className="now__temp">
-            {num(toTemp(current.temperature_2m, units))}
-            <sup>{u.temp}</sup>
-          </div>
-          <div>
-            <div className="now__cond">
-              <span className="now__glyph" aria-hidden="true">
-                {code.glyph}
-              </span>
-              {code.label}
-            </div>
-            <div className="now__sub">
-              Feels {num(toTemp(current.apparent_temperature, units))}
-              {u.temp}
-              {todayRow && (
-                <>
-                  {' · '}
-                  {num(toTemp(todayRow.tempMin ?? 0, units))}–{num(toTemp(todayRow.tempMax ?? 0, units))}
-                  {u.temp} today
-                </>
-              )}
-              {yesterday != null && (
-                <>
-                  {' · '}
-                  {yesterday >= 0 ? '+' : '−'}
-                  {num(Math.abs(toTempDelta(yesterday, units)), 1)}
-                  {u.temp} vs 24h ago
-                </>
-              )}
-            </div>
+    <main>
+      {/* Level one: the answer, before any chart. */}
+      <div className="hero">
+        <div className="hero__place">
+          <div className="hero__name">{place}</div>
+          <div className="hero__meta">
+            {formatWeekday(now)} {formatHour(now)} local
+            {isDefaultPlace ? ' · default location' : ''} · updated {sinceLabel(Date.now() - updatedAt)}
           </div>
         </div>
-      </Panel>
 
-      <Panel span={5} title="Conditions now">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(88px, 1fr))', gap: '14px 18px' }}>
-          <Stat
-            label="Wind"
-            value={num(toSpeed(current.wind_speed_10m, units))}
-            unit={u.speed}
-            note={`${compass(current.wind_direction_10m)} · ${windBand(current.wind_speed_10m)}`}
-            color={colors['s-wind']}
-            small
-          />
-          <Stat
-            label="Gusts"
-            value={num(toSpeed(current.wind_gusts_10m, units))}
-            unit={u.speed}
-            note={`${num(toSpeed(current.wind_gusts_10m - current.wind_speed_10m, units))} over sustained`}
-            small
-          />
-          <Stat
-            label="Humidity"
-            value={num(current.relative_humidity_2m)}
-            unit="%"
-            note={`Dew ${num(toTemp(current.dew_point_2m, units))}${u.temp}`}
-            color={colors['s-humidity']}
-            small
-          />
-          <Stat
-            label="Pressure"
-            value={num(toPressure(pressureNow, units), pressureDigits(units))}
-            unit={u.pressure}
-            note={
-              pressureTrend == null
-                ? '—'
-                : `${pressureTrend > 0.3 ? '↑ rising' : pressureTrend < -0.3 ? '↓ falling' : '→ steady'} 3h`
-            }
-            color={colors['s-pressure']}
-            small
-          />
-          <Stat
-            label="UV index"
-            value={num(uv.level === 0 && !todayRow?.uvMax ? 0 : hours.find((row) => row.t >= now - 3600_000)?.uv ?? 0, 1)}
-            note={
-              <>
-                {uv.label}
-                <Meter value={(hours.find((row) => row.t >= now - 3600_000)?.uv ?? 0) / 11} color={levelColor(colors, uv.level)} />
-              </>
-            }
-            color={levelColor(colors, uv.level)}
-            small
-          />
-          <Stat
-            label="Air quality"
-            value={num(airCurrent?.us_aqi)}
-            note={
-              <>
-                {aqi.label}
-                <Meter value={(airCurrent?.us_aqi ?? 0) / 200} color={levelColor(colors, aqi.level)} />
-              </>
-            }
-            color={levelColor(colors, aqi.level)}
-            small
-          />
-          <Stat
-            label="Cloud"
-            value={num(current.cloud_cover)}
-            unit="%"
-            note={visibility == null ? '—' : `Vis ${num(toDistance(visibility, units), 1)} ${u.distance}`}
-            color={colors['s-cloud']}
-            small
-          />
-          <Stat
-            label="Next rain"
-            value={wet ? `${num(wet.precipProb)}%` : '—'}
-            note={wet ? `${formatWeekday(wet.t)} ${formatHour(wet.t)}` : 'None in window'}
-            color={colors['s-precip']}
-            small
-          />
+        <div className="hero__temp">
+          {num(toTemp(current.temperature_2m, units))}
+          <sup>{u.temp}</sup>
         </div>
-      </Panel>
 
-      <Panel span={12} title={`Temperature · next ${range} hours`} note={`${u.temp} · night shaded`} flush>
-        <TemperatureChart {...hourly} />
-      </Panel>
+        <div className="hero__cond">
+          <span className="hero__summary">{code.label}</span>
+          <span className="hero__detail">
+            Feels {num(toTemp(current.apparent_temperature, units))}
+            {u.temp}
+            {todayRow && (
+              <>
+                {' · '}
+                {num(toTemp(todayRow.tempMin ?? 0, units))}–{num(toTemp(todayRow.tempMax ?? 0, units))}
+                {u.temp} today
+              </>
+            )}
+            {yesterday != null && (
+              <>
+                {' · '}
+                {yesterday >= 0 ? '+' : '−'}
+                {num(Math.abs(toTempDelta(yesterday, units)), 1)}
+                {u.temp} vs 24h ago
+              </>
+            )}
+          </span>
+        </div>
 
-      <Panel span={6} title="Precipitation" note={`chance % · ${u.precip}`} flush>
-        <PrecipitationChart {...hourly} />
-      </Panel>
+        <div className="hero__flags">
+          {flags.map((flag) => (
+            <Flag key={flag.label} label={flag.label} value={flag.value} color={flag.color} />
+          ))}
+        </div>
+      </div>
 
-      <Panel span={6} title="Wind" note={u.speed} flush>
-        <WindChart {...hourly} />
-      </Panel>
-
-      <Panel
-        span={12}
-        title="Daily range"
-        note={`${u.temp} · one week back, forecast ahead · shaded region observed`}
-        flush
-      >
-        <DailyTrendChart rows={days} now={now} units={units} />
-      </Panel>
-
-      <Panel span={5} title="By day" note={`${u.temp} · ${u.precip}`}>
-        <DayList rows={days} units={units} today={today} currentTemp={current.temperature_2m} />
-      </Panel>
-
-      <Panel
-        span={7}
-        title="Daylight"
-        note={todayRow ? `${duration(todayRow.daylight)} today` : undefined}
-        flush
-      >
-        <DaylightChart rows={days} />
-        {todayRow?.sunrise && todayRow.sunset && (
-          <div style={{ display: 'flex', gap: 24, marginTop: 10 }}>
-            <Stat label="Sunrise" value={formatHour(parseStamp(todayRow.sunrise.iso).t)} small />
-            <Stat label="Sunset" value={formatHour(parseStamp(todayRow.sunset.iso).t)} small />
-            <Stat label="Daylight" value={duration(todayRow.daylight)} small />
-            <Stat label="Sunshine" value={duration(todayRow.sunshine)} small />
+      <Section title="Right now">
+        <Panel wide>
+          <div className="stats">
+            <Stat
+              label="Wind"
+              value={num(toSpeed(current.wind_speed_10m, units))}
+              unit={u.speed}
+              note={`${compass(current.wind_direction_10m)} · ${windBand(current.wind_speed_10m)}`}
+              color={colors['s-wind']}
+            />
+            <Stat
+              label="Gusts"
+              value={num(toSpeed(current.wind_gusts_10m, units))}
+              unit={u.speed}
+              note={`+${num(toSpeed(current.wind_gusts_10m - current.wind_speed_10m, units))} ${u.speed}`}
+            />
+            <Stat
+              label="Humidity"
+              value={num(current.relative_humidity_2m)}
+              unit="%"
+              note={`Dew point ${num(toTemp(current.dew_point_2m, units))}${u.temp}`}
+              color={colors['s-humidity']}
+            />
+            <Stat
+              label="Pressure"
+              value={num(toPressure(pressureNow, units), pressureDigits(units))}
+              unit={u.pressure}
+              note={
+                pressureTrend == null
+                  ? '—'
+                  : `${pressureTrend > 0.3 ? 'Rising' : pressureTrend < -0.3 ? 'Falling' : 'Steady'} over 3h`
+              }
+              color={colors['s-pressure']}
+            />
+            <Stat
+              label="Cloud cover"
+              value={num(current.cloud_cover)}
+              unit="%"
+              note={visibility == null ? undefined : `Visibility ${num(toDistance(visibility, units), 1)} ${u.distance}`}
+              color={colors['s-cloud']}
+            />
+            <Stat
+              label="UV index"
+              value={num(uvNow, 1)}
+              note={
+                <>
+                  {uv.label}
+                  {todayRow?.uvMax != null && ` · peak ${num(todayRow.uvMax, 1)} today`}
+                  <Meter value={uvNow / 11} color={levelColor(colors, uv.level)} />
+                </>
+              }
+              color={levelColor(colors, uv.level)}
+            />
+            <Stat
+              label="Air quality"
+              value={num(airCurrent?.us_aqi)}
+              note={
+                <>
+                  {aqi.label}
+                  <Meter value={(airCurrent?.us_aqi ?? 0) / 200} color={levelColor(colors, aqi.level)} />
+                </>
+              }
+              color={levelColor(colors, aqi.level)}
+            />
+            <Stat
+              label="Next rain"
+              value={wet ? `${num(wet.precipProb)}%` : 'None'}
+              note={wet ? `${formatWeekday(wet.t)} ${formatHour(wet.t)}` : `Dry for the next ${range}h`}
+              color={colors['s-precip']}
+            />
           </div>
-        )}
-      </Panel>
+        </Panel>
+      </Section>
 
-      <Panel span={6} title="Humidity & dew point" note="% · °" flush>
-        <HumidityChart {...hourly} />
-      </Panel>
+      <Section title={`Next ${range} hours`}>
+        <Panel wide title="Temperature" note={u.temp}>
+          <TemperatureChart {...hourly} />
+        </Panel>
 
-      <Panel span={6} title="Cloud & pressure" note={`% · ${u.pressure}`} flush>
-        <CloudPressureChart {...hourly} />
-      </Panel>
+        {/* Temperature and precipitation are the two questions most visits are about, so
+            both get the full row; the supporting four tile beneath them, four across on a
+            wide screen and two across on a laptop — an even split at either size. */}
+        <Panel wide title="Precipitation" note={`chance % · ${u.precip}`}>
+          <PrecipitationChart {...hourly} />
+        </Panel>
 
-      <Panel span={6} title="UV index" note="daylight hours only" flush>
-        <UvChart {...hourly} />
-      </Panel>
+        <Panel title="Wind" note={u.speed}>
+          <WindChart {...hourly} height={170} />
+        </Panel>
 
-      <Panel span={6} title="Pollutants" note="vs WHO guideline" flush>
-        {currentAqiRow ? (
-          <PollutantChart current={currentAqiRow} />
-        ) : (
-          <p className="stat__note">Air quality data is unavailable for this location.</p>
-        )}
-      </Panel>
+        <Panel title="Humidity & dew point" note={`% · ${u.temp}`}>
+          <HumidityChart {...hourly} height={170} />
+        </Panel>
+
+        <Panel title="Cloud & pressure" note={`% · ${u.pressure}`}>
+          <CloudPressureChart {...hourly} height={170} />
+        </Panel>
+
+        <Panel title="UV index">
+          <UvChart {...hourly} height={170} />
+        </Panel>
+      </Section>
+
+      <Section title="Past week and forecast">
+        <Panel wide title="Daily range" note={`${u.temp} · shaded = observed`}>
+          <DailyTrendChart rows={days} now={now} units={units} />
+        </Panel>
+
+        <Panel title="By day" note={`${u.temp} · ${u.precip}`}>
+          <DayList rows={days} units={units} today={today} currentTemp={current.temperature_2m} />
+        </Panel>
+
+        <Panel title="Daylight" note={todayRow ? `${duration(todayRow.daylight)} today` : undefined}>
+          <DaylightChart rows={days} height={214} />
+          {todayRow?.sunrise && todayRow.sunset && (
+            <div className="stats" style={{ marginTop: 16 }}>
+              <Stat label="Sunrise" value={formatHour(parseStamp(todayRow.sunrise.iso).t)} small />
+              <Stat label="Sunset" value={formatHour(parseStamp(todayRow.sunset.iso).t)} small />
+              <Stat label="Daylight" value={duration(todayRow.daylight)} small />
+              <Stat label="Sunshine" value={duration(todayRow.sunshine)} small />
+            </div>
+          )}
+        </Panel>
+      </Section>
 
       {airRows.length > 0 && (
-        <Panel span={12} title="Air quality index" note="US AQI · next 4 days" flush>
-          <AqiChart rows={airRows} now={now} />
-        </Panel>
+        <Section title="Air quality">
+          <Panel wide title="Index" note="next 4 days">
+            <AqiChart rows={airRows} now={now} />
+          </Panel>
+
+          <Panel wide title="Pollutants" note="% of WHO guideline">
+            <PollutantChart current={currentAqiRow} />
+          </Panel>
+        </Section>
       )}
 
-      <Panel span={12} title={`Hourly detail · next ${range} hours`} note={`${window.length} rows`}>
-        <HourTable rows={window} units={units} />
-      </Panel>
-
-      <Panel span={12}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px' }}>
-          <Stat label="Latitude" value={forecast.latitude.toFixed(3)} small />
-          <Stat label="Longitude" value={forecast.longitude.toFixed(3)} small />
-          <Stat
-            label="Elevation"
-            value={num(toElevation(forecast.elevation, units))}
-            unit={u.length}
-            small
-          />
-          <Stat label="Timezone" value={forecast.timezone_abbreviation} note={forecast.timezone} small />
-          <Stat
-            label="Precip total"
-            value={num(
-              toPrecip(
-                days.filter((day) => !day.past).reduce((sum, day) => sum + (day.precipSum ?? 0), 0),
-                units,
-              ),
-              digits,
-            )}
-            unit={u.precip}
-            note="forecast window"
-            small
-          />
+      {/* Level three: reference data, folded away until asked for. */}
+      <details className="disclosure">
+        <summary>
+          Hourly detail
+          <span className="disclosure__note">{window.length} rows</span>
+        </summary>
+        <div className="bento">
+          <Panel wide>
+            <HourTable rows={window} units={units} />
+          </Panel>
+          <Panel wide title="Station">
+            <div className="stats">
+              <Stat label="Latitude" value={forecast.latitude.toFixed(3)} small />
+              <Stat label="Longitude" value={forecast.longitude.toFixed(3)} small />
+              <Stat label="Elevation" value={num(toElevation(forecast.elevation, units))} unit={u.length} small />
+              <Stat label="Timezone" value={forecast.timezone_abbreviation} note={forecast.timezone} small />
+              <Stat
+                label="Forecast precipitation"
+                value={num(
+                  toPrecip(
+                    days.filter((day) => !day.past).reduce((sum, day) => sum + (day.precipSum ?? 0), 0),
+                    units,
+                  ),
+                  digits,
+                )}
+                unit={u.precip}
+                small
+              />
+            </div>
+          </Panel>
         </div>
-      </Panel>
+      </details>
     </main>
   )
 }
