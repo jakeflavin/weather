@@ -74,7 +74,8 @@ identity colours: those hues are content, not chrome, and never appear on a cont
 Two layout rules do most of the work:
 
 - **Sections carry the hierarchy.** The page is a hero answering "what is it like out
-  there", then four bands of panels. A section's heading sits on the same surface as the
+  there" — the reading, the condition, a few flags for what changes your day, and the next
+  twelve hours — then four bands of panels. A section's heading sits on the same surface as the
   panels it introduces, with the sunken background showing only in the gap *between*
   sections — a heading on its own strip above a rule reads as a divider, not a title.
 - **Rows always fill.** Panels are flex items, not grid tracks, so a row that does not

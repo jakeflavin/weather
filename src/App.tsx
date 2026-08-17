@@ -3,6 +3,7 @@ import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 import { Sunrise, Sunset } from 'lucide-react'
 import { LocationBar } from './components/LocationBar'
 import { DayList } from './components/DayList'
+import { HourStrip } from './components/HourStrip'
 import { HourTable } from './components/HourTable'
 import { Panel } from './components/Panel'
 import { Section } from './components/Section'
@@ -265,6 +266,25 @@ function Dashboard({
     })
   }
 
+  // Whichever of the two is still ahead — after dark that is tomorrow's sunrise, which is
+  // why the next day's row is consulted rather than clamping to today's.
+  const sunrise = todayRow?.sunrise?.t
+  const sunset = todayRow?.sunset?.t
+  const nextSunrise = days.find((row) => (row.sunrise?.t ?? 0) > now)?.sunrise?.t
+  if (sunrise != null && sunset != null) {
+    const next =
+      now < sunrise
+        ? { label: 'Sunrise', at: sunrise }
+        : now < sunset
+          ? { label: 'Sunset', at: sunset }
+          : nextSunrise != null
+            ? { label: 'Sunrise', at: nextSunrise }
+            : null
+    if (next) {
+      flags.push({ label: next.label, value: formatHour(next.at), color: colors['s-pressure'] })
+    }
+  }
+
   return (
     <main>
       {/* Level one: the answer, before any chart. */}
@@ -313,6 +333,8 @@ function Dashboard({
             <Flag key={flag.label} label={flag.label} value={flag.value} color={flag.color} />
           ))}
         </div>
+
+        <HourStrip rows={window} units={units} />
       </div>
 
       <Section title="Right now">

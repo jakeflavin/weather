@@ -274,7 +274,6 @@ summary {
   position: relative;
   flex: 1 1 300px;
   min-width: 240px;
-  max-width: 460px;
   display: flex;
   align-items: center;
 }
@@ -382,7 +381,8 @@ summary {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -502,6 +502,57 @@ summary {
   font-size: var(--font-small);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The hourly strip takes the width the hero would otherwise leave empty, and wraps to its
+ * own line before it would squeeze the headline reading.
+ */
+.hourstrip {
+  display: flex;
+  flex: 1 1 420px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hourstrip::-webkit-scrollbar {
+  display: none;
+}
+
+.hourstrip__cell {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 46px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.hourstrip__cell:hover {
+  background: var(--surface-hi);
+}
+
+.hourstrip__time {
+  font-size: var(--font-lozenge);
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.hourstrip__temp {
+  font-size: var(--font-body);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Always rendered, blank below 10%, so every cell is the same height. */
+.hourstrip__precip {
+  font-size: var(--font-lozenge);
+  color: var(--s-precip);
+  font-variant-numeric: tabular-nums;
+  min-height: 14px;
 }
 
 /* Two or three facts that change what you do today, pulled out of the panels below. */
