@@ -700,10 +700,14 @@ summary {
   margin-left: 2px;
 }
 
+/* One line always, so the meter below it never shifts relative to the stat alongside. */
 .stat__note {
   font-size: var(--font-small);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .meter {
@@ -844,7 +848,7 @@ table.data tr[data-daybreak='true'] td {
 }
 
 .day[data-past='true'] {
-  color: var(--dim);
+  opacity: 0.55;
 }
 
 .day[data-today='true'] .day__name {

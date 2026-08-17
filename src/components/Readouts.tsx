@@ -7,6 +7,7 @@ export function Stat({
   value,
   unit,
   note,
+  meter,
   small = false,
   color,
 }: {
@@ -14,6 +15,12 @@ export function Stat({
   value: ReactNode
   unit?: string
   note?: ReactNode
+  /**
+   * A level bar, as its own slot rather than nested in `note`. Kept separate so a note that
+   * runs long cannot push the bar down and misalign it against the stat beside it — the
+   * note clamps to one line, and the bar always sits at the same offset.
+   */
+  meter?: ReactNode
   small?: boolean
   /** Ties the number to its series colour where the same quantity is plotted nearby. */
   color?: string
@@ -26,6 +33,7 @@ export function Stat({
         {unit && <span className="stat__unit">{unit}</span>}
       </div>
       {note && <div className="stat__note">{note}</div>}
+      {meter}
     </div>
   )
 }

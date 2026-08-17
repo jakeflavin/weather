@@ -84,7 +84,10 @@ export function TemperatureChart({ rows, bands, now, units, height = 190 }: Hour
             <YAxis
               {...axisProps(colors)}
               width={30}
-              domain={['auto', 'auto']}
+              domain={[
+                (min: number) => Math.floor(min - 1),
+                (max: number) => Math.ceil(max + 1),
+              ]}
               tickFormatter={(value: number) => num(toTemp(value, units))}
             />
             {/* Freezing is the one threshold worth marking: it changes what falls. */}
@@ -469,7 +472,7 @@ export function CloudPressureChart({ rows, bands, now, units, height = 170 }: Ho
               stroke={colors['s-cloud']}
               strokeWidth={1}
               fill={colors['s-cloud']}
-              fillOpacity={0.16}
+              fillOpacity={0.1}
               dot={false}
               connectNulls
               isAnimationActive={false}

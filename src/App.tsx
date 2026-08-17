@@ -364,24 +364,15 @@ function Dashboard({
             <Stat
               label="UV index"
               value={num(uvNow, 1)}
-              note={
-                <>
-                  {uv.label}
-                  {todayRow?.uvMax != null && ` · peak ${num(todayRow.uvMax, 1)} today`}
-                  <Meter value={uvNow / 11} color={levelColor(colors, uv.level)} />
-                </>
-              }
+              note={`${uv.label}${todayRow?.uvMax != null ? ` · max ${num(todayRow.uvMax, 1)}` : ''}`}
+              meter={<Meter value={uvNow / 11} color={levelColor(colors, uv.level)} />}
               color={levelColor(colors, uv.level)}
             />
             <Stat
               label="Air quality"
               value={num(airCurrent?.us_aqi)}
-              note={
-                <>
-                  {aqi.label}
-                  <Meter value={(airCurrent?.us_aqi ?? 0) / 200} color={levelColor(colors, aqi.level)} />
-                </>
-              }
+              note={aqi.label}
+              meter={<Meter value={(airCurrent?.us_aqi ?? 0) / 200} color={levelColor(colors, aqi.level)} />}
               color={levelColor(colors, aqi.level)}
             />
             <Stat
@@ -418,7 +409,7 @@ function Dashboard({
           <CloudPressureChart {...hourly} height={170} />
         </Panel>
 
-        <Panel title="UV index">
+        <Panel title="UV index" note="daylight only">
           <UvChart {...hourly} height={170} />
         </Panel>
       </Section>

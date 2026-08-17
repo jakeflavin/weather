@@ -11,6 +11,7 @@ import {
   Bar,
   Cell,
   ComposedChart,
+  Line,
   ReferenceArea,
   ReferenceLine,
   ResponsiveContainer,
@@ -141,9 +142,10 @@ export function DailyTrendChart({
               yAxisId="t"
               type="monotone"
               dataKey="apparentRange"
-              stroke="none"
-              fill={colors['s-feels']}
-              fillOpacity={0.14}
+              stroke={colors['s-feels']}
+              strokeWidth={1}
+              strokeDasharray="3 3"
+              fill="none"
               connectNulls
               activeDot={false}
               isAnimationActive={false}
@@ -206,7 +208,7 @@ export function DailyTrendChart({
             color: colors['s-temp'],
             shape: 'box',
           },
-          { label: 'Feels-like range', color: colors['s-feels'], shape: 'box' },
+          { label: 'Feels-like range', color: colors['s-feels'], shape: 'dash' },
           {
             label: `Precip ${u.precip}`,
             color: colors['s-precip'],
@@ -290,7 +292,7 @@ export function DaylightChart({
               isAnimationActive={false}
             >
               {data.map((row) => (
-                <Cell key={row.t} fillOpacity={row.past ? 0.22 : 0.45} />
+                <Cell key={row.t} fillOpacity={row.past ? 0.18 : 0.34} />
               ))}
             </Bar>
             <NowLine now={now} colors={colors} />
@@ -365,14 +367,13 @@ export function AqiChart({ rows, now, height = 170 }: { rows: AqiRow[]; now: num
               width={26}
               domain={[0, () => Math.max(60, Math.ceil((peak * 1.25) / 25) * 25)]}
             />
-            <Area
+            <Line
               type="monotone"
               dataKey="usAqi"
               stroke={colors['s-aqi']}
-              strokeWidth={1.5}
-              fill={colors['s-aqi']}
-              fillOpacity={0.12}
+              strokeWidth={1.75}
               dot={false}
+              activeDot={{ r: 2.5, strokeWidth: 0 }}
               connectNulls
               isAnimationActive={false}
             />
