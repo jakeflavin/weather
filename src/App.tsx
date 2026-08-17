@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useIsFetching, useQueryClient } from '@tanstack/react-query'
+import { Sunrise, Sunset } from 'lucide-react'
 import { LocationBar } from './components/LocationBar'
 import { DayList } from './components/DayList'
 import { HourTable } from './components/HourTable'
 import { Panel } from './components/Panel'
 import { Section } from './components/Section'
-import { Flag, Meter, Stat } from './components/Readouts'
+import { Flag, Meter, Stat, WindArrow } from './components/Readouts'
+import { WeatherIcon } from './components/WeatherIcon'
 import {
   CloudPressureChart,
   HumidityChart,
@@ -276,8 +278,11 @@ function Dashboard({
         </div>
 
         <div className="hero__temp">
-          {num(toTemp(current.temperature_2m, units))}
-          <sup>{u.temp}</sup>
+          <WeatherIcon code={current.weather_code} isDay={current.is_day === 1} size={52} />
+          <span className="hero__reading">
+            {num(toTemp(current.temperature_2m, units))}
+            <sup>{u.temp}</sup>
+          </span>
         </div>
 
         <div className="hero__cond">
@@ -312,12 +317,17 @@ function Dashboard({
 
       <Section title="Right now">
         <Panel wide>
-          <div className="stats">
+          <div className="stats stats--fixed">
             <Stat
               label="Wind"
               value={num(toSpeed(current.wind_speed_10m, units))}
               unit={u.speed}
-              note={`${compass(current.wind_direction_10m)} · ${windBand(current.wind_speed_10m)}`}
+              note={
+                <>
+                  <WindArrow degrees={current.wind_direction_10m} /> {compass(current.wind_direction_10m)} ·{' '}
+                  {windBand(current.wind_speed_10m)}
+                </>
+              }
               color={colors['s-wind']}
             />
             <Stat
@@ -426,8 +436,26 @@ function Dashboard({
           <DaylightChart rows={days} height={214} />
           {todayRow?.sunrise && todayRow.sunset && (
             <div className="stats" style={{ marginTop: 16 }}>
-              <Stat label="Sunrise" value={formatHour(parseStamp(todayRow.sunrise.iso).t)} small />
-              <Stat label="Sunset" value={formatHour(parseStamp(todayRow.sunset.iso).t)} small />
+              <Stat
+                label="Sunrise"
+                value={
+                  <>
+                    <Sunrise size={17} strokeWidth={1.75} color="var(--s-pressure)" style={{ verticalAlign: '-3px' }} />{' '}
+                    {formatHour(parseStamp(todayRow.sunrise.iso).t)}
+                  </>
+                }
+                small
+              />
+              <Stat
+                label="Sunset"
+                value={
+                  <>
+                    <Sunset size={17} strokeWidth={1.75} color="var(--s-pressure)" style={{ verticalAlign: '-3px' }} />{' '}
+                    {formatHour(parseStamp(todayRow.sunset.iso).t)}
+                  </>
+                }
+                small
+              />
               <Stat label="Daylight" value={duration(todayRow.daylight)} small />
               <Stat label="Sunshine" value={duration(todayRow.sunshine)} small />
             </div>

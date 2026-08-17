@@ -2,6 +2,7 @@ import type { DayRow } from '../lib/series'
 import { formatDayMonth, formatWeekday } from '../lib/time'
 import { UNIT_LABELS, num, precipDigits, toPrecip, toTemp, type UnitSystem } from '../lib/units'
 import { weatherCode } from '../lib/weatherCode'
+import { WeatherIcon } from './WeatherIcon'
 
 /**
  * The day-by-day list.
@@ -50,7 +51,7 @@ export function DayList({
               {isToday ? 'Today' : `${formatWeekday(row.t)} ${formatDayMonth(row.t).replace(/\D+/g, '')}`}
             </span>
             <span className="day__glyph" title={code.label}>
-              {code.glyph}
+              <WeatherIcon code={row.code} size={18} />
             </span>
             <span className="day__cond" title={`${formatDayMonth(row.t)} · ${code.label}`}>
               {code.short}

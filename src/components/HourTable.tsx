@@ -12,6 +12,7 @@ import {
   type UnitSystem,
 } from '../lib/units'
 import { weatherCode } from '../lib/weatherCode'
+import { WeatherIcon } from './WeatherIcon'
 
 /**
  * The raw hourly numbers, for when a chart is not precise enough.
@@ -52,7 +53,9 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
                 {row.hour === 0 || index === 0 ? `${formatWeekday(row.t)} ` : ''}
                 {formatHour(row.t)}
               </td>
-              <td title={weatherCode(row.code).label}>{weatherCode(row.code).glyph}</td>
+              <td title={weatherCode(row.code).label}>
+                <WeatherIcon code={row.code} isDay={row.isDay} size={15} />
+              </td>
               <td className="strong">{num(toTemp(row.temp ?? NaN, units))}</td>
               <td>{num(toTemp(row.apparent ?? NaN, units))}</td>
               <td>{num(toTemp(row.dewPoint ?? NaN, units))}</td>

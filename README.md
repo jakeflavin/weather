@@ -67,7 +67,8 @@ sizes, quiet sentence-case section headers, and blue as the only interactive acc
 Tokens and shadows are lifted directly from fibo's `styles.css`.
 
 What weather adds is a data palette — one colour per measured quantity, held constant
-everywhere that quantity appears. That follows the same rule fibo applies to its per-player
+everywhere that quantity appears, including the sky icons (lucide) in the hero, the day
+list and the hourly table. That follows the same rule fibo applies to its per-player
 identity colours: those hues are content, not chrome, and never appear on a control.
 
 Two layout rules do most of the work:
@@ -78,6 +79,9 @@ Two layout rules do most of the work:
   sections — a heading on its own strip above a rule reads as a divider, not a title.
 - **Rows always fill.** Panels are flex items, not grid tracks, so a row that does not
   divide evenly grows its members instead of stranding empty cells. A grid of `auto-fit`
-  tracks cannot do this: five tiles in a four-track grid leaves three holes.
+  tracks cannot do this: five tiles in a four-track grid leaves three holes. The eight
+  condition readings are the exception — they use fixed counts of 8/4/2, all of which
+  divide eight, because a strip of numbers also has to keep its columns aligned between
+  rows, which growing flex items do not.
 
 Data from [Open-Meteo](https://open-meteo.com), free for non-commercial use under CC BY 4.0.

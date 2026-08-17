@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Navigation } from 'lucide-react'
 
 /** Label, value, footnote — the atom the condition tiles are built from. */
 export function Stat({
@@ -52,5 +53,24 @@ export function Flag({ label, value, color }: { label: string; value: ReactNode;
       <span className="flag__label">{label}</span>
       <span className="flag__value">{value}</span>
     </div>
+  )
+}
+
+/**
+ * A compass arrow for a wind bearing.
+ *
+ * Open-Meteo reports the direction wind blows *from*, so the arrow is turned to point the
+ * way the air is travelling — 180° off the reported bearing, which is what a wind barb on
+ * a chart does and what anyone reading it expects.
+ */
+export function WindArrow({ degrees, size = 14 }: { degrees: number | null | undefined; size?: number }) {
+  if (degrees == null || Number.isNaN(degrees)) return null
+  return (
+    <Navigation
+      size={size}
+      strokeWidth={1.75}
+      aria-hidden="true"
+      style={{ transform: `rotate(${degrees + 180}deg)`, flex: 'none', verticalAlign: '-2px' }}
+    />
   )
 }

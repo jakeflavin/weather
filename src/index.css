@@ -440,8 +440,8 @@ summary {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 40px;
-  padding: 24px 16px;
+  gap: 16px 32px;
+  padding: 20px 16px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 }
@@ -465,8 +465,14 @@ summary {
 
 .hero__temp {
   display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero__reading {
+  display: flex;
   align-items: flex-start;
-  font-size: clamp(48px, 8vw, 68px);
+  font-size: clamp(44px, 7vw, 60px);
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -502,8 +508,8 @@ summary {
 .hero__flags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-left: auto;
+  align-items: center;
+  gap: 8px 24px;
 }
 
 .flag {
@@ -629,6 +635,30 @@ summary {
 
 /* ────────────────────────────────────────────────────────────── readouts */
 
+/*
+ * The eight condition readings use fixed column counts — 8, 4, or 2 — all of which divide
+ * eight exactly. That keeps every row full *and* keeps the columns aligned between rows,
+ * which growing flex items do not: a row of three stretches each one wider than a row of
+ * five above it, and the strip stops reading as a table.
+ */
+.stats.stats--fixed {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+@media (min-width: 620px) {
+  .stats.stats--fixed {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1180px) {
+  .stats.stats--fixed {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
 /* Flex, not grid, for the same reason the bento is: a trailing stat grows into the space
    left over instead of stranding empty cells beside it. */
 .stats {
@@ -677,6 +707,7 @@ summary {
 }
 
 .meter {
+  max-width: 148px;
   height: 4px;
   border-radius: 2px;
   background: var(--surface-hi);

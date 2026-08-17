@@ -458,7 +458,7 @@ export function PollutantChart({
               domain={[0, (max: number) => Math.max(120, Math.ceil(max / 25) * 25)]}
               tickFormatter={(value: number) => `${value}%`}
             />
-            <YAxis {...axisProps(colors)} type="category" dataKey="name" width={44} />
+            <YAxis {...axisProps(colors)} type="category" dataKey="name" width={48} interval={0} />
             {/* The guideline itself: bars crossing this line are over the limit. */}
             <ReferenceLine x={100} stroke={colors.dim} strokeDasharray="2 2" />
             <Bar dataKey="pct" maxBarSize={12} isAnimationActive={false}>
