@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The mark is the app: a bar chart of a day's temperature, on paper. -->
+  <rect width="64" height="64" fill="#f2f1ed" />
+  <g fill="#16181c">
+    <rect x="10" y="38" width="7" height="16" />
+    <rect x="21" y="28" width="7" height="26" />
+    <rect x="32" y="16" width="7" height="38" />
+    <rect x="43" y="30" width="7" height="24" />
+  </g>
+  <rect x="10" y="8" width="40" height="2" fill="#d2542a" />
+</svg>

@@ -1,0 +1,15 @@
+{
+  "name": "Weather",
+  "short_name": "Weather",
+  "description": "A dense, chart-first weather dashboard: hourly and daily forecasts, wind, pressure, UV and air quality, for anywhere.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f2f1ed",
+  "theme_color": "#f2f1ed",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
