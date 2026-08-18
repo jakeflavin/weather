@@ -24,6 +24,23 @@ const BASEMAP = {
 const BASEMAP_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · radar <a href="https://www.rainviewer.com/">RainViewer</a>'
 
+/**
+ * The highest zoom RainViewer actually renders. Ask for z8 and it returns a placeholder
+ * PNG reading "zoom level not supported" — the same image whatever palette you chose,
+ * which is why a palette change appeared to do nothing once you had zoomed in.
+ *
+ * Leaflet's answer is `maxNativeZoom`: stop requesting new tiles past this level and
+ * upscale the last real ones instead. Radar goes soft as you zoom rather than vanishing.
+ * Verified for radar by probing the tile server; satellite is set a level lower as a
+ * precaution, since its frame list was empty throughout development and could not be
+ * checked the same way.
+ */
+const MAX_NATIVE_ZOOM: Record<LayerKind, number> = { radar: 7, satellite: 6 }
+
+/** Past the native limit the overlay is upscaled, so there is little point going further. */
+const MAP_MAX_ZOOM = 10
+const MAP_MIN_ZOOM = 3
+
 /** Milliseconds per frame while playing, and the pause held on the newest frame. */
 const FRAME_MS = 450
 const HOLD_MS = 1200
@@ -122,6 +139,8 @@ export default function RadarPanel({
     const map = L.map(container, {
       center: [lat, lon],
       zoom: 7,
+      minZoom: MAP_MIN_ZOOM,
+      maxZoom: MAP_MAX_ZOOM,
       // The map sits inside a long scrolling page; a wheel that zooms instead of scrolling
       // traps the reader. Buttons, double-click and pinch all still zoom.
       scrollWheelZoom: false,
@@ -133,7 +152,7 @@ export default function RadarPanel({
     baseRef.current = L.tileLayer(BASEMAP[theme], {
       attribution: BASEMAP_ATTRIBUTION,
       subdomains: 'abcd',
-      maxZoom: 18,
+      maxZoom: MAP_MAX_ZOOM,
     }).addTo(map)
 
     markerRef.current = L.circleMarker([lat, lon], {
@@ -194,7 +213,8 @@ export default function RadarPanel({
       const layer = L.tileLayer(frameTileUrl(radarIndex, frame, settings), {
         opacity: 0,
         zIndex: 10,
-        maxZoom: 18,
+        maxZoom: MAP_MAX_ZOOM,
+        maxNativeZoom: MAX_NATIVE_ZOOM[settings.kind],
         // Keep tiles for frames that have scrolled out of view, so a replay is instant.
         keepBuffer: 4,
       })
@@ -306,17 +326,16 @@ export default function RadarPanel({
               type="button"
               aria-pressed={settings.kind === value}
               disabled={value === 'satellite' && !satelliteAvailable}
-              title={
-                value === 'satellite' && !satelliteAvailable
-                  ? 'No satellite frames are published right now'
-                  : undefined
-              }
               onClick={() => update({ kind: value })}
             >
               {value === 'radar' ? 'Radar' : 'Satellite'}
             </button>
           ))}
         </div>
+
+        {!satelliteAvailable && data && (
+          <span className="radar__hint">Satellite has no frames published right now</span>
+        )}
 
         <label className="radar__field">
           <span>Palette</span>

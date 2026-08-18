@@ -1190,6 +1190,11 @@ table.data tr[data-daybreak='true'] td {
   accent-color: var(--accent);
 }
 
+.radar__hint {
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
 .radar__check {
   display: flex;
   align-items: center;
