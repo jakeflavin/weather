@@ -221,6 +221,16 @@ summary {
   color: var(--text);
 }
 
+.segmented button:disabled {
+  color: var(--dim);
+  opacity: 0.5;
+  cursor: default;
+}
+
+.segmented button:disabled:hover {
+  background: none;
+}
+
 .segmented button[aria-pressed='true'] {
   background: var(--accent);
   color: var(--accent-ink);
@@ -1049,6 +1059,177 @@ table.data tr[data-daybreak='true'] td {
   border-radius: 2px;
 }
 
+/* ──────────────────────────────────────────────────────────────── radar */
+
+.radar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radar__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.radar__play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+/* One tick per frame: a scrubber that also shows how much history there is. */
+.radar__timeline {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  flex: 1 1 200px;
+  min-width: 120px;
+  height: 18px;
+}
+
+.radar__tick {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  border-radius: 2px;
+  padding: 0;
+  background: var(--surface-hi);
+  cursor: pointer;
+}
+
+.radar__tick:hover {
+  background: var(--line-strong);
+}
+
+.radar__tick[data-active='true'] {
+  background: var(--accent);
+}
+
+/* Nowcast frames are model output; the stripe keeps them from reading as observation. */
+.radar__tick[data-forecast='true'] {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface-hi) 0 3px,
+    transparent 3px 6px
+  );
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.radar__tick[data-forecast='true'][data-active='true'] {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.radar__time {
+  font-size: var(--font-small);
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radar__badge {
+  border-radius: 2px;
+  padding: 1px 6px;
+  font-size: var(--font-lozenge);
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.radar__map {
+  height: 440px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface-hi);
+  /* Leaflet panes sit above the page otherwise and cover the sticky app bar. */
+  z-index: 0;
+  isolation: isolate;
+}
+
+.radar__state {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
+.radar__options {
+  display: flex;
+  align-items: center;
+  gap: 10px 20px;
+  flex-wrap: wrap;
+}
+
+.radar__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-small);
+  color: var(--dim);
+}
+
+.radar__field select {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: var(--font-small);
+}
+
+.radar__field input[type='range'] {
+  width: 96px;
+  accent-color: var(--accent);
+}
+
+.radar__check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-small);
+  color: var(--dim);
+  cursor: pointer;
+}
+
+.radar__check input {
+  accent-color: var(--accent);
+}
+
+/* Leaflet's own chrome, brought into the design system. */
+.radar__map .leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--surface-hi);
+}
+
+.radar__map .leaflet-bar a {
+  background: var(--surface);
+  color: var(--text);
+  border-bottom-color: var(--line);
+}
+
+.radar__map .leaflet-bar a:hover {
+  background: var(--surface-hi);
+  color: var(--text);
+}
+
+.radar__map .leaflet-control-attribution {
+  background: var(--surface);
+  color: var(--dim);
+  font-size: var(--font-lozenge);
+}
+
+.radar__map .leaflet-control-attribution a {
+  color: var(--accent);
+}
+
 /* ────────────────────────────────────────────────────── states & footer */
 
 .notice {
@@ -1100,6 +1281,10 @@ table.data tr[data-daybreak='true'] td {
 /* ────────────────────────────────────────────────────────── narrow view */
 
 @media (max-width: 600px) {
+  .radar__map {
+    height: 300px;
+  }
+
   /* The tool groups need a full row of their own here; letting them wrap beside the brand
      leaves it floating against a two-line block. */
   .appbar {

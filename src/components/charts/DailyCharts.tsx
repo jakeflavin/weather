@@ -20,6 +20,7 @@ import {
   YAxis,
 } from 'recharts'
 import type { AqiRow, DayRow } from '../../lib/series'
+import { normalFor, type Normals } from '../../lib/climate'
 import { aqiBand, weatherCode } from '../../lib/weatherCode'
 import { ChartFrame, Legend, NowLine, Tip } from './base'
 import {
@@ -40,6 +41,7 @@ import {
   precipDigits,
   toPrecip,
   toTemp,
+  toTempDelta,
   type UnitSystem,
 } from '../../lib/units'
 
@@ -63,29 +65,39 @@ const formatDayTick = (t: number) => formatDayMonth(t)
 interface TrendRow extends DayRow {
   range: [number, number] | null
   apparentRange: [number, number] | null
+  /** The ten-year low–high band for this calendar date, where history is available. */
+  normalRange: [number, number] | null
+  normalMax: number | null
 }
 
 export function DailyTrendChart({
   rows,
   now,
   units,
+  normals,
   height = 230,
 }: {
   rows: DayRow[]
   now: number
   units: UnitSystem
+  normals?: Normals | null
   height?: number
 }) {
   const colors = useChartColors()
   const u = UNIT_LABELS[units]
   const digits = precipDigits(units)
 
-  const data: TrendRow[] = rows.map((row) => ({
-    ...row,
-    range: row.tempMin != null && row.tempMax != null ? [row.tempMin, row.tempMax] : null,
-    apparentRange:
-      row.apparentMin != null && row.apparentMax != null ? [row.apparentMin, row.apparentMax] : null,
-  }))
+  const data: TrendRow[] = rows.map((row) => {
+    const normal = normalFor(normals, row.day)
+    return {
+      ...row,
+      range: row.tempMin != null && row.tempMax != null ? [row.tempMin, row.tempMax] : null,
+      apparentRange:
+        row.apparentMin != null && row.apparentMax != null ? [row.apparentMin, row.apparentMax] : null,
+      normalRange: normal ? [normal.tempMin, normal.tempMax] : null,
+      normalMax: normal?.tempMax ?? null,
+    }
+  })
 
   const firstPast = data.find((row) => row.past)
   const lastPast = [...data].reverse().find((row) => row.past)
@@ -106,6 +118,19 @@ export function DailyTrendChart({
               />
             )}
             <XAxis {...dayAxis(colors)} ticks={dayTicks(data)} tickFormatter={formatDayTick} />
+            {normals && (
+              <Area
+                yAxisId="t"
+                type="monotone"
+                dataKey="normalRange"
+                stroke="none"
+                fill={colors['line-strong']}
+                fillOpacity={0.18}
+                connectNulls
+                activeDot={false}
+                isAnimationActive={false}
+              />
+            )}
             <YAxis
               {...axisProps(colors)}
               yAxisId="t"
@@ -193,6 +218,25 @@ export function DailyTrendChart({
                         label: 'Condition',
                         value: weatherCode(row.code).short,
                       },
+                      ...(row.normalRange
+                        ? [
+                            {
+                              label: `${normals?.years ?? 10}-yr avg`,
+                              value: `${num(toTemp(row.normalRange[0], units))} – ${num(toTemp(row.normalRange[1], units))}${u.temp}`,
+                              color: colors['line-strong'],
+                            },
+                            {
+                              label: 'vs average',
+                              value:
+                                row.tempMax == null || row.normalMax == null
+                                  ? '—'
+                                  : `${row.tempMax - row.normalMax >= 0 ? '+' : '−'}${num(
+                                      Math.abs(toTempDelta(row.tempMax - row.normalMax, units)),
+                                      1,
+                                    )}${u.temp}`,
+                            },
+                          ]
+                        : []),
                     ]}
                   />
                 )
@@ -209,6 +253,15 @@ export function DailyTrendChart({
             shape: 'box',
           },
           { label: 'Feels-like range', color: colors['s-feels'], shape: 'dash' },
+          ...(normals
+            ? [
+                {
+                  label: `${normals.years}-yr average`,
+                  color: colors['line-strong'],
+                  shape: 'box' as const,
+                },
+              ]
+            : []),
           {
             label: `Precip ${u.precip}`,
             color: colors['s-precip'],

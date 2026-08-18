@@ -6,6 +6,7 @@
  */
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
+const ARCHIVE_URL = 'https://archive-api.open-meteo.com/v1/archive'
 const AIR_QUALITY_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality'
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 
@@ -186,4 +187,46 @@ export async function searchPlaces(name: string, signal?: AbortSignal): Promise<
 export function labelFromTimezone(timezone: string): string {
   const city = timezone.split('/').pop() ?? timezone
   return city.replace(/_/g, ' ')
+}
+
+// ─────────────────────────────────────────────────────────── historical archive
+
+/** Years of history averaged into the daily climatology. */
+export const CLIMATE_YEARS = 10
+
+/**
+ * The archive lags real time by several days, so the window stops short of today rather
+ * than asking for observations that do not exist yet.
+ */
+const ARCHIVE_LAG_DAYS = 7
+
+export interface Archive {
+  daily: {
+    time: string[]
+    temperature_2m_max: (number | null)[]
+    temperature_2m_min: (number | null)[]
+    precipitation_sum: (number | null)[]
+  }
+}
+
+/**
+ * Ten years of daily highs, lows and rainfall for one point — about 100 KB, fetched once a
+ * day. It is a lot to ask for a background band on one chart, but the alternative is ten
+ * separate windowed requests, which costs more in round trips than it saves in bytes.
+ */
+export function fetchArchive(lat: number, lon: number, signal?: AbortSignal): Promise<Archive> {
+  const end = new Date(Date.now() - ARCHIVE_LAG_DAYS * 86_400_000)
+  const start = new Date(end)
+  start.setFullYear(start.getFullYear() - CLIMATE_YEARS)
+  const iso = (date: Date) => date.toISOString().slice(0, 10)
+
+  const params = new URLSearchParams({
+    latitude: lat.toFixed(4),
+    longitude: lon.toFixed(4),
+    start_date: iso(start),
+    end_date: iso(end),
+    daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum',
+    timezone: 'auto',
+  })
+  return getJson<Archive>(`${ARCHIVE_URL}?${params}`, signal)
 }

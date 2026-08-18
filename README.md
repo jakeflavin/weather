@@ -1,12 +1,12 @@
 # Weather
 
 A chart-first weather dashboard. Every number the forecast carries, plotted — hourly
-temperature, precipitation, wind, humidity, pressure, cloud, UV and air quality, plus a
-three-week daily range that includes the past week so a forecast has something to be read
-against.
+temperature, precipitation, wind, humidity, pressure, cloud, UV and air quality, a
+three-week daily range against a ten-year baseline, and animated precipitation radar.
 
-No API key, no account, no server. It talks to [Open-Meteo](https://open-meteo.com)
-directly from the browser.
+No API key, no account, no server. It talks to [Open-Meteo](https://open-meteo.com),
+[RainViewer](https://www.rainviewer.com) and [CARTO](https://carto.com) directly from the
+browser, all of which are usable without credentials.
 
 ## Running it
 
@@ -33,6 +33,10 @@ npm run dev
 - **`u`** flips metric/imperial, **`t`** cycles light/auto/dark, **`r`** refetches.
 - The hourly window is 24, 48 or 72 hours, set in the masthead; it drives every hourly
   chart and the detail table at the bottom.
+- The radar plays two hours of observed frames plus any nowcast. Scrub with the timeline,
+  or switch layer, palette and opacity underneath it. The wheel deliberately does **not**
+  zoom — a map that swallows the scroll halfway down a long page is a trap; use the
+  buttons, double-click or pinch.
 - The location lives in the URL, so any view can be linked or bookmarked. Up to eight
   places can be saved to the rail under the search box.
 
@@ -40,11 +44,14 @@ npm run dev
 
 ```
 src/
-  api/openMeteo.ts   one module per remote surface — forecast, air quality, geocoding
+  api/openMeteo.ts   forecast, air quality, geocoding, and the historical archive
+  api/rainviewer.ts  the radar frame index and its tile URLs
   lib/time.ts        naive-local-ISO handling, so the UI runs on the location's clock
   lib/series.ts      parallel API arrays reshaped into chart rows
+  lib/climate.ts     ten years of archive reduced to a daily baseline
   lib/units.ts       metric in, whatever you asked for out
   components/charts/ theme.ts holds the palette + axis defaults; the rest are charts
+  components/RadarPanel.tsx  Leaflet, driven imperatively (see below)
   App.tsx            the panel layout
 ```
 
@@ -58,6 +65,14 @@ Three decisions worth knowing about:
 - **Chart colours live in `index.css`** and are read out with `getComputedStyle`, because
   Recharts writes colours as SVG presentation attributes where `var()` is not reliably
   resolved. The stylesheet stays the one place the palette is defined.
+- **The radar drives Leaflet imperatively**, not through a React wrapper. Smooth animation
+  means keeping every visited frame mounted as its own tile layer and swapping opacity
+  between them; reconciling sixteen tile layers through React on every tick fights that.
+  The panel is lazy-loaded, so Leaflet stays out of the main bundle.
+- **The baseline is a ten-year average, not a climate normal.** WMO normals are computed
+  over thirty years and published by national services; this is ten years of Open-Meteo
+  archive, pooled over a seven-day window to damp the noise. The UI says "10-yr avg" for
+  exactly that reason — calling it a normal would claim more than the data supports.
 
 ## Design
 
@@ -85,4 +100,7 @@ Two layout rules do most of the work:
   divide eight, because a strip of numbers also has to keep its columns aligned between
   rows, which growing flex items do not.
 
-Data from [Open-Meteo](https://open-meteo.com), free for non-commercial use under CC BY 4.0.
+Forecast, air quality and archive data from [Open-Meteo](https://open-meteo.com), free for
+non-commercial use under CC BY 4.0. Radar mosaic from
+[RainViewer](https://www.rainviewer.com). Basemap © [OpenStreetMap](https://www.openstreetmap.org/copyright)
+contributors, © [CARTO](https://carto.com/attributions).

@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 import { Sunrise, Sunset } from 'lucide-react'
 import { LocationBar } from './components/LocationBar'
 import { DayList } from './components/DayList'
+const RadarPanel = lazy(() => import('./components/RadarPanel'))
+
 import { HourStrip } from './components/HourStrip'
 import { HourTable } from './components/HourTable'
 import { Panel } from './components/Panel'
@@ -21,7 +23,7 @@ import { AqiChart, DailyTrendChart, DaylightChart, PollutantChart } from './comp
 import { levelColor, useChartColors } from './components/charts/theme'
 import { describe, useLocations } from './hooks/useLocations'
 import { useSettings, type Theme } from './hooks/useSettings'
-import { useAirQuality, useForecast } from './hooks/useWeather'
+import { useAirQuality, useClimatology, useForecast } from './hooks/useWeather'
 import {
   changeVsYesterday,
   nextWetHour,
@@ -48,6 +50,7 @@ import {
   toTempDelta,
   type UnitSystem,
 } from './lib/units'
+import { departure, type Normals } from './lib/climate'
 import { aqiBand, uvBand, weatherCode, windBand } from './lib/weatherCode'
 
 /** How much of the hourly series the charts and table show. */
@@ -62,6 +65,7 @@ export default function App() {
 
   const forecast = useForecast(current)
   const air = useAirQuality(current)
+  const climate = useClimatology(current)
   const queryClient = useQueryClient()
   const fetching = useIsFetching({ queryKey: ['forecast'] }) > 0
 
@@ -157,6 +161,7 @@ export default function App() {
           forecast={forecast.data}
           airRows={toAqiRows(air.data)}
           airCurrent={air.data?.current}
+          normals={climate.data}
           units={units}
           range={range}
           place={describe(current)}
@@ -192,6 +197,7 @@ function Dashboard({
   forecast,
   airRows,
   airCurrent,
+  normals,
   units,
   range,
   place,
@@ -201,6 +207,7 @@ function Dashboard({
   forecast: NonNullable<ReturnType<typeof useForecast>['data']>
   airRows: ReturnType<typeof toAqiRows>
   airCurrent: NonNullable<ReturnType<typeof useAirQuality>['data']>['current'] | undefined
+  normals: Normals | null | undefined
   units: UnitSystem
   range: Range
   place: string
@@ -263,6 +270,17 @@ function Dashboard({
       label: 'Today',
       value: `${num(toTemp(todayRow.tempMin ?? 0, units))}–${num(toTemp(todayRow.tempMax ?? 0, units))}${u.temp}`,
       color: colors['s-temp'],
+    })
+  }
+
+  // "Is this unusual for here?" is the question a baseline exists to answer, so it goes in
+  // the hero rather than being buried in a chart tooltip. Under a degree is not a story.
+  const todayDeparture = departure(normals, today, todayRow?.tempMax ?? null)
+  if (todayDeparture != null && Math.abs(todayDeparture) >= 1) {
+    flags.push({
+      label: `vs ${normals?.years ?? 10}-yr average`,
+      value: `${todayDeparture >= 0 ? '+' : '−'}${num(Math.abs(toTempDelta(todayDeparture, units)), 1)}${u.temp}`,
+      color: todayDeparture >= 0 ? colors['s-temp'] : colors['s-precip'],
     })
   }
 
@@ -407,6 +425,19 @@ function Dashboard({
         </Panel>
       </Section>
 
+      <Section title="Radar">
+        <Panel wide title="Precipitation mosaic" note="2h observed · nowcast where available">
+          <Suspense fallback={<p className="radar__state">Loading radar…</p>}>
+            <RadarPanel
+              lat={forecast.latitude}
+              lon={forecast.longitude}
+              place={place}
+              utcOffsetSeconds={forecast.utc_offset_seconds}
+            />
+          </Suspense>
+        </Panel>
+      </Section>
+
       <Section title={`Next ${range} hours`}>
         <Panel wide title="Temperature" note={u.temp}>
           <TemperatureChart {...hourly} />
@@ -438,7 +469,7 @@ function Dashboard({
 
       <Section title="Past week and forecast">
         <Panel wide title="Daily range" note={`${u.temp} · shaded = observed`}>
-          <DailyTrendChart rows={days} now={now} units={units} />
+          <DailyTrendChart rows={days} now={now} units={units} normals={normals} />
         </Panel>
 
         <Panel title="By day" note={`${u.temp} · ${u.precip}`}>
