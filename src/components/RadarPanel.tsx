@@ -8,7 +8,6 @@ import {
   fetchRadarIndex,
   frameTileUrl,
   type Frame,
-  type LayerKind,
   type RadarIndex,
 } from '../api/rainviewer'
 import { useResolvedTheme } from '../hooks/useResolvedTheme'
@@ -31,11 +30,9 @@ const BASEMAP_ATTRIBUTION =
  *
  * Leaflet's answer is `maxNativeZoom`: stop requesting new tiles past this level and
  * upscale the last real ones instead. Radar goes soft as you zoom rather than vanishing.
- * Verified for radar by probing the tile server; satellite is set a level lower as a
- * precaution, since its frame list was empty throughout development and could not be
- * checked the same way.
+ * Verified by probing the tile server: z4–z7 return imagery, z8 and up do not.
  */
-const MAX_NATIVE_ZOOM: Record<LayerKind, number> = { radar: 7, satellite: 6 }
+const MAX_NATIVE_ZOOM = 7
 
 /** Past the native limit the overlay is upscaled, so there is little point going further. */
 const MAP_MAX_ZOOM = 10
@@ -46,7 +43,6 @@ const FRAME_MS = 450
 const HOLD_MS = 1200
 
 interface RadarSettings {
-  kind: LayerKind
   color: number
   smooth: boolean
   snow: boolean
@@ -54,7 +50,6 @@ interface RadarSettings {
 }
 
 const DEFAULTS: RadarSettings = {
-  kind: 'radar',
   color: 2,
   smooth: true,
   snow: true,
@@ -105,22 +100,7 @@ export default function RadarPanel({
     refetchInterval: 10 * 60 * 1000,
   })
 
-  const frames: Frame[] = useMemo(
-    () => (data ? (settings.kind === 'radar' ? data.radar : data.satellite) : []),
-    [data, settings.kind],
-  )
-
-  /**
-   * RainViewer's infrared satellite coverage comes and goes — the list is often empty. A
-   * layer with no frames is offered as a disabled control rather than a blank map, and a
-   * stored preference for it falls back rather than stranding the reader on nothing.
-   */
-  const satelliteAvailable = (data?.satellite.length ?? 0) > 0
-  useEffect(() => {
-    if (data && settings.kind === 'satellite' && !satelliteAvailable) {
-      setSettings((value) => ({ ...value, kind: 'radar' }))
-    }
-  }, [data, satelliteAvailable, settings.kind, setSettings])
+  const frames: Frame[] = useMemo(() => data?.radar ?? [], [data])
 
   // Newest observed frame is the sensible landing point: "what is happening now".
   const latestObserved = useMemo(() => {
@@ -201,7 +181,7 @@ export default function RadarPanel({
     for (const layer of layersRef.current.values()) map.removeLayer(layer)
     layersRef.current.clear()
     shownRef.current = null
-  }, [settings.kind, settings.color, settings.smooth, settings.snow])
+  }, [settings.color, settings.smooth, settings.snow])
 
   /** Mounts a frame's layer if it does not exist yet, at zero opacity. */
   const ensureLayer = useCallback(
@@ -214,7 +194,7 @@ export default function RadarPanel({
         opacity: 0,
         zIndex: 10,
         maxZoom: MAP_MAX_ZOOM,
-        maxNativeZoom: MAX_NATIVE_ZOOM[settings.kind],
+        maxNativeZoom: MAX_NATIVE_ZOOM,
         // Keep tiles for frames that have scrolled out of view, so a replay is instant.
         keepBuffer: 4,
       })
@@ -307,7 +287,7 @@ export default function RadarPanel({
 
       {isPending && <p className="radar__state">Loading radar frames…</p>}
       {!isPending && !isError && frames.length === 0 && (
-        <p className="radar__state">No frames are published for this layer right now.</p>
+        <p className="radar__state">No radar frames are published right now.</p>
       )}
       {isError && (
         <p className="radar__state">
@@ -319,30 +299,11 @@ export default function RadarPanel({
       )}
 
       <div className="radar__options">
-        <div className="segmented" role="group" aria-label="Layer">
-          {(['radar', 'satellite'] as LayerKind[]).map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={settings.kind === value}
-              disabled={value === 'satellite' && !satelliteAvailable}
-              onClick={() => update({ kind: value })}
-            >
-              {value === 'radar' ? 'Radar' : 'Satellite'}
-            </button>
-          ))}
-        </div>
-
-        {!satelliteAvailable && data && (
-          <span className="radar__hint">Satellite has no frames published right now</span>
-        )}
-
         <label className="radar__field">
           <span>Palette</span>
           <select
             value={settings.color}
             onChange={(event) => update({ color: Number(event.target.value) })}
-            disabled={settings.kind === 'satellite'}
           >
             {COLOR_SCHEMES.map((scheme) => (
               <option key={scheme.id} value={scheme.id}>
@@ -378,7 +339,6 @@ export default function RadarPanel({
             type="checkbox"
             checked={settings.snow}
             onChange={(event) => update({ snow: event.target.checked })}
-            disabled={settings.kind === 'satellite'}
           />
           Mark snow
         </label>

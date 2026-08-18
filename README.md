@@ -34,9 +34,10 @@ npm run dev
 - The hourly window is 24, 48 or 72 hours, set in the masthead; it drives every hourly
   chart and the detail table at the bottom.
 - The radar plays two hours of observed frames plus any nowcast. Scrub with the timeline,
-  or switch layer, palette and opacity underneath it. The wheel deliberately does **not**
-  zoom — a map that swallows the scroll halfway down a long page is a trap; use the
-  buttons, double-click or pinch.
+  and set palette and opacity underneath it. The wheel deliberately does **not** zoom — a
+  map that swallows the scroll halfway down a long page is a trap; use the buttons,
+  double-click or pinch. Detail stops at zoom 7, which is as far as RainViewer renders;
+  past that the imagery is upscaled rather than dropped.
 - The location lives in the URL, so any view can be linked or bookmarked. Up to eight
   places can be saved to the rail under the search box.
 

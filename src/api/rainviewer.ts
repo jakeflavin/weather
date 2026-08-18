@@ -18,7 +18,6 @@ interface RawIndex {
   host: string
   generated: number
   radar?: { past?: RawFrame[]; nowcast?: RawFrame[] }
-  satellite?: { infrared?: RawFrame[] }
 }
 
 export interface Frame {
@@ -33,7 +32,6 @@ export interface RadarIndex {
   host: string
   generated: number
   radar: Frame[]
-  satellite: Frame[]
 }
 
 /** RainViewer's palettes, by their documented ids. */
@@ -45,8 +43,6 @@ export const COLOR_SCHEMES = [
   { id: 0, name: 'Black and white' },
 ] as const
 
-export type LayerKind = 'radar' | 'satellite'
-
 export async function fetchRadarIndex(signal?: AbortSignal): Promise<RadarIndex> {
   const res = await fetch(INDEX_URL, { signal })
   if (!res.ok) throw new Error(`Radar index unavailable (${res.status})`)
@@ -55,27 +51,15 @@ export async function fetchRadarIndex(signal?: AbortSignal): Promise<RadarIndex>
   const past = (json.radar?.past ?? []).map((frame) => ({ ...frame, forecast: false }))
   const nowcast = (json.radar?.nowcast ?? []).map((frame) => ({ ...frame, forecast: true }))
 
-  return {
-    host: json.host,
-    generated: json.generated,
-    radar: [...past, ...nowcast],
-    // Infrared satellite has no forecast frames; everything in it is observed.
-    satellite: (json.satellite?.infrared ?? []).map((frame) => ({ ...frame, forecast: false })),
-  }
+  return { host: json.host, generated: json.generated, radar: [...past, ...nowcast] }
 }
 
-/**
- * A tile URL template for one frame, with `{z}/{x}/{y}` left for Leaflet to fill.
- *
- * Satellite imagery only renders sensibly in the greyscale palettes, so it ignores the
- * chosen radar colour scheme rather than producing a rainbow cloud field.
- */
+/** A tile URL template for one frame, with `{z}/{x}/{y}` left for Leaflet to fill. */
 export function frameTileUrl(
   index: RadarIndex,
   frame: Frame,
-  options: { kind: LayerKind; color: number; smooth: boolean; snow: boolean },
+  options: { color: number; smooth: boolean; snow: boolean },
 ): string {
-  const color = options.kind === 'satellite' ? 0 : options.color
-  const flags = `${options.smooth ? 1 : 0}_${options.kind === 'satellite' ? 0 : options.snow ? 1 : 0}`
-  return `${index.host}${frame.path}/512/{z}/{x}/{y}/${color}/${flags}.png`
+  const flags = `${options.smooth ? 1 : 0}_${options.snow ? 1 : 0}`
+  return `${index.host}${frame.path}/512/{z}/{x}/{y}/${options.color}/${flags}.png`
 }
