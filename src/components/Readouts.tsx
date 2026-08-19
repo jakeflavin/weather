@@ -28,7 +28,10 @@ export function Stat({
   return (
     <div>
       <div className="stat__label">{label}</div>
-      <div className={small ? 'stat__value stat__value--sm' : 'stat__value'} style={color ? { color } : undefined}>
+      <div
+        className={small ? 'stat__value stat__value--sm' : 'stat__value'}
+        style={color ? { color } : undefined}
+      >
         {value}
         {unit && <span className="stat__unit">{unit}</span>}
       </div>
@@ -71,7 +74,13 @@ export function Flag({ label, value, color }: { label: string; value: ReactNode;
  * way the air is travelling — 180° off the reported bearing, which is what a wind barb on
  * a chart does and what anyone reading it expects.
  */
-export function WindArrow({ degrees, size = 14 }: { degrees: number | null | undefined; size?: number }) {
+export function WindArrow({
+  degrees,
+  size = 14,
+}: {
+  degrees: number | null | undefined
+  size?: number
+}) {
   if (degrees == null || Number.isNaN(degrees)) return null
   return (
     <Navigation

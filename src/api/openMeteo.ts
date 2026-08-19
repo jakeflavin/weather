@@ -139,7 +139,9 @@ async function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   if (!res.ok) {
     // Open-Meteo puts a human-readable cause in the body on 4xx.
     const reason = await res.text().catch(() => '')
-    throw new Error(reason ? `${res.status}: ${reason.slice(0, 200)}` : `Request failed (${res.status})`)
+    throw new Error(
+      reason ? `${res.status}: ${reason.slice(0, 200)}` : `Request failed (${res.status})`,
+    )
   }
   return res.json() as Promise<T>
 }
@@ -158,7 +160,11 @@ export function fetchForecast(lat: number, lon: number, signal?: AbortSignal): P
   return getJson<Forecast>(`${FORECAST_URL}?${params}`, signal)
 }
 
-export function fetchAirQuality(lat: number, lon: number, signal?: AbortSignal): Promise<AirQuality> {
+export function fetchAirQuality(
+  lat: number,
+  lon: number,
+  signal?: AbortSignal,
+): Promise<AirQuality> {
   const params = new URLSearchParams({
     latitude: lat.toFixed(4),
     longitude: lon.toFixed(4),

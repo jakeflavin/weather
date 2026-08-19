@@ -19,7 +19,14 @@ export interface UnitLabels {
 
 export const UNIT_LABELS: Record<UnitSystem, UnitLabels> = {
   metric: { temp: '°C', speed: 'km/h', length: 'm', precip: 'mm', pressure: 'hPa', distance: 'km' },
-  imperial: { temp: '°F', speed: 'mph', length: 'ft', precip: 'in', pressure: 'inHg', distance: 'mi' },
+  imperial: {
+    temp: '°F',
+    speed: 'mph',
+    length: 'ft',
+    precip: 'in',
+    pressure: 'inHg',
+    distance: 'mi',
+  },
 }
 
 export function toTemp(celsius: number, system: UnitSystem): number {
@@ -72,7 +79,24 @@ export function pressureDigits(system: UnitSystem): number {
 /** Compass point for a bearing in degrees. */
 export function compass(degrees: number | null | undefined): string {
   if (degrees == null || Number.isNaN(degrees)) return '—'
-  const points = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+  const points = [
+    'N',
+    'NNE',
+    'NE',
+    'ENE',
+    'E',
+    'ESE',
+    'SE',
+    'SSE',
+    'S',
+    'SSW',
+    'SW',
+    'WSW',
+    'W',
+    'WNW',
+    'NW',
+    'NNW',
+  ]
   // Normalised into range: a negative bearing indexed off the front of the array.
   const index = ((Math.round(degrees / 22.5) % 16) + 16) % 16
   return points[index] ?? '—'

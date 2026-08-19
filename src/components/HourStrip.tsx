@@ -31,9 +31,7 @@ export function HourStrip({ rows, units }: { rows: HourRow[]; units: UnitSystem 
           <div className="hourstrip__cell" role="listitem" key={row.t} title={code.label}>
             <span className="hourstrip__time">{formatHourShort(row.t)}</span>
             <WeatherIcon code={row.code} isDay={row.isDay} size={18} />
-            <span className="hourstrip__temp">
-              {num(toTemp(row.temp ?? NaN, units))}°
-            </span>
+            <span className="hourstrip__temp">{num(toTemp(row.temp ?? NaN, units))}°</span>
             {/* Below 10% the number is noise — the blank keeps the row heights equal. */}
             <span className="hourstrip__precip">{chance >= 10 ? `${num(chance)}%` : ''}</span>
           </div>

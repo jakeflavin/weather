@@ -103,7 +103,14 @@ export function LocationBar({
     <div className="locbar">
       <div className="search">
         <span className="search__glyph" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          >
             <circle cx="7" cy="7" r="4.5" />
             <path d="M10.5 10.5 14 14" strokeLinecap="round" />
           </svg>
@@ -135,10 +142,21 @@ export function LocationBar({
             {places.map((place, index) => {
               const location = fromPlace(place)
               return (
-                <li key={place.id} role="option" aria-selected={index === active} data-active={index === active}>
-                  <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => choose(location)}>
+                <li
+                  key={place.id}
+                  role="option"
+                  aria-selected={index === active}
+                  data-active={index === active}
+                >
+                  <button
+                    type="button"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => choose(location)}
+                  >
                     <span>{place.name}</span>
-                    <span className="dim">{[place.admin1, place.country].filter(Boolean).join(', ')}</span>
+                    <span className="dim">
+                      {[place.admin1, place.country].filter(Boolean).join(', ')}
+                    </span>
                     <span className="results__meta">
                       {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
                     </span>
@@ -147,7 +165,9 @@ export function LocationBar({
               )
             })}
             {!places.length && (
-              <li className="results__empty">{isFetching ? 'Searching…' : 'No places match that.'}</li>
+              <li className="results__empty">
+                {isFetching ? 'Searching…' : 'No places match that.'}
+              </li>
             )}
           </ul>
         )}

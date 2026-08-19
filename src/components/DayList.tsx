@@ -48,7 +48,9 @@ export function DayList({
         return (
           <div className="day" key={row.day} data-past={row.past} data-today={isToday}>
             <span className="day__name">
-              {isToday ? 'Today' : `${formatWeekday(row.t)} ${formatDayMonth(row.t).replace(/\D+/g, '')}`}
+              {isToday
+                ? 'Today'
+                : `${formatWeekday(row.t)} ${formatDayMonth(row.t).replace(/\D+/g, '')}`}
             </span>
             <span className="day__glyph" title={code.label}>
               <WeatherIcon code={row.code} size={18} />
@@ -59,7 +61,11 @@ export function DayList({
             <span className="day__low">
               {row.tempMin == null ? '—' : num(toTemp(row.tempMin, units))}
             </span>
-            <span className="range" role="img" aria-label={`Low ${num(toTemp(row.tempMin ?? 0, units))} to high ${num(toTemp(row.tempMax ?? 0, units))} ${u.temp}`}>
+            <span
+              className="range"
+              role="img"
+              aria-label={`Low ${num(toTemp(row.tempMin ?? 0, units))} to high ${num(toTemp(row.tempMax ?? 0, units))} ${u.temp}`}
+            >
               {row.tempMin != null && row.tempMax != null && (
                 <span
                   className="range__span"

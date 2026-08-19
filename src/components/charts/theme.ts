@@ -52,7 +52,10 @@ export function useChartColors(): ChartColors {
     // `data-theme` is written by useSettings; watching the attribute covers both the
     // manual toggle and the OS preference changing underneath 'system'.
     const observer = new MutationObserver(() => setColors(readTokens()))
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
     return () => observer.disconnect()
   }, [])
 

@@ -93,7 +93,9 @@ export function DailyTrendChart({
       ...row,
       range: row.tempMin != null && row.tempMax != null ? [row.tempMin, row.tempMax] : null,
       apparentRange:
-        row.apparentMin != null && row.apparentMax != null ? [row.apparentMin, row.apparentMax] : null,
+        row.apparentMin != null && row.apparentMax != null
+          ? [row.apparentMin, row.apparentMax]
+          : null,
       normalRange: normal ? [normal.tempMin, normal.tempMax] : null,
       normalMax: normal?.tempMax ?? null,
     }
@@ -389,7 +391,15 @@ export function DaylightChart({
 
 // ---------------------------------------------------------------- air quality
 
-export function AqiChart({ rows, now, height = 170 }: { rows: AqiRow[]; now: number; height?: number }) {
+export function AqiChart({
+  rows,
+  now,
+  height = 170,
+}: {
+  rows: AqiRow[]
+  now: number
+  height?: number
+}) {
   const colors = useChartColors()
   const data = rows.filter((row) => row.usAqi != null)
   if (!data.length) return null
@@ -526,7 +536,11 @@ export function PollutantChart({
             <ReferenceLine x={100} stroke={colors.dim} strokeDasharray="2 2" />
             <Bar dataKey="pct" maxBarSize={12} isAnimationActive={false}>
               {data.map((row) => (
-                <Cell key={row.name} fill={row.pct > 100 ? colors.l3 : colors['s-aqi']} fillOpacity={0.8} />
+                <Cell
+                  key={row.name}
+                  fill={row.pct > 100 ? colors.l3 : colors['s-aqi']}
+                  fillOpacity={0.8}
+                />
               ))}
             </Bar>
             <Tooltip

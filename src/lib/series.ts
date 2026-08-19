@@ -156,7 +156,12 @@ export function windowFrom(rows: HourRow[], from: number, count: number): HourRo
 }
 
 /** Hours either side of `from`, for charts that show where a trend came from. */
-export function windowAround(rows: HourRow[], from: number, before: number, after: number): HourRow[] {
+export function windowAround(
+  rows: HourRow[],
+  from: number,
+  before: number,
+  after: number,
+): HourRow[] {
   const index = rows.findIndex((row) => row.t >= from - 3600_000)
   if (index < 0) return rows.slice(-(before + after))
   return rows.slice(Math.max(0, index - before), index + after)

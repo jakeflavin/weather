@@ -12,7 +12,14 @@ export interface Location {
   lon: number
 }
 
-const FALLBACK: Location = { id: '40.71,-74.01', name: 'New York', region: 'New York', country: 'United States', lat: 40.7128, lon: -74.006 }
+const FALLBACK: Location = {
+  id: '40.71,-74.01',
+  name: 'New York',
+  region: 'New York',
+  country: 'United States',
+  lat: 40.7128,
+  lon: -74.006,
+}
 const MAX_SAVED = 8
 
 export function locationId(lat: number, lon: number): string {
@@ -47,7 +54,8 @@ function fromUrl(): Location | null {
   if (!rawLat || !rawLon) return null
   const lat = Number(rawLat)
   const lon = Number(rawLon)
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return null
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
+    return null
   return {
     id: locationId(lat, lon),
     name: params.get('name') ?? `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
@@ -117,7 +125,9 @@ export function useLocations() {
 
   const save = useCallback(
     (location: Location) => {
-      setSaved((list) => [location, ...list.filter((item) => item.id !== location.id)].slice(0, MAX_SAVED))
+      setSaved((list) =>
+        [location, ...list.filter((item) => item.id !== location.id)].slice(0, MAX_SAVED),
+      )
     },
     [setSaved],
   )

@@ -101,7 +101,11 @@ export function normalFor(normals: Normals | null | undefined, isoDate: string):
 /**
  * How far a day's high sits from its baseline. Positive is warmer than usual.
  */
-export function departure(normals: Normals | null | undefined, isoDate: string, tempMax: number | null): number | null {
+export function departure(
+  normals: Normals | null | undefined,
+  isoDate: string,
+  tempMax: number | null,
+): number | null {
   const normal = normalFor(normals, isoDate)
   if (!normal || tempMax == null) return null
   return tempMax - normal.tempMax

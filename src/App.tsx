@@ -5,12 +5,8 @@ import { LocationBar } from './components/LocationBar'
 import { describe, useLocations } from './hooks/useLocations'
 import { useSettings, type Theme } from './hooks/useSettings'
 import { useAirQuality, useClimatology, useForecast } from './hooks/useWeather'
-import {
-  toAqiRows
-} from './lib/series'
-import {
-  type UnitSystem
-} from './lib/units'
+import { toAqiRows } from './lib/series'
+import { type UnitSystem } from './lib/units'
 
 /** How much of the hourly series the charts and table show. */
 const RANGES = [24, 48, 72] as const
@@ -33,9 +29,16 @@ export default function App() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null
-      if (target?.tagName === 'INPUT' || target?.isContentEditable || event.metaKey || event.ctrlKey) return
+      if (
+        target?.tagName === 'INPUT' ||
+        target?.isContentEditable ||
+        event.metaKey ||
+        event.ctrlKey
+      )
+        return
       if (event.key === 'u') setUnits((value) => (value === 'metric' ? 'imperial' : 'metric'))
-      if (event.key === 't') setTheme((value) => (value === 'dark' ? 'light' : value === 'light' ? 'system' : 'dark'))
+      if (event.key === 't')
+        setTheme((value) => (value === 'dark' ? 'light' : value === 'light' ? 'system' : 'dark'))
       if (event.key === 'r') queryClient.invalidateQueries()
     }
     window.addEventListener('keydown', onKey)
@@ -50,21 +53,36 @@ export default function App() {
         <div className="appbar__tools">
           <div className="segmented" role="group" aria-label="Hourly range">
             {RANGES.map((value) => (
-              <button key={value} type="button" aria-pressed={range === value} onClick={() => setRange(value)}>
+              <button
+                key={value}
+                type="button"
+                aria-pressed={range === value}
+                onClick={() => setRange(value)}
+              >
                 {value}h
               </button>
             ))}
           </div>
           <div className="segmented" role="group" aria-label="Units">
             {(['metric', 'imperial'] as UnitSystem[]).map((value) => (
-              <button key={value} type="button" aria-pressed={units === value} onClick={() => setUnits(value)}>
+              <button
+                key={value}
+                type="button"
+                aria-pressed={units === value}
+                onClick={() => setUnits(value)}
+              >
                 {value === 'metric' ? '°C' : '°F'}
               </button>
             ))}
           </div>
           <div className="segmented" role="group" aria-label="Theme">
             {(['light', 'system', 'dark'] as Theme[]).map((value) => (
-              <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)}>
+              <button
+                key={value}
+                type="button"
+                aria-pressed={theme === value}
+                onClick={() => setTheme(value)}
+              >
                 {value === 'light' ? 'Light' : value === 'dark' ? 'Dark' : 'Auto'}
               </button>
             ))}
@@ -107,7 +125,9 @@ export default function App() {
       {forecast.isError && (
         <div className="notice notice--error" role="alert">
           <span className="notice__title">No data</span>
-          {forecast.error instanceof Error ? forecast.error.message : 'The forecast request failed.'}
+          {forecast.error instanceof Error
+            ? forecast.error.message
+            : 'The forecast request failed.'}
           <div style={{ marginTop: 12 }}>
             <button type="button" className="button" onClick={() => forecast.refetch()}>
               Try again

@@ -15,7 +15,7 @@ import {
   PrecipitationChart,
   TemperatureChart,
   UvChart,
-  WindChart
+  WindChart,
 } from './charts/HourlyCharts'
 import { AqiChart, DailyTrendChart, DaylightChart, PollutantChart } from './charts/DailyCharts'
 import { levelColor, useChartColors } from './charts/theme'
@@ -27,7 +27,7 @@ import {
   toAqiRows,
   toDayRows,
   toHourRows,
-  windowFrom
+  windowFrom,
 } from '../lib/series'
 import { formatHour, formatWeekday, nowAt, parseStamp, sinceLabel } from '../lib/time'
 import {
@@ -44,7 +44,7 @@ import {
   toSpeed,
   toTemp,
   toTempDelta,
-  type UnitSystem
+  type UnitSystem,
 } from '../lib/units'
 import { departure, type Normals } from '../lib/climate'
 import { aqiBand, uvBand, weatherCode, windBand } from '../lib/weatherCode'
@@ -66,7 +66,7 @@ export function Dashboard({
   range,
   place,
   isDefaultPlace,
-  updatedAt
+  updatedAt,
 }: {
   forecast: NonNullable<ReturnType<typeof useForecast>['data']>
   airRows: ReturnType<typeof toAqiRows>
@@ -102,7 +102,8 @@ export function Dashboard({
   const uv = uvBand(uvNow)
   const uvPeak = uvBand(todayRow?.uvMax)
   const aqi = aqiBand(airCurrent?.us_aqi)
-  const currentAqiRow = airRows.find((row) => row.t >= now - 3600_000) ?? airRows[airRows.length - 1]
+  const currentAqiRow =
+    airRows.find((row) => row.t >= now - 3600_000) ?? airRows[airRows.length - 1]
   const visibility = hours.find((row) => row.t >= now - 3600_000)?.visibility
 
   // Pressure trend over the last three hours — the direction matters more than the value.
@@ -112,7 +113,6 @@ export function Dashboard({
 
   const hourly = { rows: window, bands, now, units }
 
-
   // The hero carries at most three flags: what changes what you do today. Rain first,
   // then UV, then air quality — each only when it is actually worth acting on.
   const flags: { label: string; value: string; color: string }[] = []
@@ -120,11 +120,15 @@ export function Dashboard({
     flags.push({
       label: 'Rain expected',
       value: `${num(wet.precipProb)}% at ${formatHour(wet.t)}`,
-      color: colors['s-precip']
+      color: colors['s-precip'],
     })
   }
   if (uvPeak.level >= 2) {
-    flags.push({ label: 'UV peak today', value: uvPeak.label, color: levelColor(colors, uvPeak.level) })
+    flags.push({
+      label: 'UV peak today',
+      value: uvPeak.label,
+      color: levelColor(colors, uvPeak.level),
+    })
   }
   if (aqi.level >= 1) {
     flags.push({ label: 'Air quality', value: aqi.label, color: levelColor(colors, aqi.level) })
@@ -133,7 +137,7 @@ export function Dashboard({
     flags.push({
       label: 'Today',
       value: `${num(toTemp(todayRow.tempMin ?? 0, units))}–${num(toTemp(todayRow.tempMax ?? 0, units))}${u.temp}`,
-      color: colors['s-temp']
+      color: colors['s-temp'],
     })
   }
 
@@ -144,7 +148,7 @@ export function Dashboard({
     flags.push({
       label: `vs ${normals?.years ?? 10}-yr average`,
       value: `${todayDeparture >= 0 ? '+' : '−'}${num(Math.abs(toTempDelta(todayDeparture, units)), 1)}${u.temp}`,
-      color: todayDeparture >= 0 ? colors['s-temp'] : colors['s-precip']
+      color: todayDeparture >= 0 ? colors['s-temp'] : colors['s-precip'],
     })
   }
 
@@ -175,7 +179,8 @@ export function Dashboard({
           <div className="hero__name">{place}</div>
           <div className="hero__meta">
             {formatWeekday(now)} {formatHour(now)} local
-            {isDefaultPlace ? ' · default location' : ''} · updated {sinceLabel(Date.now() - updatedAt)}
+            {isDefaultPlace ? ' · default location' : ''} · updated{' '}
+            {sinceLabel(Date.now() - updatedAt)}
           </div>
         </div>
 
@@ -195,7 +200,8 @@ export function Dashboard({
             {todayRow && (
               <>
                 {' · '}
-                {num(toTemp(todayRow.tempMin ?? 0, units))}–{num(toTemp(todayRow.tempMax ?? 0, units))}
+                {num(toTemp(todayRow.tempMin ?? 0, units))}–
+                {num(toTemp(todayRow.tempMax ?? 0, units))}
                 {u.temp} today
               </>
             )}
@@ -228,8 +234,8 @@ export function Dashboard({
               unit={u.speed}
               note={
                 <>
-                  <WindArrow degrees={current.wind_direction_10m} /> {compass(current.wind_direction_10m)} ·{' '}
-                  {windBand(current.wind_speed_10m)}
+                  <WindArrow degrees={current.wind_direction_10m} />{' '}
+                  {compass(current.wind_direction_10m)} · {windBand(current.wind_speed_10m)}
                 </>
               }
               color={colors['s-wind']}
@@ -262,7 +268,11 @@ export function Dashboard({
               label="Cloud cover"
               value={num(current.cloud_cover)}
               unit="%"
-              note={visibility == null ? undefined : `Visibility ${num(toDistance(visibility, units), 1)} ${u.distance}`}
+              note={
+                visibility == null
+                  ? undefined
+                  : `Visibility ${num(toDistance(visibility, units), 1)} ${u.distance}`
+              }
               color={colors['s-cloud']}
             />
             <Stat
@@ -276,13 +286,20 @@ export function Dashboard({
               label="Air quality"
               value={num(airCurrent?.us_aqi)}
               note={aqi.label}
-              meter={<Meter value={(airCurrent?.us_aqi ?? 0) / 200} color={levelColor(colors, aqi.level)} />}
+              meter={
+                <Meter
+                  value={(airCurrent?.us_aqi ?? 0) / 200}
+                  color={levelColor(colors, aqi.level)}
+                />
+              }
               color={levelColor(colors, aqi.level)}
             />
             <Stat
               label="Next rain"
               value={wet ? `${num(wet.precipProb)}%` : 'None'}
-              note={wet ? `${formatWeekday(wet.t)} ${formatHour(wet.t)}` : `Dry for the next ${range}h`}
+              note={
+                wet ? `${formatWeekday(wet.t)} ${formatHour(wet.t)}` : `Dry for the next ${range}h`
+              }
               color={colors['s-precip']}
             />
           </div>
@@ -340,7 +357,10 @@ export function Dashboard({
           <DayList rows={days} units={units} today={today} currentTemp={current.temperature_2m} />
         </Panel>
 
-        <Panel title="Daylight" note={todayRow ? `${duration(todayRow.daylight)} today` : undefined}>
+        <Panel
+          title="Daylight"
+          note={todayRow ? `${duration(todayRow.daylight)} today` : undefined}
+        >
           <DaylightChart rows={days} now={now} height={214} />
           {todayRow?.sunrise && todayRow.sunset && (
             <div className="stats" style={{ marginTop: 16 }}>
@@ -348,7 +368,12 @@ export function Dashboard({
                 label="Sunrise"
                 value={
                   <>
-                    <Sunrise size={17} strokeWidth={1.75} color="var(--s-pressure)" style={{ verticalAlign: '-3px' }} />{' '}
+                    <Sunrise
+                      size={17}
+                      strokeWidth={1.75}
+                      color="var(--s-pressure)"
+                      style={{ verticalAlign: '-3px' }}
+                    />{' '}
                     {formatHour(parseStamp(todayRow.sunrise.iso).t)}
                   </>
                 }
@@ -358,7 +383,12 @@ export function Dashboard({
                 label="Sunset"
                 value={
                   <>
-                    <Sunset size={17} strokeWidth={1.75} color="var(--s-pressure)" style={{ verticalAlign: '-3px' }} />{' '}
+                    <Sunset
+                      size={17}
+                      strokeWidth={1.75}
+                      color="var(--s-pressure)"
+                      style={{ verticalAlign: '-3px' }}
+                    />{' '}
                     {formatHour(parseStamp(todayRow.sunset.iso).t)}
                   </>
                 }
@@ -397,13 +427,25 @@ export function Dashboard({
             <div className="stats">
               <Stat label="Latitude" value={forecast.latitude.toFixed(3)} small />
               <Stat label="Longitude" value={forecast.longitude.toFixed(3)} small />
-              <Stat label="Elevation" value={num(toElevation(forecast.elevation, units))} unit={u.length} small />
-              <Stat label="Timezone" value={forecast.timezone_abbreviation} note={forecast.timezone} small />
+              <Stat
+                label="Elevation"
+                value={num(toElevation(forecast.elevation, units))}
+                unit={u.length}
+                small
+              />
+              <Stat
+                label="Timezone"
+                value={forecast.timezone_abbreviation}
+                note={forecast.timezone}
+                small
+              />
               <Stat
                 label="Forecast precipitation"
                 value={num(
                   toPrecip(
-                    days.filter((day) => !day.past).reduce((sum, day) => sum + (day.precipSum ?? 0), 0),
+                    days
+                      .filter((day) => !day.past)
+                      .reduce((sum, day) => sum + (day.precipSum ?? 0), 0),
                     units,
                   ),
                   digits,

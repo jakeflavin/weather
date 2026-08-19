@@ -84,10 +84,7 @@ export function TemperatureChart({ rows, bands, now, units, height = 190 }: Hour
             <YAxis
               {...axisProps(colors)}
               width={30}
-              domain={[
-                (min: number) => Math.floor(min - 1),
-                (max: number) => Math.ceil(max + 1),
-              ]}
+              domain={[(min: number) => Math.floor(min - 1), (max: number) => Math.ceil(max + 1)]}
               tickFormatter={(value: number) => num(toTemp(value, units))}
             />
             {/* Freezing is the one threshold worth marking: it changes what falls. */}
@@ -366,8 +363,18 @@ export function HumidityChart({ rows, bands, now, units, height = 170 }: HourlyP
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
             <NightBands bands={bands} colors={colors} />
-            <XAxis {...gridProps(colors)} ticks={hourTicks(rows, 6)} tickFormatter={formatHourTick} />
-            <YAxis {...axisProps(colors)} yAxisId="rh" width={30} domain={[0, 100]} ticks={[0, 50, 100]} />
+            <XAxis
+              {...gridProps(colors)}
+              ticks={hourTicks(rows, 6)}
+              tickFormatter={formatHourTick}
+            />
+            <YAxis
+              {...axisProps(colors)}
+              yAxisId="rh"
+              width={30}
+              domain={[0, 100]}
+              ticks={[0, 50, 100]}
+            />
             <YAxis
               {...axisProps(colors)}
               yAxisId="dew"
@@ -449,7 +456,11 @@ export function CloudPressureChart({ rows, bands, now, units, height = 170 }: Ho
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
             <NightBands bands={bands} colors={colors} />
-            <XAxis {...gridProps(colors)} ticks={hourTicks(rows, 6)} tickFormatter={formatHourTick} />
+            <XAxis
+              {...gridProps(colors)}
+              ticks={hourTicks(rows, 6)}
+              tickFormatter={formatHourTick}
+            />
             <YAxis
               {...axisProps(colors)}
               yAxisId="cloud"
@@ -538,7 +549,11 @@ export function UvChart({ rows, now, units: _units, height = 150 }: HourlyProps)
       <ChartFrame height={height}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={daylight} margin={CHART_MARGIN}>
-            <XAxis {...gridProps(colors)} ticks={hourTicks(daylight, 4)} tickFormatter={formatHourTick} />
+            <XAxis
+              {...gridProps(colors)}
+              ticks={hourTicks(daylight, 4)}
+              tickFormatter={formatHourTick}
+            />
             <YAxis
               {...axisProps(colors)}
               width={22}

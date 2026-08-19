@@ -54,7 +54,10 @@ export function weatherCode(code: number | null | undefined): WeatherCode {
 }
 
 /** UV index bands, per WHO. */
-export function uvBand(value: number | null | undefined): { label: string; level: 0 | 1 | 2 | 3 | 4 } {
+export function uvBand(value: number | null | undefined): {
+  label: string
+  level: 0 | 1 | 2 | 3 | 4
+} {
   if (value == null) return { label: '—', level: 0 }
   if (value < 3) return { label: 'Low', level: 0 }
   if (value < 6) return { label: 'Moderate', level: 1 }
@@ -64,7 +67,10 @@ export function uvBand(value: number | null | undefined): { label: string; level
 }
 
 /** US EPA AQI bands. */
-export function aqiBand(value: number | null | undefined): { label: string; level: 0 | 1 | 2 | 3 | 4 | 5 } {
+export function aqiBand(value: number | null | undefined): {
+  label: string
+  level: 0 | 1 | 2 | 3 | 4 | 5
+} {
   if (value == null) return { label: '—', level: 0 }
   if (value <= 50) return { label: 'Good', level: 0 }
   if (value <= 100) return { label: 'Moderate', level: 1 }

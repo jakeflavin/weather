@@ -283,7 +283,11 @@ export default function RadarPanel({
         </span>
       </div>
 
-      <div className="radar__map" ref={containerRef} aria-label={`Precipitation radar near ${place}`} />
+      <div
+        className="radar__map"
+        ref={containerRef}
+        aria-label={`Precipitation radar near ${place}`}
+      />
 
       {isPending && <p className="radar__state">Loading radar frames…</p>}
       {!isPending && !isError && frames.length === 0 && (
