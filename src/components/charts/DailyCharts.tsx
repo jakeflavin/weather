@@ -33,7 +33,7 @@ import {
   tipHourHeading,
   useChartColors,
 } from './theme'
-import { formatDayMonth, formatHour, formatWeekday } from '@/lib/time'
+import { formatClockHours, formatDayMonth, formatHour, formatWeekday } from '@/lib/time'
 import {
   UNIT_LABELS,
   duration,
@@ -354,18 +354,16 @@ export function DaylightChart({
             <Tooltip
               cursor={{ fill: colors['chart-grid'], fillOpacity: 0.5 }}
               content={rowTip<DaylightRow>((row) => {
-                const clock = (hours: number) =>
-                  `${String(Math.floor(hours)).padStart(2, '0')}:${String(Math.round((hours % 1) * 60)).padStart(2, '0')}`
                 return (
                   <Tip
                     heading={tipDayHeading(row.t)}
                     rows={[
                       {
                         label: 'Sunrise',
-                        value: clock(row.rise),
+                        value: formatClockHours(row.rise),
                         color: colors['s-pressure'],
                       },
-                      { label: 'Sunset', value: clock(row.set) },
+                      { label: 'Sunset', value: formatClockHours(row.set) },
                       { label: 'Daylight', value: duration(row.daylight) },
                       { label: 'Sunshine', value: duration(row.sunshine) },
                     ]}

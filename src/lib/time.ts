@@ -48,6 +48,21 @@ export function formatHour(t: number): string {
   return fmt(t, { hour: 'numeric', minute: '2-digit' })
 }
 
+/**
+ * A time of day given as decimal hours — 6.5 is half past six — in the viewer's clock,
+ * so a US reader gets 6:30 AM where a French one gets 06:30.
+ *
+ * Hours are turned into an offset from the epoch, which is midnight UTC, and read back
+ * out in UTC by `fmt` — the same fiction the rest of this file already runs on.
+ */
+export function formatClockHours(hours: number): string {
+  if (!Number.isFinite(hours)) return '—'
+  // Rounded to the whole minute before formatting, not after: formatting truncates, so
+  // 6.9999 would otherwise read 6:59. The code this replaced rounded the minute field on
+  // its own and could produce 06:60.
+  return fmt(Math.round(hours * 60) * 60_000, { hour: 'numeric', minute: '2-digit' })
+}
+
 /** Compact axis label: `2 PM` / `14`. */
 export function formatHourShort(t: number): string {
   return fmt(t, { hour: 'numeric' })
