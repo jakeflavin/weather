@@ -105,3 +105,7 @@ Forecast, air quality and archive data from [Open-Meteo](https://open-meteo.com)
 non-commercial use under CC BY 4.0. Radar mosaic from
 [RainViewer](https://www.rainviewer.com). Basemap © [OpenStreetMap](https://www.openstreetmap.org/copyright)
 contributors, © [CARTO](https://carto.com/attributions).
+
+## Standards
+
+Code in this repo follows the [shared standards](https://github.com/jakeflavin/portfolio/blob/main/docs/STANDARDS.md) and [layout](https://github.com/jakeflavin/portfolio/blob/main/docs/LAYOUT.md) used across the directory.
