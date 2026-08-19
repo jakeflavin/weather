@@ -61,7 +61,10 @@ export function useChartColors(): ChartColors {
 
 /** Level ramp shared by UV and AQI, indexed by band. */
 export function levelColor(colors: ChartColors, level: number): string {
-  return [colors.l0, colors.l1, colors.l2, colors.l3, colors.l4, colors.l5][Math.min(level, 5)]
+  const ramp = [colors.l0, colors.l1, colors.l2, colors.l3, colors.l4, colors.l5]
+  // Clamped at both ends: only the upper bound was guarded, so a negative band indexed off
+  // the front of the ramp.
+  return ramp[Math.min(Math.max(level, 0), 5)] ?? colors.l0
 }
 
 /** Axis defaults, so every chart in the app shares one tick treatment. */

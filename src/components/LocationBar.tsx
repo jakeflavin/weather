@@ -89,7 +89,8 @@ export function LocationBar({
       setActive((index) => (index - 1 + places.length) % places.length)
     } else if (event.key === 'Enter') {
       event.preventDefault()
-      choose(fromPlace(places[active]))
+      const place = places[active]
+      if (place) choose(fromPlace(place))
     } else if (event.key === 'Escape') {
       event.preventDefault()
       setOpen(false)

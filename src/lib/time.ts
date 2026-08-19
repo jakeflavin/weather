@@ -25,6 +25,9 @@ export function parseStamp(iso: string): Stamp {
   const match = ISO.exec(iso)
   if (!match) return { t: NaN, iso, hour: 0, minute: 0, day: iso.slice(0, 10) }
   const [, y, mo, d, h = '0', mi = '0'] = match
+  // The pattern guarantees these three, but nothing proves it to the compiler — and a
+  // defaulted year would silently date the reading to 1900 rather than refusing it.
+  if (!y || !mo || !d) return { t: NaN, iso, hour: 0, minute: 0, day: iso.slice(0, 10) }
   return {
     t: Date.UTC(+y, +mo - 1, +d, +h, +mi),
     iso,

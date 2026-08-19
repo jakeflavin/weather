@@ -73,7 +73,9 @@ export function pressureDigits(system: UnitSystem): number {
 export function compass(degrees: number | null | undefined): string {
   if (degrees == null || Number.isNaN(degrees)) return '—'
   const points = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
-  return points[Math.round(degrees / 22.5) % 16]
+  // Normalised into range: a negative bearing indexed off the front of the array.
+  const index = ((Math.round(degrees / 22.5) % 16) + 16) % 16
+  return points[index] ?? '—'
 }
 
 /** Seconds → `13h 42m`, used for daylight and sunshine durations. */

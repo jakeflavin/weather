@@ -181,7 +181,8 @@ export function nightBands(rows: HourRow[]): Band[] {
       open = null
     }
   }
-  if (open != null && rows.length) bands.push({ from: open, to: rows[rows.length - 1].t })
+  const last = rows[rows.length - 1]
+  if (open != null && last) bands.push({ from: open, to: last.t })
   return bands
 }
 

@@ -49,8 +49,9 @@ export function buildNormals(archive: Archive | undefined, years: number): Norma
   for (let i = 0; i < time.length; i++) {
     const max = temperature_2m_max[i]
     const min = temperature_2m_min[i]
-    if (max == null || min == null) continue
-    const day = key(time[i])
+    const stamp = time[i]
+    if (max == null || min == null || stamp == null) continue
+    const day = key(stamp)
     let bucket = buckets.get(day)
     if (!bucket) {
       bucket = { max: [], min: [], precip: [] }
