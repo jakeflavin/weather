@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { usePersistentState } from './usePersistentState'
-import type { UnitSystem } from '../lib/units'
+import type { UnitSystem } from '@/lib/units'
 
 export type Theme = 'light' | 'dark' | 'system'
 

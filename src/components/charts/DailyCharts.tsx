@@ -19,9 +19,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { AqiRow, DayRow } from '../../lib/series'
-import { normalFor, type Normals } from '../../lib/climate'
-import { aqiBand, weatherCode } from '../../lib/weatherCode'
+import type { AqiRow, DayRow } from '@/lib/series'
+import { normalFor, type Normals } from '@/lib/climate'
+import { aqiBand, weatherCode } from '@/lib/weatherCode'
 import { ChartFrame, Legend, NowLine, Tip } from './base'
 import {
   CHART_MARGIN,
@@ -33,7 +33,7 @@ import {
   tipHourHeading,
   useChartColors,
 } from './theme'
-import { formatDayMonth, formatHour, formatWeekday } from '../../lib/time'
+import { formatDayMonth, formatHour, formatWeekday } from '@/lib/time'
 import {
   UNIT_LABELS,
   duration,
@@ -43,7 +43,7 @@ import {
   toTemp,
   toTempDelta,
   type UnitSystem,
-} from '../../lib/units'
+} from '@/lib/units'
 
 const dayAxis = (colors: ChartColors) => ({
   ...axisProps(colors),

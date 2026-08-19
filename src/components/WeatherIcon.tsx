@@ -11,7 +11,7 @@ import {
   Sun,
   type LucideIcon,
 } from 'lucide-react'
-import { weatherCode, type WeatherGroup } from '../lib/weatherCode'
+import { weatherCode, type WeatherGroup } from '@/lib/weatherCode'
 
 /**
  * The sky, as a glyph.

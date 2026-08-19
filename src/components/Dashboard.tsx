@@ -19,7 +19,7 @@ import {
 } from './charts/HourlyCharts'
 import { AqiChart, DailyTrendChart, DaylightChart, PollutantChart } from './charts/DailyCharts'
 import { levelColor, useChartColors } from './charts/theme'
-import { useAirQuality, useForecast } from '../hooks/useWeather'
+import { useAirQuality, useForecast } from '@/hooks/useWeather'
 import {
   changeVsYesterday,
   nextWetHour,
@@ -28,8 +28,8 @@ import {
   toDayRows,
   toHourRows,
   windowFrom,
-} from '../lib/series'
-import { formatHour, formatWeekday, nowAt, parseStamp, sinceLabel } from '../lib/time'
+} from '@/lib/series'
+import { formatHour, formatWeekday, nowAt, parseStamp, sinceLabel } from '@/lib/time'
 import {
   UNIT_LABELS,
   compass,
@@ -45,9 +45,9 @@ import {
   toTemp,
   toTempDelta,
   type UnitSystem,
-} from '../lib/units'
-import { departure, type Normals } from '../lib/climate'
-import { aqiBand, uvBand, weatherCode, windBand } from '../lib/weatherCode'
+} from '@/lib/units'
+import { departure, type Normals } from '@/lib/climate'
+import { aqiBand, uvBand, weatherCode, windBand } from '@/lib/weatherCode'
 
 /** How much of the hourly series the charts and table show. */
 const RANGES = [24, 48, 72] as const

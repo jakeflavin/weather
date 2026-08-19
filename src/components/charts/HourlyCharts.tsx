@@ -18,8 +18,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { Band, HourRow } from '../../lib/series'
-import { uvBand } from '../../lib/weatherCode'
+import type { Band, HourRow } from '@/lib/series'
+import { uvBand } from '@/lib/weatherCode'
 import { ChartFrame, Legend, NightBands, NowLine, Tip } from './base'
 import {
   CHART_MARGIN,
@@ -42,8 +42,8 @@ import {
   toSpeed,
   toTemp,
   type UnitSystem,
-} from '../../lib/units'
-import { compass } from '../../lib/units'
+} from '@/lib/units'
+import { compass } from '@/lib/units'
 
 interface HourlyProps {
   rows: HourRow[]

@@ -9,10 +9,10 @@ import {
   frameTileUrl,
   type Frame,
   type RadarIndex,
-} from '../api/rainviewer'
-import { useResolvedTheme } from '../hooks/useResolvedTheme'
-import { formatHour, formatWeekday } from '../lib/time'
-import { usePersistentState } from '../hooks/usePersistentState'
+} from '@/api/rainviewer'
+import { useResolvedTheme } from '@/hooks/useResolvedTheme'
+import { formatHour, formatWeekday } from '@/lib/time'
+import { usePersistentState } from '@/hooks/usePersistentState'
 
 /** CARTO's basemaps are keyless and come in a matched light/dark pair. */
 const BASEMAP = {

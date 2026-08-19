@@ -6,7 +6,7 @@
  * than zeroed so Recharts draws a gap instead of a false floor.
  */
 
-import type { AirQuality, Forecast } from '../api/openMeteo'
+import type { AirQuality, Forecast } from '@/api/openMeteo'
 import { parseStamp, type Stamp } from './time'
 
 export interface HourRow {

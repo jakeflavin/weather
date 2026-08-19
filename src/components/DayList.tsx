@@ -1,7 +1,7 @@
-import type { DayRow } from '../lib/series'
-import { formatDayMonth, formatWeekday } from '../lib/time'
-import { UNIT_LABELS, num, precipDigits, toPrecip, toTemp, type UnitSystem } from '../lib/units'
-import { weatherCode } from '../lib/weatherCode'
+import type { DayRow } from '@/lib/series'
+import { formatDayMonth, formatWeekday } from '@/lib/time'
+import { UNIT_LABELS, num, precipDigits, toPrecip, toTemp, type UnitSystem } from '@/lib/units'
+import { weatherCode } from '@/lib/weatherCode'
 import { WeatherIcon } from './WeatherIcon'
 
 /**

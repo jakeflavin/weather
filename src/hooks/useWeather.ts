@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { CLIMATE_YEARS, fetchAirQuality, fetchArchive } from '../api/openMeteo'
-import { fetchForecast } from '../api/openMeteo'
-import { buildNormals } from '../lib/climate'
+import { CLIMATE_YEARS, fetchAirQuality, fetchArchive } from '@/api/openMeteo'
+import { fetchForecast } from '@/api/openMeteo'
+import { buildNormals } from '@/lib/climate'
 import type { Location } from './useLocations'
 
 /** Open-Meteo updates hourly; refetching faster than this only burns their bandwidth. */

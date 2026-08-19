@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePersistentState } from './usePersistentState'
-import type { Place } from '../api/openMeteo'
+import type { Place } from '@/api/openMeteo'
 
 export interface Location {
   /** `lat,lon` rounded to ~1km — stable across the geocoder returning slightly different points. */

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { searchPlaces } from '../api/openMeteo'
-import { describe, fromPlace, type Location } from '../hooks/useLocations'
+import { searchPlaces } from '@/api/openMeteo'
+import { describe, fromPlace, type Location } from '@/hooks/useLocations'
 
 /** Long enough that typing a city name is one request, short enough to feel immediate. */
 const DEBOUNCE_MS = 220

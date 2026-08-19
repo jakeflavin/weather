@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { formatFullDate, formatHour, formatHourShort, formatWeekday } from '../../lib/time'
+import { formatFullDate, formatHour, formatHourShort, formatWeekday } from '@/lib/time'
 
 /**
  * Chart colours are defined once, in `index.css`, and read back out here.

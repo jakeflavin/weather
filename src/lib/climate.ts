@@ -7,7 +7,7 @@
  * calling it a normal would be a claim the data does not support.
  */
 
-import type { Archive } from '../api/openMeteo'
+import type { Archive } from '@/api/openMeteo'
 
 /**
  * Half-width of the smoothing window, in days.

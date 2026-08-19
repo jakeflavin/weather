@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { ReferenceArea, ReferenceLine } from 'recharts'
-import type { Band } from '../../lib/series'
+import type { Band } from '@/lib/series'
 import type { ChartColors } from './theme'
 
 /**

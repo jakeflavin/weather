@@ -1,7 +1,7 @@
-import type { HourRow } from '../lib/series'
-import { formatHourShort } from '../lib/time'
-import { num, toTemp, type UnitSystem } from '../lib/units'
-import { weatherCode } from '../lib/weatherCode'
+import type { HourRow } from '@/lib/series'
+import { formatHourShort } from '@/lib/time'
+import { num, toTemp, type UnitSystem } from '@/lib/units'
+import { weatherCode } from '@/lib/weatherCode'
 import { WeatherIcon } from './WeatherIcon'
 
 /**

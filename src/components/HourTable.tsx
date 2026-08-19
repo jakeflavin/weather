@@ -1,5 +1,5 @@
-import type { HourRow } from '../lib/series'
-import { formatHour, formatWeekday } from '../lib/time'
+import type { HourRow } from '@/lib/series'
+import { formatHour, formatWeekday } from '@/lib/time'
 import {
   UNIT_LABELS,
   compass,
@@ -10,8 +10,8 @@ import {
   toSpeed,
   toTemp,
   type UnitSystem,
-} from '../lib/units'
-import { weatherCode } from '../lib/weatherCode'
+} from '@/lib/units'
+import { weatherCode } from '@/lib/weatherCode'
 import { WeatherIcon } from './WeatherIcon'
 
 /**
