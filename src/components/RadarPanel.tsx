@@ -247,10 +247,10 @@ export default function RadarPanel({
 
   return (
     <div className="radar">
-      <div className="radar__bar">
+      <div className="radar-bar">
         <button
           type="button"
-          className="button radar__play"
+          className="button radar-play"
           onClick={() => setPlaying((value) => !value)}
           disabled={frames.length < 2}
           aria-label={playing ? 'Pause animation' : 'Play animation'}
@@ -259,12 +259,12 @@ export default function RadarPanel({
           {playing ? 'Pause' : 'Play'}
         </button>
 
-        <div className="radar__timeline">
+        <div className="radar-timeline">
           {frames.map((item, position) => (
             <button
               type="button"
               key={item.path}
-              className="radar__tick"
+              className="radar-tick"
               data-active={position === index}
               data-forecast={item.forecast}
               onClick={() => {
@@ -277,33 +277,33 @@ export default function RadarPanel({
           ))}
         </div>
 
-        <span className="radar__time">
+        <span className="radar-time">
           {frameLabel}
-          {frame?.forecast && <span className="radar__badge">forecast</span>}
+          {frame?.forecast && <span className="radar-badge">forecast</span>}
         </span>
       </div>
 
       <div
-        className="radar__map"
+        className="radar-map"
         ref={containerRef}
         aria-label={`Precipitation radar near ${place}`}
       />
 
-      {isPending && <p className="radar__state">Loading radar frames…</p>}
+      {isPending && <p className="radar-state">Loading radar frames…</p>}
       {!isPending && !isError && frames.length === 0 && (
-        <p className="radar__state">No radar frames are published right now.</p>
+        <p className="radar-state">No radar frames are published right now.</p>
       )}
       {isError && (
-        <p className="radar__state">
+        <p className="radar-state">
           Radar is unavailable right now.{' '}
-          <button type="button" className="button button--subtle" onClick={() => refetch()}>
+          <button type="button" className="button is-subtle" onClick={() => refetch()}>
             Retry
           </button>
         </p>
       )}
 
-      <div className="radar__options">
-        <label className="radar__field">
+      <div className="radar-options">
+        <label className="radar-field">
           <span>Palette</span>
           <select
             value={settings.color}
@@ -317,7 +317,7 @@ export default function RadarPanel({
           </select>
         </label>
 
-        <label className="radar__field">
+        <label className="radar-field">
           <span>Opacity</span>
           <input
             type="range"
@@ -329,7 +329,7 @@ export default function RadarPanel({
           />
         </label>
 
-        <label className="radar__check">
+        <label className="radar-check">
           <input
             type="checkbox"
             checked={settings.smooth}
@@ -338,7 +338,7 @@ export default function RadarPanel({
           Smooth
         </label>
 
-        <label className="radar__check">
+        <label className="radar-check">
           <input
             type="checkbox"
             checked={settings.snow}

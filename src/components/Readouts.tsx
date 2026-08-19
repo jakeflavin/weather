@@ -27,15 +27,15 @@ export function Stat({
 }) {
   return (
     <div>
-      <div className="stat__label">{label}</div>
+      <div className="stat-label">{label}</div>
       <div
-        className={small ? 'stat__value stat__value--sm' : 'stat__value'}
+        className={small ? 'stat-value is-sm' : 'stat-value'}
         style={color ? { color } : undefined}
       >
         {value}
-        {unit && <span className="stat__unit">{unit}</span>}
+        {unit && <span className="stat-unit">{unit}</span>}
       </div>
-      {note && <div className="stat__note">{note}</div>}
+      {note && <div className="stat-note">{note}</div>}
       {meter}
     </div>
   )
@@ -49,7 +49,7 @@ export function Meter({ value, color }: { value: number; color?: string }) {
   const pct = Math.max(0, Math.min(1, value)) * 100
   return (
     <div className="meter">
-      <div className="meter__fill" style={{ width: `${pct}%`, background: color }} />
+      <div className="meter-fill" style={{ width: `${pct}%`, background: color }} />
     </div>
   )
 }
@@ -61,8 +61,8 @@ export function Meter({ value, color }: { value: number; color?: string }) {
 export function Flag({ label, value, color }: { label: string; value: ReactNode; color?: string }) {
   return (
     <div className="flag" style={color ? ({ '--flag': color } as React.CSSProperties) : undefined}>
-      <span className="flag__label">{label}</span>
-      <span className="flag__value">{value}</span>
+      <span className="flag-label">{label}</span>
+      <span className="flag-value">{value}</span>
     </div>
   )
 }

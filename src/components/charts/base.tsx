@@ -64,12 +64,12 @@ export interface TipRow {
 export function Tip({ heading, rows }: { heading: string; rows: TipRow[] }) {
   return (
     <div className="tip">
-      <div className="tip__head">{heading}</div>
+      <div className="tip-head">{heading}</div>
       {rows.map((row) => (
-        <div className="tip__row" key={row.label}>
+        <div className="tip-row" key={row.label}>
           {/* The swatch keeps its space when a row has no series colour, so the labels in
               a tooltip stay in one column. */}
-          <i className="tip__swatch" style={{ background: row.color ?? 'transparent' }} />
+          <i className="tip-swatch" style={{ background: row.color ?? 'transparent' }} />
           <span>{row.label}</span>
           <span>{row.value}</span>
         </div>
@@ -86,9 +86,9 @@ export function Legend({
   return (
     <div className="legend">
       {items.map((item) => (
-        <span className="legend__item" key={item.label}>
+        <span className="legend-item" key={item.label}>
           <i
-            className="legend__key"
+            className="legend-key"
             data-shape={item.shape ?? 'line'}
             style={{
               background: item.shape === 'dash' ? undefined : item.color,

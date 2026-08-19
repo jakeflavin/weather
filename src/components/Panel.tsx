@@ -20,14 +20,14 @@ export function Panel({
   children: ReactNode
 }) {
   return (
-    <article className={wide ? 'panel panel--wide' : 'panel'}>
+    <article className={wide ? 'panel is-wide' : 'panel'}>
       {(title || note) && (
-        <header className="panel__head">
-          {title && <h3 className="panel__title">{title}</h3>}
-          {note && <span className="panel__note">{note}</span>}
+        <header className="panel-head">
+          {title && <h3 className="panel-title">{title}</h3>}
+          {note && <span className="panel-note">{note}</span>}
         </header>
       )}
-      <div className="panel__body">{children}</div>
+      <div className="panel-body">{children}</div>
     </article>
   )
 }

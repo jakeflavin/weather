@@ -175,26 +175,26 @@ export function Dashboard({
     <main>
       {/* Level one: the answer, before any chart. */}
       <div className="hero">
-        <div className="hero__place">
-          <div className="hero__name">{place}</div>
-          <div className="hero__meta">
+        <div className="hero-place">
+          <div className="hero-name">{place}</div>
+          <div className="hero-meta">
             {formatWeekday(now)} {formatHour(now)} local
             {isDefaultPlace ? ' · default location' : ''} · updated{' '}
             {sinceLabel(Date.now() - updatedAt)}
           </div>
         </div>
 
-        <div className="hero__temp">
+        <div className="hero-temp">
           <WeatherIcon code={current.weather_code} isDay={current.is_day === 1} size={52} />
-          <span className="hero__reading">
+          <span className="hero-reading">
             {num(toTemp(current.temperature_2m, units))}
             <sup>{u.temp}</sup>
           </span>
         </div>
 
-        <div className="hero__cond">
-          <span className="hero__summary">{code.label}</span>
-          <span className="hero__detail">
+        <div className="hero-cond">
+          <span className="hero-summary">{code.label}</span>
+          <span className="hero-detail">
             Feels {num(toTemp(current.apparent_temperature, units))}
             {u.temp}
             {todayRow && (
@@ -216,7 +216,7 @@ export function Dashboard({
           </span>
         </div>
 
-        <div className="hero__flags">
+        <div className="hero-flags">
           {flags.map((flag) => (
             <Flag key={flag.label} label={flag.label} value={flag.value} color={flag.color} />
           ))}
@@ -227,7 +227,7 @@ export function Dashboard({
 
       <Section title="Right now">
         <Panel wide>
-          <div className="stats stats--fixed">
+          <div className="stats is-fixed">
             <Stat
               label="Wind"
               value={num(toSpeed(current.wind_speed_10m, units))}
@@ -308,7 +308,7 @@ export function Dashboard({
 
       <Section title="Radar">
         <Panel wide title="Precipitation mosaic" note="2h observed · nowcast where available">
-          <Suspense fallback={<p className="radar__state">Loading radar…</p>}>
+          <Suspense fallback={<p className="radar-state">Loading radar…</p>}>
             <RadarPanel
               lat={forecast.latitude}
               lon={forecast.longitude}
@@ -417,7 +417,7 @@ export function Dashboard({
       <details className="disclosure">
         <summary>
           Hourly detail
-          <span className="disclosure__note">{window.length} rows</span>
+          <span className="disclosure-note">{window.length} rows</span>
         </summary>
         <div className="bento">
           <Panel wide>

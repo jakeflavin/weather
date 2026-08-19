@@ -102,7 +102,7 @@ export function LocationBar({
   return (
     <div className="locbar">
       <div className="search">
-        <span className="search__glyph" aria-hidden="true">
+        <span className="search-glyph" aria-hidden="true">
           <svg
             width="14"
             height="14"
@@ -133,7 +133,7 @@ export function LocationBar({
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           onKeyDown={onKeyDown}
         />
-        <span className="search__kbd" aria-hidden="true">
+        <span className="search-kbd" aria-hidden="true">
           /
         </span>
 
@@ -159,7 +159,7 @@ export function LocationBar({
                     </span>
                     {/* Kept as a plain decimal for the same reason as the station readout:
                         this is a coordinate people copy elsewhere. */}
-                    <span className="results__meta">
+                    <span className="results-meta">
                       {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
                     </span>
                   </button>
@@ -167,7 +167,7 @@ export function LocationBar({
               )
             })}
             {!places.length && (
-              <li className="results__empty">
+              <li className="results-empty">
                 {isFetching ? 'Searching…' : 'No places match that.'}
               </li>
             )}
@@ -181,7 +181,7 @@ export function LocationBar({
 
       <button
         type="button"
-        className="button button--subtle"
+        className="button is-subtle"
         onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}
       >
         {isSaved ? 'Saved' : 'Save'}
@@ -195,7 +195,7 @@ export function LocationBar({
             </button>
             <button
               type="button"
-              className="chip__remove"
+              className="chip-remove"
               onClick={() => onRemove(location.id)}
               aria-label={`Remove ${location.name}`}
             >

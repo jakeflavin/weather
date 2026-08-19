@@ -171,18 +171,18 @@ summary {
   border-bottom: 1px solid var(--line);
 }
 
-.appbar__brand {
+.appbar-brand {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
-.appbar__spacer {
+.appbar-spacer {
   flex: 1;
 }
 
-.appbar__tools {
+.appbar-tools {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -258,12 +258,12 @@ summary {
   cursor: default;
 }
 
-.button--subtle {
+.button.is-subtle {
   border-color: transparent;
   background: none;
 }
 
-.button--subtle:hover:not(:disabled) {
+.button.is-subtle:hover:not(:disabled) {
   background: var(--surface-hi);
 }
 
@@ -312,7 +312,7 @@ summary {
   background: var(--surface);
 }
 
-.search__glyph {
+.search-glyph {
   position: absolute;
   left: 10px;
   color: var(--dim);
@@ -320,7 +320,7 @@ summary {
   display: flex;
 }
 
-.search__kbd {
+.search-kbd {
   position: absolute;
   right: 8px;
   font-size: var(--font-lozenge);
@@ -331,7 +331,7 @@ summary {
   pointer-events: none;
 }
 
-.search:focus-within .search__kbd {
+.search:focus-within .search-kbd {
   display: none;
 }
 
@@ -371,7 +371,7 @@ summary {
   background: var(--surface-hi);
 }
 
-.results__meta {
+.results-meta {
   margin-left: auto;
   font-size: var(--font-small);
   color: var(--dim);
@@ -379,7 +379,7 @@ summary {
   font-variant-numeric: tabular-nums;
 }
 
-.results__empty {
+.results-empty {
   padding: 8px 12px;
   font-size: var(--font-small);
   color: var(--dim);
@@ -434,7 +434,7 @@ summary {
   font-weight: 600;
 }
 
-.chip__remove {
+.chip-remove {
   padding: 0 8px 0 2px !important;
 }
 
@@ -455,30 +455,30 @@ summary {
   border-bottom: 1px solid var(--line);
 }
 
-.hero__place {
+.hero-place {
   min-width: 200px;
 }
 
-.hero__name {
+.hero-name {
   font-size: 24px;
   line-height: 28px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-.hero__meta {
+.hero-meta {
   font-size: var(--font-small);
   color: var(--dim);
   margin-top: 2px;
 }
 
-.hero__temp {
+.hero-temp {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-.hero__reading {
+.hero-reading {
   display: flex;
   align-items: flex-start;
   font-size: clamp(44px, 7vw, 60px);
@@ -488,26 +488,26 @@ summary {
   font-variant-numeric: tabular-nums;
 }
 
-.hero__temp sup {
+.hero-temp sup {
   font-size: 0.32em;
   font-weight: 500;
   color: var(--dim);
   margin-top: 0.28em;
 }
 
-.hero__cond {
+.hero-cond {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.hero__summary {
+.hero-summary {
   font-size: 16px;
   line-height: 20px;
   font-weight: 600;
 }
 
-.hero__detail {
+.hero-detail {
   font-size: var(--font-small);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
@@ -529,7 +529,7 @@ summary {
   display: none;
 }
 
-.hourstrip__cell {
+.hourstrip-cell {
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
@@ -540,24 +540,24 @@ summary {
   border-radius: 4px;
 }
 
-.hourstrip__cell:hover {
+.hourstrip-cell:hover {
   background: var(--surface-hi);
 }
 
-.hourstrip__time {
+.hourstrip-time {
   font-size: var(--font-lozenge);
   color: var(--dim);
   white-space: nowrap;
 }
 
-.hourstrip__temp {
+.hourstrip-temp {
   font-size: var(--font-body);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 /* Always rendered, blank below 10%, so every cell is the same height. */
-.hourstrip__precip {
+.hourstrip-precip {
   font-size: var(--font-lozenge);
   color: var(--s-precip);
   font-variant-numeric: tabular-nums;
@@ -565,7 +565,7 @@ summary {
 }
 
 /* Two or three facts that change what you do today, pulled out of the panels below. */
-.hero__flags {
+.hero-flags {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -579,13 +579,13 @@ summary {
   gap: 4px;
 }
 
-.flag__label {
+.flag-label {
   font-size: var(--font-small);
   color: var(--dim);
 }
 
 /* ADS lozenge: a tinted pill carrying the quantity's own colour, as fibo tags do. */
-.flag__value {
+.flag-value {
   display: inline-flex;
   align-items: center;
   border-radius: 2px;
@@ -616,7 +616,7 @@ summary {
   margin-top: 12px;
 }
 
-.section__head {
+.section-head {
   display: flex;
   align-items: baseline;
   gap: 12px;
@@ -624,14 +624,14 @@ summary {
   padding: 16px 16px 12px;
 }
 
-.section__title {
+.section-title {
   font-size: 16px;
   line-height: 20px;
   font-weight: 600;
   margin: 0;
 }
 
-.section__note {
+.section-note {
   font-size: var(--font-small);
   color: var(--dim);
 }
@@ -662,25 +662,25 @@ summary {
   background: var(--surface);
 }
 
-.panel--wide {
+.panel.is-wide {
   flex-basis: 100%;
 }
 
-.panel__head {
+.panel-head {
   display: flex;
   align-items: baseline;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.panel__title {
+.panel-title {
   font-size: var(--font-small);
   font-weight: 600;
   color: var(--dim);
   margin: 0;
 }
 
-.panel__note {
+.panel-note {
   font-size: var(--font-small);
   color: var(--dim);
   margin-left: auto;
@@ -688,7 +688,7 @@ summary {
   font-variant-numeric: tabular-nums;
 }
 
-.panel__body {
+.panel-body {
   flex: 1;
   min-height: 0;
 }
@@ -701,20 +701,20 @@ summary {
  * which growing flex items do not: a row of three stretches each one wider than a row of
  * five above it, and the strip stops reading as a table.
  */
-.stats.stats--fixed {
+.stats.stats.is-fixed {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px 24px;
 }
 
 @media (min-width: 620px) {
-  .stats.stats--fixed {
+  .stats.stats.is-fixed {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1180px) {
-  .stats.stats--fixed {
+  .stats.stats.is-fixed {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
@@ -735,12 +735,12 @@ summary {
   min-width: 0;
 }
 
-.stat__label {
+.stat-label {
   font-size: var(--font-small);
   color: var(--dim);
 }
 
-.stat__value {
+.stat-value {
   font-size: 20px;
   line-height: 24px;
   font-weight: 600;
@@ -748,12 +748,12 @@ summary {
   white-space: nowrap;
 }
 
-.stat__value--sm {
+.stat-value.is-sm {
   font-size: 16px;
   line-height: 20px;
 }
 
-.stat__unit {
+.stat-unit {
   font-size: 0.65em;
   font-weight: 500;
   color: var(--dim);
@@ -761,7 +761,7 @@ summary {
 }
 
 /* One line always, so the meter below it never shifts relative to the stat alongside. */
-.stat__note {
+.stat-note {
   font-size: var(--font-small);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
@@ -780,7 +780,7 @@ summary {
   overflow: hidden;
 }
 
-.meter__fill {
+.meter-fill {
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: 2px;
@@ -876,7 +876,7 @@ table.data tr[data-daybreak='true'] td {
   transform: rotate(90deg);
 }
 
-.disclosure__note {
+.disclosure-note {
   margin-left: auto;
   font-size: var(--font-small);
   font-weight: 400;
@@ -911,25 +911,25 @@ table.data tr[data-daybreak='true'] td {
   opacity: 0.55;
 }
 
-.day[data-today='true'] .day__name {
+.day[data-today='true'] .day-name {
   font-weight: 600;
 }
 
-.day__glyph {
+.day-glyph {
   color: var(--dim);
   text-align: center;
 }
 
-.day__cond,
-.day__low {
+.day-cond,
+.day-low {
   color: var(--dim);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.day__low,
-.day__high {
+.day-low,
+.day-high {
   text-align: right;
 }
 
@@ -941,7 +941,7 @@ table.data tr[data-daybreak='true'] td {
   background: var(--surface-hi);
 }
 
-.range__span {
+.range-span {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -949,7 +949,7 @@ table.data tr[data-daybreak='true'] td {
   background: linear-gradient(90deg, var(--s-precip), var(--s-temp));
 }
 
-.range__now {
+.range-now {
   position: absolute;
   top: -3px;
   bottom: -3px;
@@ -958,12 +958,12 @@ table.data tr[data-daybreak='true'] td {
   background: var(--text);
 }
 
-.day__precip {
+.day-precip {
   text-align: right;
   color: var(--s-precip);
 }
 
-.day__precip[data-zero='true'] {
+.day-precip[data-zero='true'] {
   color: var(--dim);
 }
 
@@ -995,31 +995,31 @@ table.data tr[data-daybreak='true'] td {
   font-variant-numeric: tabular-nums;
 }
 
-.tip__head {
+.tip-head {
   font-weight: 600;
   color: var(--text);
   font-size: var(--font-small);
   margin-bottom: 8px;
 }
 
-.tip__row {
+.tip-row {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 20px;
 }
 
-.tip__row > span:first-of-type {
+.tip-row > span:first-of-type {
   color: var(--dim);
 }
 
-.tip__row > span:last-of-type {
+.tip-row > span:last-of-type {
   margin-left: auto;
   color: var(--text);
   font-weight: 500;
 }
 
-.tip__swatch {
+.tip-swatch {
   width: 8px;
   height: 8px;
   border-radius: 2px;
@@ -1033,7 +1033,7 @@ table.data tr[data-daybreak='true'] td {
   margin-top: 8px;
 }
 
-.legend__item {
+.legend-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1041,18 +1041,18 @@ table.data tr[data-daybreak='true'] td {
   color: var(--dim);
 }
 
-.legend__key {
+.legend-key {
   width: 12px;
   height: 2px;
   border-radius: 1px;
   flex: none;
 }
 
-.legend__key[data-shape='dash'] {
+.legend-key[data-shape='dash'] {
   background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 8px);
 }
 
-.legend__key[data-shape='box'] {
+.legend-key[data-shape='box'] {
   width: 8px;
   height: 8px;
   border-radius: 2px;
@@ -1066,14 +1066,14 @@ table.data tr[data-daybreak='true'] td {
   gap: 10px;
 }
 
-.radar__bar {
+.radar-bar {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.radar__play {
+.radar-play {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1081,7 +1081,7 @@ table.data tr[data-daybreak='true'] td {
 }
 
 /* One tick per frame: a scrubber that also shows how much history there is. */
-.radar__timeline {
+.radar-timeline {
   display: flex;
   align-items: stretch;
   gap: 2px;
@@ -1090,7 +1090,7 @@ table.data tr[data-daybreak='true'] td {
   height: 18px;
 }
 
-.radar__tick {
+.radar-tick {
   appearance: none;
   flex: 1 1 auto;
   min-width: 0;
@@ -1101,26 +1101,26 @@ table.data tr[data-daybreak='true'] td {
   cursor: pointer;
 }
 
-.radar__tick:hover {
+.radar-tick:hover {
   background: var(--line-strong);
 }
 
-.radar__tick[data-active='true'] {
+.radar-tick[data-active='true'] {
   background: var(--accent);
 }
 
 /* Nowcast frames are model output; the stripe keeps them from reading as observation. */
-.radar__tick[data-forecast='true'] {
+.radar-tick[data-forecast='true'] {
   background: repeating-linear-gradient(45deg, var(--surface-hi) 0 3px, transparent 3px 6px);
   box-shadow: inset 0 0 0 1px var(--line);
 }
 
-.radar__tick[data-forecast='true'][data-active='true'] {
+.radar-tick[data-forecast='true'][data-active='true'] {
   background: var(--accent);
   box-shadow: inset 0 0 0 1px var(--accent);
 }
 
-.radar__time {
+.radar-time {
   font-size: var(--font-small);
   color: var(--dim);
   font-variant-numeric: tabular-nums;
@@ -1130,7 +1130,7 @@ table.data tr[data-daybreak='true'] td {
   gap: 6px;
 }
 
-.radar__badge {
+.radar-badge {
   border-radius: 2px;
   padding: 1px 6px;
   font-size: var(--font-lozenge);
@@ -1139,7 +1139,7 @@ table.data tr[data-daybreak='true'] td {
   background: var(--accent-dim);
 }
 
-.radar__map {
+.radar-map {
   height: 440px;
   border-radius: 4px;
   overflow: hidden;
@@ -1149,20 +1149,20 @@ table.data tr[data-daybreak='true'] td {
   isolation: isolate;
 }
 
-.radar__state {
+.radar-state {
   margin: 0;
   font-size: var(--font-small);
   color: var(--dim);
 }
 
-.radar__options {
+.radar-options {
   display: flex;
   align-items: center;
   gap: 10px 20px;
   flex-wrap: wrap;
 }
 
-.radar__field {
+.radar-field {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1170,7 +1170,7 @@ table.data tr[data-daybreak='true'] td {
   color: var(--dim);
 }
 
-.radar__field select {
+.radar-field select {
   border: 1px solid var(--line);
   border-radius: 4px;
   background: var(--surface);
@@ -1180,12 +1180,12 @@ table.data tr[data-daybreak='true'] td {
   font-size: var(--font-small);
 }
 
-.radar__field input[type='range'] {
+.radar-field input[type='range'] {
   width: 96px;
   accent-color: var(--accent);
 }
 
-.radar__check {
+.radar-check {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1194,34 +1194,34 @@ table.data tr[data-daybreak='true'] td {
   cursor: pointer;
 }
 
-.radar__check input {
+.radar-check input {
   accent-color: var(--accent);
 }
 
 /* Leaflet's own chrome, brought into the design system. */
-.radar__map .leaflet-container {
+.radar-map .leaflet-container {
   font-family: var(--font-sans);
   background: var(--surface-hi);
 }
 
-.radar__map .leaflet-bar a {
+.radar-map .leaflet-bar a {
   background: var(--surface);
   color: var(--text);
   border-bottom-color: var(--line);
 }
 
-.radar__map .leaflet-bar a:hover {
+.radar-map .leaflet-bar a:hover {
   background: var(--surface-hi);
   color: var(--text);
 }
 
-.radar__map .leaflet-control-attribution {
+.radar-map .leaflet-control-attribution {
   background: var(--surface);
   color: var(--dim);
   font-size: var(--font-lozenge);
 }
 
-.radar__map .leaflet-control-attribution a {
+.radar-map .leaflet-control-attribution a {
   color: var(--accent);
 }
 
@@ -1237,7 +1237,7 @@ table.data tr[data-daybreak='true'] td {
   border-bottom: 1px solid var(--line);
 }
 
-.notice__title {
+.notice-title {
   display: block;
   color: var(--text);
   font-size: 16px;
@@ -1245,7 +1245,7 @@ table.data tr[data-daybreak='true'] td {
   margin-bottom: 6px;
 }
 
-.notice--error .notice__title {
+.notice.is-error .notice-title {
   color: var(--danger);
 }
 
@@ -1269,14 +1269,14 @@ table.data tr[data-daybreak='true'] td {
   text-decoration: underline;
 }
 
-.footer__spacer {
+.footer-spacer {
   flex: 1;
 }
 
 /* ────────────────────────────────────────────────────────── narrow view */
 
 @media (max-width: 600px) {
-  .radar__map {
+  .radar-map {
     height: 300px;
   }
 
@@ -1287,15 +1287,15 @@ table.data tr[data-daybreak='true'] td {
     gap: 8px;
   }
 
-  .appbar__spacer {
+  .appbar-spacer {
     display: none;
   }
 
-  .appbar__tools {
+  .appbar-tools {
     width: 100%;
   }
 
-  .appbar__tools .button {
+  .appbar-tools .button {
     margin-left: auto;
   }
 
@@ -1304,7 +1304,7 @@ table.data tr[data-daybreak='true'] td {
     padding: 20px 16px;
   }
 
-  .hero__flags {
+  .hero-flags {
     margin-left: 0;
     width: 100%;
   }
@@ -1314,7 +1314,7 @@ table.data tr[data-daybreak='true'] td {
     gap: 8px;
   }
 
-  .day__cond {
+  .day-cond {
     display: none;
   }
 }

@@ -48,9 +48,9 @@ export default function App() {
   return (
     <div className="app">
       <header className="appbar">
-        <span className="appbar__brand">Weather</span>
-        <span className="appbar__spacer" />
-        <div className="appbar__tools">
+        <span className="appbar-brand">Weather</span>
+        <span className="appbar-spacer" />
+        <div className="appbar-tools">
           <div className="segmented" role="group" aria-label="Hourly range">
             {RANGES.map((value) => (
               <button
@@ -117,14 +117,14 @@ export default function App() {
 
       {forecast.isPending && !forecast.data && (
         <p className="notice">
-          <span className="notice__title">Loading</span>
+          <span className="notice-title">Loading</span>
           Fetching the forecast for {describe(current)}.
         </p>
       )}
 
       {forecast.isError && (
-        <div className="notice notice--error" role="alert">
-          <span className="notice__title">No data</span>
+        <div className="notice is-error" role="alert">
+          <span className="notice-title">No data</span>
           {forecast.error instanceof Error
             ? forecast.error.message
             : 'The forecast request failed.'}
@@ -158,7 +158,7 @@ export default function App() {
           </a>
         </span>
         <span>Shortcuts · / search · u units · t theme · r refresh</span>
-        <span className="footer__spacer" />
+        <span className="footer-spacer" />
         <span>
           {forecast.data
             ? `${forecast.data.timezone} · ${forecast.data.timezone_abbreviation}`

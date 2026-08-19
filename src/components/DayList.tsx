@@ -47,18 +47,18 @@ export function DayList({
         const precip = toPrecip(row.precipSum ?? 0, units)
         return (
           <div className="day" key={row.day} data-past={row.past} data-today={isToday}>
-            <span className="day__name">
+            <span className="day-name">
               {isToday
                 ? 'Today'
                 : `${formatWeekday(row.t)} ${formatDayMonth(row.t).replace(/\D+/g, '')}`}
             </span>
-            <span className="day__glyph" title={code.label}>
+            <span className="day-glyph" title={code.label}>
               <WeatherIcon code={row.code} size={18} />
             </span>
-            <span className="day__cond" title={`${formatDayMonth(row.t)} · ${code.label}`}>
+            <span className="day-cond" title={`${formatDayMonth(row.t)} · ${code.label}`}>
               {code.short}
             </span>
-            <span className="day__low">
+            <span className="day-low">
               {row.tempMin == null ? '—' : num(toTemp(row.tempMin, units))}
             </span>
             <span
@@ -68,7 +68,7 @@ export function DayList({
             >
               {row.tempMin != null && row.tempMax != null && (
                 <span
-                  className="range__span"
+                  className="range-span"
                   style={{
                     left: `${position(row.tempMin)}%`,
                     width: `${Math.max(position(row.tempMax) - position(row.tempMin), 1.5)}%`,
@@ -76,13 +76,13 @@ export function DayList({
                 />
               )}
               {isToday && currentTemp != null && (
-                <span className="range__now" style={{ left: `${position(currentTemp)}%` }} />
+                <span className="range-now" style={{ left: `${position(currentTemp)}%` }} />
               )}
             </span>
-            <span className="day__high">
+            <span className="day-high">
               {row.tempMax == null ? '—' : num(toTemp(row.tempMax, units))}
             </span>
-            <span className="day__precip" data-zero={precip < 0.05}>
+            <span className="day-precip" data-zero={precip < 0.05}>
               {precip < 0.05 ? '—' : `${num(precip, digits)}`}
               <span className="unit">{precip < 0.05 ? '' : u.precip}</span>
             </span>

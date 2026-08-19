@@ -11,8 +11,8 @@ import type { ReactNode } from 'react'
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="section">
-      <header className="section__head">
-        <h2 className="section__title">{title}</h2>
+      <header className="section-head">
+        <h2 className="section-title">{title}</h2>
       </header>
       <div className="bento">{children}</div>
     </section>
