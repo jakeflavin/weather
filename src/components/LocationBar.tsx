@@ -157,6 +157,8 @@ export function LocationBar({
                     <span className="dim">
                       {[place.admin1, place.country].filter(Boolean).join(', ')}
                     </span>
+                    {/* Kept as a plain decimal for the same reason as the station readout:
+                        this is a coordinate people copy elsewhere. */}
                     <span className="results__meta">
                       {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
                     </span>

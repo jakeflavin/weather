@@ -425,6 +425,8 @@ export function Dashboard({
           </Panel>
           <Panel wide title="Station">
             <div className="stats">
+              {/* Not Intl: a coordinate is something people copy into a map or a
+                  script, and a comma decimal breaks it wherever they paste it. */}
               <Stat label="Latitude" value={forecast.latitude.toFixed(3)} small />
               <Stat label="Longitude" value={forecast.longitude.toFixed(3)} small />
               <Stat
