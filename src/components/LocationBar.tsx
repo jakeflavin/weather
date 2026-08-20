@@ -14,7 +14,8 @@ import {
 } from './LocationBar.styled'
 import { useQuery } from '@tanstack/react-query'
 import { searchPlaces } from '@/api/openMeteo'
-import { describe, fromPlace, type Location } from '@/hooks/useLocations'
+import { describe, fromPlace, label, type Location } from '@/hooks/useLocations'
+import { PHONE, useMediaQuery } from '@/hooks/useMediaQuery'
 
 /** Long enough that typing a city name is one request, short enough to feel immediate. */
 const DEBOUNCE_MS = 220
@@ -33,6 +34,12 @@ function useDebounced(value: string, delay: number) {
  *
  * The listbox is keyboard-first: `/` from anywhere focuses the field, arrows move the
  * highlight, Enter selects, Escape closes without changing the location.
+ *
+ * The options carry ids and the field points at the highlighted one with
+ * `aria-activedescendant`, because focus never leaves the text field — without it the
+ * highlight moves silently and a screen reader is told nothing at all. Each option is
+ * itself the clickable element: an `option` may not contain a focusable descendant, and a
+ * button inside one would also put every result in the tab order twice over.
  */
 export function LocationBar({
   current,
@@ -57,7 +64,9 @@ export function LocationBar({
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const phone = useMediaQuery(PHONE)
   const listId = useId()
+  const optionId = (index: number) => `${listId}-option-${index}`
   const debounced = useDebounced(query, DEBOUNCE_MS)
 
   const { data: places = [], isFetching } = useQuery({
@@ -135,7 +144,8 @@ export function LocationBar({
           aria-expanded={showList}
           aria-controls={listId}
           aria-autocomplete="list"
-          placeholder="Search a city, region or airport"
+          aria-activedescendant={showList && places.length ? optionId(active) : undefined}
+          placeholder={phone ? 'Search a place' : 'Search a city, region or airport'}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value)
@@ -146,69 +156,58 @@ export function LocationBar({
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           onKeyDown={onKeyDown}
         />
-        <SearchKbd aria-hidden="true">
-          /
-        </SearchKbd>
+        <SearchKbd aria-hidden="true">/</SearchKbd>
 
         {showList && (
-          <Results id={listId} role="listbox">
+          <Results id={listId} role="listbox" aria-label="Places">
             {places.map((place, index) => {
               const location = fromPlace(place)
               return (
                 <li
                   key={place.id}
+                  id={optionId(index)}
                   role="option"
                   aria-selected={index === active}
                   data-active={index === active}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setActive(index)}
+                  onClick={() => choose(location)}
                 >
-                  <button
-                    type="button"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => choose(location)}
-                  >
-                    <span>{place.name}</span>
-                    <Dim>
-                      {[place.admin1, place.country].filter(Boolean).join(', ')}
-                    </Dim>
-                    {/* Kept as a plain decimal for the same reason as the station readout:
-                        this is a coordinate people copy elsewhere. */}
-                    <ResultMeta>
-                      {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
-                    </ResultMeta>
-                  </button>
+                  <span>{place.name}</span>
+                  <Dim>{[place.admin1, place.country].filter(Boolean).join(', ')}</Dim>
+                  {/* Kept as a plain decimal for the same reason as the station readout:
+                      this is a coordinate people copy elsewhere. */}
+                  <ResultMeta>
+                    {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
+                  </ResultMeta>
                 </li>
               )
             })}
             {!places.length && (
-              <ResultsEmpty>
-                {isFetching ? 'Searching…' : 'No places match that.'}
-              </ResultsEmpty>
+              <ResultsEmpty>{isFetching ? 'Searching…' : 'No places match that.'}</ResultsEmpty>
             )}
           </Results>
         )}
       </Search>
 
-      <Button type="button" onClick={onLocate} disabled={locating}>
-        {locating ? 'Locating…' : 'Use my location'}
+      {/* Save is the one that changes stored state and shows up elsewhere, so it is the
+          one that carries the border; locating is a one-off that leaves nothing behind. */}
+      <Button type="button" onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}>
+        {isSaved ? 'Saved' : 'Save'}
       </Button>
 
-      <Button
-        type="button"
-          $subtle
-        onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}
-      >
-        {isSaved ? 'Saved' : 'Save'}
+      <Button type="button" $subtle onClick={onLocate} disabled={locating}>
+        {locating ? 'Locating…' : phone ? 'Locate' : 'Use my location'}
       </Button>
 
       <Chips>
         {saved.map((location) => (
           <Chip key={location.id} data-current={location.id === current.id}>
-            <button type="button" onClick={() => onSelect(location)}>
-              {describe(location)}
+            <button type="button" title={describe(location)} onClick={() => onSelect(location)}>
+              {label(location)}
             </button>
             <ChipRemove
               type="button"
-
               onClick={() => onRemove(location.id)}
               aria-label={`Remove ${location.name}`}
             >

@@ -9,8 +9,10 @@ import {
   Options,
   PlayButton,
   Radar,
+  Scrub,
   State,
   Tick,
+  Ticks,
   Time,
   Timeline,
 } from './RadarPanel.styled'
@@ -26,6 +28,7 @@ import {
   type RadarIndex,
 } from '@/api/rainviewer'
 import { useResolvedTheme } from '@/hooks/useResolvedTheme'
+import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
 import { formatHour, formatWeekday } from '@/lib/time'
 import { usePersistentState } from '@/hooks/usePersistentState'
 
@@ -56,6 +59,16 @@ const MAP_MIN_ZOOM = 3
 /** Milliseconds per frame while playing, and the pause held on the newest frame. */
 const FRAME_MS = 450
 const HOLD_MS = 1200
+
+/**
+ * Playback under `prefers-reduced-motion`.
+ *
+ * The loop is a `setTimeout`, so the stylesheet's blanket reduced-motion rule — which only
+ * collapses CSS animation and transition durations — never reached it. It is not silenced
+ * altogether: the reader pressed a button labelled Play, and the movement of the rain is
+ * the content. It steps at a slideshow's pace instead of an animation's.
+ */
+const REDUCED_FRAME_MS = 1400
 
 interface RadarSettings {
   color: number
@@ -95,6 +108,7 @@ export default function RadarPanel({
   utcOffsetSeconds: number
 }) {
   const theme = useResolvedTheme()
+  const reducedMotion = usePrefersReducedMotion()
   const [settings, setSettings] = usePersistentState<RadarSettings>('wx:radar', DEFAULTS)
   const [index, setIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
@@ -244,12 +258,13 @@ export default function RadarPanel({
   useEffect(() => {
     if (!playing || frames.length < 2) return
     const atEnd = index >= frames.length - 1
+    const step = reducedMotion ? REDUCED_FRAME_MS : FRAME_MS
     const timer = setTimeout(
       () => setIndex((value) => (value >= frames.length - 1 ? 0 : value + 1)),
-      atEnd ? HOLD_MS : FRAME_MS,
+      atEnd ? Math.max(HOLD_MS, step) : step,
     )
     return () => clearTimeout(timer)
-  }, [playing, index, frames.length])
+  }, [playing, index, frames.length, reducedMotion])
 
   const update = (patch: Partial<RadarSettings>) => setSettings((value) => ({ ...value, ...patch }))
 
@@ -259,6 +274,8 @@ export default function RadarPanel({
         frame.time * 1000 + utcOffsetSeconds * 1000,
       )}`
     : '—'
+
+  const dead = frames.length === 0
 
   return (
     <Radar>
@@ -274,20 +291,29 @@ export default function RadarPanel({
         </PlayButton>
 
         <Timeline>
-          {frames.map((item, position) => (
-            <Tick
-              type="button"
-              key={item.path}
-              data-active={position === index}
-              data-forecast={item.forecast}
-              onClick={() => {
-                setPlaying(false)
-                setIndex(position)
-              }}
-              aria-label={formatHour(item.time * 1000 + utcOffsetSeconds * 1000)}
-              title={formatHour(item.time * 1000 + utcOffsetSeconds * 1000)}
-            />
-          ))}
+          <Ticks aria-hidden="true">
+            {frames.map((item, position) => (
+              <Tick
+                key={item.path}
+                data-active={position === index}
+                data-forecast={item.forecast}
+              />
+            ))}
+          </Ticks>
+          <Scrub
+            type="range"
+            min={0}
+            max={Math.max(frames.length - 1, 0)}
+            step={1}
+            value={Math.min(index, Math.max(frames.length - 1, 0))}
+            disabled={frames.length < 2}
+            aria-label="Radar frame"
+            aria-valuetext={frameLabel}
+            onChange={(event) => {
+              setPlaying(false)
+              setIndex(Number(event.target.value))
+            }}
+          />
         </Timeline>
 
         <Time>
@@ -296,10 +322,7 @@ export default function RadarPanel({
         </Time>
       </Bar>
 
-      <MapBox
-        ref={containerRef}
-        aria-label={`Precipitation radar near ${place}`}
-      />
+      <MapBox ref={containerRef} aria-label={`Precipitation radar near ${place}`} />
 
       {isPending && <State>Loading radar frames…</State>}
       {!isPending && !isError && frames.length === 0 && (
@@ -319,6 +342,7 @@ export default function RadarPanel({
           <span>Palette</span>
           <select
             value={settings.color}
+            disabled={dead}
             onChange={(event) => update({ color: Number(event.target.value) })}
           >
             {COLOR_SCHEMES.map((scheme) => (
@@ -337,6 +361,8 @@ export default function RadarPanel({
             max={1}
             step={0.05}
             value={settings.opacity}
+            disabled={dead}
+            aria-label="Radar opacity"
             onChange={(event) => update({ opacity: Number(event.target.value) })}
           />
         </Field>
@@ -345,6 +371,7 @@ export default function RadarPanel({
           <input
             type="checkbox"
             checked={settings.smooth}
+            disabled={dead}
             onChange={(event) => update({ smooth: event.target.checked })}
           />
           Smooth
@@ -354,6 +381,7 @@ export default function RadarPanel({
           <input
             type="checkbox"
             checked={settings.snow}
+            disabled={dead}
             onChange={(event) => update({ snow: event.target.checked })}
           />
           Mark snow

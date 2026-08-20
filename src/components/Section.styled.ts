@@ -14,6 +14,11 @@ export const band = `
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   margin-top: 12px;
+
+  @media print {
+    break-inside: avoid;
+    border-color: #d0d0d0;
+  }
 `
 
 export const Band = styled.section`
@@ -22,10 +27,15 @@ export const Band = styled.section`
 
 export const Head = styled.header`
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
   flex-wrap: wrap;
   padding: 16px 16px 12px;
+
+  /* A section control sits at the far end of the heading it governs. */
+  > *:not(h2) {
+    margin-left: auto;
+  }
 `
 
 export const Title = styled.h2`

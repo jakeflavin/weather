@@ -9,11 +9,25 @@ import { Band, Bento, Head, Title } from './Section.styled'
  * sibling of every other and there is nowhere for the eye to start; with them the page
  * reads as four or five questions, each answered by a small group of charts.
  */
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({
+  title,
+  action,
+  children,
+}: {
+  title: string
+  /**
+   * A control that governs this section, sat in its heading rather than the masthead.
+   * The phone layout uses it for the hourly range: a control belongs next to the thing it
+   * changes, and the masthead has no room to spare on a 390px screen.
+   */
+  action?: ReactNode
+  children: ReactNode
+}) {
   return (
     <Band>
       <Head>
         <Title>{title}</Title>
+        {action}
       </Head>
       <Bento>{children}</Bento>
     </Band>

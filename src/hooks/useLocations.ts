@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePersistentState } from './usePersistentState'
 import type { Place } from '@/api/openMeteo'
 
@@ -40,29 +40,63 @@ export function fromPlace(place: Place): Location {
 /** `Denver, Colorado` — the region is dropped when it merely repeats the city. */
 export function describe(location: Location): string {
   const parts = [location.name]
-  if (location.region && location.region !== location.name) parts.push(location.region)
+  if (location.region && !repeats(location.region, location.name)) parts.push(location.region)
   else if (location.country) parts.push(location.country)
   return parts.join(', ')
 }
 
-function fromUrl(): Location | null {
+/**
+ * A short label, for the saved rail.
+ *
+ * The rail is a shortcut back to somewhere you chose on purpose, so the city name is the
+ * whole of what it needs; the full description rides along as the chip's tooltip. Eight
+ * full descriptions do not fit the rail at any width the app supports.
+ */
+export function label(location: Location): string {
+  return location.name
+}
+
+/**
+ * Whether a region name is just the city's again.
+ *
+ * Geocoders return administrative suffixes — `Wellington Region`, `Nizhny Novgorod
+ * Oblast`, `Capital Region` — so an equality test leaves the name printed twice. Comparing
+ * with the suffix stripped catches those while still keeping `Denver, Colorado`.
+ */
+const SUFFIXES =
+  /\s+(region|oblast|province|prefecture|county|district|state|governorate|department|municipality|metropolitan area|city)$/i
+
+function repeats(region: string, name: string): boolean {
+  const bare = region.replace(SUFFIXES, '').trim().toLowerCase()
+  return bare === name.trim().toLowerCase()
+}
+
+/** A location read out of the query string, or the reason it could not be. */
+type UrlResult = { location: Location } | { error: string } | null
+
+function fromUrl(): UrlResult {
   const params = new URLSearchParams(window.location.search)
   const rawLat = params.get('lat')
   const rawLon = params.get('lon')
+  // Nothing asked for: a cold open, not a broken link.
+  if (!rawLat && !rawLon) return null
   // `Number(null)` is 0, which would silently place everyone in the Gulf of Guinea, so the
   // parameters have to be checked for presence before they are converted.
-  if (!rawLat || !rawLon) return null
+  if (!rawLat || !rawLon) return { error: 'It was missing a coordinate.' }
   const lat = Number(rawLat)
   const lon = Number(rawLon)
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
-    return null
+  if (!Number.isFinite(lat) || !Number.isFinite(lon))
+    return { error: `“${rawLat}, ${rawLon}” isn’t a coordinate.` }
+  if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return { error: `${lat}, ${lon} is off the map.` }
   return {
-    id: locationId(lat, lon),
-    name: params.get('name') ?? `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
-    region: params.get('region') ?? undefined,
-    country: params.get('country') ?? undefined,
-    lat,
-    lon,
+    location: {
+      id: locationId(lat, lon),
+      name: params.get('name') ?? `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
+      region: params.get('region') ?? undefined,
+      country: params.get('country') ?? undefined,
+      lat,
+      lon,
+    },
   }
 }
 
@@ -70,18 +104,26 @@ function fromUrl(): Location | null {
  * The active location, plus the short list of saved ones.
  *
  * Resolution order on first load is: a location in the URL (so a shared link always wins),
- * then the last one used, then the device's own position, then a fallback. Geolocation is
- * only *asked for* when there is nothing else to show — an unprompted permission dialog on
- * a cold open is worse than a default city.
+ * then the last one used, then the device's own position, then a fallback city.
+ *
+ * Geolocation is asked for automatically only on a *cold* open — no link, no history. A
+ * shared link and a returning visitor both already know where they are going, and neither
+ * should meet a permission dialog. The fallback city is shown immediately and swapped for
+ * the real position when it arrives, so the page is never blocked on the prompt.
  */
 export function useLocations() {
   const [saved, setSaved] = usePersistentState<Location[]>('wx:saved', [])
   const [last, setLast] = usePersistentState<Location | null>('wx:last', null)
-  const [current, setCurrent] = useState<Location>(() => fromUrl() ?? last ?? FALLBACK)
+  const initial = useRef<UrlResult>(fromUrl()).current
+  const fromLink = initial && 'location' in initial ? initial.location : null
+  const [current, setCurrent] = useState<Location>(() => fromLink ?? last ?? FALLBACK)
   const [locating, setLocating] = useState(false)
   const [geoError, setGeoError] = useState<string | null>(null)
+  const [linkError, setLinkError] = useState<string | null>(
+    initial && 'error' in initial ? initial.error : null,
+  )
   /** True while showing the fallback because nothing better was known yet. */
-  const [isDefault, setIsDefault] = useState(() => !fromUrl() && !last)
+  const [isDefault, setIsDefault] = useState(() => !fromLink && !last)
 
   const select = useCallback(
     (location: Location) => {
@@ -89,6 +131,7 @@ export function useLocations() {
       setLast(location)
       setIsDefault(false)
       setGeoError(null)
+      setLinkError(null)
     },
     [setLast],
   )
@@ -123,6 +166,20 @@ export function useLocations() {
     )
   }, [select])
 
+  // A cold open asks for the position itself rather than waiting to be asked. Guarded by a
+  // ref as well as the dependency list, because a permission prompt fired twice is worse
+  // than one fired once.
+  const askedForPosition = useRef(false)
+  useEffect(() => {
+    if (askedForPosition.current) return
+    if (fromLink || last || linkError) return
+    askedForPosition.current = true
+    locate()
+    // `last` is read once, on the first render that matters: a location saved *by* this
+    // effect must not re-trigger it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const save = useCallback(
     (location: Location) => {
       setSaved((list) =>
@@ -142,7 +199,11 @@ export function useLocations() {
   // Keep the address bar in step so the page can be linked, bookmarked, or reloaded onto
   // the same place. Replace rather than push: back should leave the app, not walk the
   // history of every city looked at.
+  //
+  // A URL that arrived broken is left exactly as it came until the reader picks somewhere,
+  // so it can still be read, copied or sent back to whoever shared it.
   useEffect(() => {
+    if (linkError) return
     const params = new URLSearchParams()
     params.set('lat', current.lat.toFixed(4))
     params.set('lon', current.lon.toFixed(4))
@@ -150,7 +211,19 @@ export function useLocations() {
     if (current.region) params.set('region', current.region)
     if (current.country) params.set('country', current.country)
     window.history.replaceState(null, '', `?${params}`)
-  }, [current])
+  }, [current, linkError])
 
-  return { current, select, saved, save, remove, isSaved, locate, locating, geoError, isDefault }
+  return {
+    current,
+    select,
+    saved,
+    save,
+    remove,
+    isSaved,
+    locate,
+    locating,
+    geoError,
+    linkError,
+    isDefault,
+  }
 }
