@@ -1,4 +1,5 @@
 import { Suspense, lazy, useMemo } from 'react'
+import { Cond, Detail, Flags, Hero, Meta, Name, Place, Reading, Summary, Temp } from './Hero.styled'
 import { Sunrise, Sunset } from 'lucide-react'
 import { DayList } from './DayList'
 const RadarPanel = lazy(() => import('./RadarPanel'))
@@ -174,27 +175,27 @@ export function Dashboard({
   return (
     <main>
       {/* Level one: the answer, before any chart. */}
-      <div className="hero">
-        <div className="hero-place">
-          <div className="hero-name">{place}</div>
-          <div className="hero-meta">
+      <Hero>
+        <Place>
+          <Name>{place}</Name>
+          <Meta>
             {formatWeekday(now)} {formatHour(now)} local
             {isDefaultPlace ? ' · default location' : ''} · updated{' '}
             {sinceLabel(Date.now() - updatedAt)}
-          </div>
-        </div>
+          </Meta>
+        </Place>
 
-        <div className="hero-temp">
+        <Temp>
           <WeatherIcon code={current.weather_code} isDay={current.is_day === 1} size={52} />
-          <span className="hero-reading">
+          <Reading>
             {num(toTemp(current.temperature_2m, units))}
             <sup>{u.temp}</sup>
-          </span>
-        </div>
+          </Reading>
+        </Temp>
 
-        <div className="hero-cond">
-          <span className="hero-summary">{code.label}</span>
-          <span className="hero-detail">
+        <Cond>
+          <Summary>{code.label}</Summary>
+          <Detail>
             Feels {num(toTemp(current.apparent_temperature, units))}
             {u.temp}
             {todayRow && (
@@ -213,17 +214,17 @@ export function Dashboard({
                 {u.temp} vs 24h ago
               </>
             )}
-          </span>
-        </div>
+          </Detail>
+        </Cond>
 
-        <div className="hero-flags">
+        <Flags>
           {flags.map((flag) => (
             <Flag key={flag.label} label={flag.label} value={flag.value} color={flag.color} />
           ))}
-        </div>
+        </Flags>
 
         <HourStrip rows={window} units={units} />
-      </div>
+      </Hero>
 
       <Section title="Right now">
         <Panel wide>

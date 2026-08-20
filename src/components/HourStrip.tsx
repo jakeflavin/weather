@@ -1,4 +1,5 @@
 import type { HourRow } from '@/lib/series'
+import { Cell, CellTemp, Precip, Strip, Time } from './HourStrip.styled'
 import { formatHourShort } from '@/lib/time'
 import { num, toTemp, type UnitSystem } from '@/lib/units'
 import { weatherCode } from '@/lib/weatherCode'
@@ -23,20 +24,20 @@ export function HourStrip({ rows, units }: { rows: HourRow[]; units: UnitSystem 
   if (hours.length < 2) return null
 
   return (
-    <div className="hourstrip" role="list">
+    <Strip role="list">
       {hours.map((row) => {
         const code = weatherCode(row.code)
         const chance = row.precipProb ?? 0
         return (
-          <div className="hourstrip-cell" role="listitem" key={row.t} title={code.label}>
-            <span className="hourstrip-time">{formatHourShort(row.t)}</span>
+          <Cell role="listitem" key={row.t} title={code.label}>
+            <Time>{formatHourShort(row.t)}</Time>
             <WeatherIcon code={row.code} isDay={row.isDay} size={18} />
-            <span className="hourstrip-temp">{num(toTemp(row.temp ?? NaN, units))}°</span>
+            <CellTemp>{num(toTemp(row.temp ?? NaN, units))}°</CellTemp>
             {/* Below 10% the number is noise — the blank keeps the row heights equal. */}
-            <span className="hourstrip-precip">{chance >= 10 ? `${num(chance)}%` : ''}</span>
-          </div>
+            <Precip>{chance >= 10 ? `${num(chance)}%` : ''}</Precip>
+          </Cell>
         )
       })}
-    </div>
+    </Strip>
   )
 }

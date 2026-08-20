@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { FlagLabel, FlagRow, FlagValue } from './Hero.styled'
 import { Navigation } from 'lucide-react'
 
 /** Label, value, footnote — the atom the condition tiles are built from. */
@@ -60,10 +61,10 @@ export function Meter({ value, color }: { value: number; color?: string }) {
  */
 export function Flag({ label, value, color }: { label: string; value: ReactNode; color?: string }) {
   return (
-    <div className="flag" style={color ? ({ '--flag': color } as React.CSSProperties) : undefined}>
-      <span className="flag-label">{label}</span>
-      <span className="flag-value">{value}</span>
-    </div>
+    <FlagRow style={color ? ({ '--flag': color } as React.CSSProperties) : undefined}>
+      <FlagLabel>{label}</FlagLabel>
+      <FlagValue>{value}</FlagValue>
+    </FlagRow>
   )
 }
 
