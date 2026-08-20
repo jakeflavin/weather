@@ -11,11 +11,20 @@ export const Days = styled.div`
 
 export const Name = styled.span``
 
+/*
+ * Seven columns that can actually shrink.
+ *
+ * These used to be fixed tracks adding up to 428px inside a panel that is only that wide
+ * above about 940px of viewport — so between 660 and 900 the high temperature and the
+ * whole precipitation column walked off the panel's right edge with nothing to say they
+ * had. The two text columns now yield, and the compact layout starts at 760 rather than
+ * 600, which covers the width the fixed tracks could never reach.
+ */
 export const Day = styled.div`
   display: grid;
-  grid-template-columns: 62px 20px minmax(70px, 1fr) 34px minmax(80px, 1.3fr) 34px 56px;
+  grid-template-columns: 62px 20px minmax(0, 1fr) 34px minmax(56px, 1.3fr) 34px 56px;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 8px 0;
   border-bottom: 1px solid var(--line);
   font-size: var(--font-small);
@@ -33,8 +42,8 @@ export const Day = styled.div`
     font-weight: 600;
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: 56px 20px 30px minmax(60px, 1fr) 30px 50px;
+  @media (max-width: 760px) {
+    grid-template-columns: 56px 20px 30px minmax(50px, 1fr) 30px 50px;
     gap: 8px;
   }
 `
@@ -50,7 +59,7 @@ export const Cond = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  @media (max-width: 600px) {
+  @media (max-width: 760px) {
     display: none;
   }
 `

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button } from './components/controls.styled'
+import { TOUCH } from './components/controls.styled'
 
 export const Shell = styled.div`
   min-height: 100dvh;
@@ -21,11 +21,18 @@ export const AppBar = styled.header`
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 
-  /* The tool groups need a full row of their own here; letting them wrap beside the brand
-     leaves it floating against a two-line block. */
+  /*
+   * One row on a phone, not three. The range and theme controls move out of the masthead
+   * below 600px (see App.tsx), which leaves the brand, the unit toggle and Refresh — and
+   * those fit a 390px bar without wrapping, so the bar costs one 56px strip instead of
+   * 116px of permanently sticky chrome.
+   */
   @media (max-width: 600px) {
-    flex-wrap: wrap;
     gap: 8px;
+  }
+
+  @media print {
+    display: none;
   }
 `
 
@@ -38,10 +45,6 @@ export const Brand = styled.span`
 
 export const Spacer = styled.span`
   flex: 1;
-
-  @media (max-width: 600px) {
-    display: none;
-  }
 `
 
 export const Tools = styled.div`
@@ -49,14 +52,7 @@ export const Tools = styled.div`
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-
-  @media (max-width: 600px) {
-    width: 100%;
-
-    ${Button} {
-      margin-left: auto;
-    }
-  }
+  justify-content: flex-end;
 `
 
 export const NoticeTitle = styled.span`
@@ -90,6 +86,10 @@ export const Footer = styled.footer`
   background: var(--surface);
   border-top: 1px solid var(--line);
 
+  @media print {
+    display: none;
+  }
+
   a {
     color: var(--accent);
     text-decoration: none;
@@ -102,4 +102,18 @@ export const Footer = styled.footer`
 
 export const FooterSpacer = styled.span`
   flex: 1;
+`
+
+/**
+ * The theme control's home on a phone. The footer is where the other set-once facts
+ * already live — the data source and the keyboard shortcuts — so it reads as settings
+ * rather than as a stray control.
+ */
+export const FooterTheme = styled.span`
+  flex-basis: 100%;
+  margin: 4px 0;
+
+  ${TOUCH} {
+    margin: 8px 0 4px;
+  }
 `

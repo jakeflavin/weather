@@ -14,6 +14,11 @@ export const Hero = styled.div`
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 
+  @media print {
+    border-bottom: 0;
+    padding-top: 0;
+  }
+
   @media (max-width: 600px) {
     gap: 12px 24px;
     padding: 20px 16px;
@@ -24,7 +29,9 @@ export const Place = styled.div`
   min-width: 200px;
 `
 
+/** Rendered as the page's `h1`: it is what the document is a document of. */
 export const Name = styled.div`
+  margin: 0;
   font-size: 24px;
   line-height: 28px;
   font-weight: 600;
@@ -41,6 +48,7 @@ export const Temp = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 0 0 auto;
 
   sup {
     font-size: 0.32em;
@@ -53,7 +61,16 @@ export const Temp = styled.div`
 export const Reading = styled.div`
   display: flex;
   align-items: flex-start;
-  font-size: clamp(44px, 7vw, 60px);
+  /*
+   * On a phone this used to resolve to its 44px floor while sitting alone on the widest
+   * row it will ever have — 132px of used width in a 390px hero. It grows there instead,
+   * and the condition moves up alongside it (see Cond).
+   */
+  font-size: clamp(52px, 13vw, 60px);
+
+  @media (min-width: 601px) {
+    font-size: clamp(44px, 7vw, 60px);
+  }
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -64,6 +81,13 @@ export const Cond = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  /* Shares the reading's row rather than claiming one of its own: its detail line wraps
+     happily, and the alternative was a 62%-empty row under the headline number. */
+  @media (max-width: 600px) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
 `
 
 export const Summary = styled.div`

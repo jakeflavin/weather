@@ -12,7 +12,10 @@
     <!-- Link previews. The image is the app's own cover shot, served from the directory
          that hosts it; crawlers need an absolute URL and will not follow a relative one. -->
     <meta property="og:title" content="Weather — a forecast, in full" />
-    <meta property="og:description" content="A dense, chart-first weather dashboard: hourly and daily forecasts, wind, pressure, UV and air quality, for anywhere." />
+    <meta
+      property="og:description"
+      content="A dense, chart-first weather dashboard: hourly and daily forecasts, wind, pressure, UV and air quality, for anywhere."
+    />
     <meta property="og:site_name" content="Jake's Portfolio" />
     <meta property="og:image" content="https://portfolio-4b9fe.web.app/images/weather-cover.jpg" />
     <meta property="og:image:alt" content="Weather — a forecast, in full" />
@@ -20,11 +23,13 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Weather — a forecast, in full" />
-    <meta name="twitter:description" content="A dense, chart-first weather dashboard: hourly and daily forecasts, wind, pressure, UV and air quality, for anywhere." />
+    <meta
+      name="twitter:description"
+      content="A dense, chart-first weather dashboard: hourly and daily forecasts, wind, pressure, UV and air quality, for anywhere."
+    />
     <meta name="twitter:image" content="https://portfolio-4b9fe.web.app/images/weather-cover.jpg" />
     <meta name="twitter:image:alt" content="Weather — a forecast, in full" />
     <link rel="canonical" href="https://portfolio-4b9fe.web.app/weather/" />
-
 
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#f8f8f8" />
@@ -36,24 +41,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Weather" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The page draws entirely in the system stack (`--font-sans`), so there is no web
+         font to fetch. Only the forecast host is worth a warm connection. -->
     <link rel="preconnect" href="https://api.open-meteo.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-      <!--
+    <!--
       Resolves the theme before the first paint. Every app switches tokens on
       <html data-theme>, but React only sets it on mount — so without this the page
       paints the light palette first, which is a white flash on a dark screen.
     -->
     <script>
       try {
-        var stored = localStorage.getItem('wx:theme');
-        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var stored = localStorage.getItem('wx:theme')
+        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches
         document.documentElement.dataset.theme =
-          stored === 'light' || stored === 'dark' ? stored : dark ? 'dark' : 'light';
+          stored === 'light' || stored === 'dark' ? stored : dark ? 'dark' : 'light'
       } catch (e) {}
     </script>
   </head>

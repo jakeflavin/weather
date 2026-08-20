@@ -139,6 +139,31 @@ summary {
   border-radius: 2px;
 }
 
+/*
+ * Print.
+ *
+ * The app is a page of numbers with a permanent URL, so it gets printed. The chrome hides
+ * itself in the components that own it; what belongs here is the ground, which is all this
+ * sheet is allowed to hold: white paper, ink that survives a mono printer, and the data
+ * palette kept rather than dropped, since a colour per quantity is what makes the charts
+ * readable at all.
+ */
+@page {
+  margin: 14mm;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

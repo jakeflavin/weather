@@ -14,6 +14,16 @@ export const Strip = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  /*
+   * Twelve cells never fit a phone — eight show and four sit off the right edge — and with
+   * the scrollbar suppressed the only hint was a cell clipped mid-label, which reads as a
+   * layout bug rather than an invitation. Below the breakpoint the strip always overflows,
+   * so the fade is unconditional there and absent everywhere else.
+   */
+  @media (max-width: 600px) {
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
 `
 
 export const Cell = styled.div`

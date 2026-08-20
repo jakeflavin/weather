@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo } from 'react'
+import { Suspense, lazy, useMemo, type ReactNode } from 'react'
 import { Cond, Detail, Flags, Hero, Meta, Name, Place, Reading, Summary, Temp } from './Hero.styled'
 import { Bento, Disclosure, DisclosureNote } from './Section.styled'
 import { Stats } from './Readouts.styled'
@@ -68,6 +68,7 @@ export function Dashboard({
   normals,
   units,
   range,
+  rangeControl,
   place,
   isDefaultPlace,
   updatedAt,
@@ -78,6 +79,8 @@ export function Dashboard({
   normals: Normals | null | undefined
   units: UnitSystem
   range: Range
+  /** The hourly-range control, when the layout has moved it out of the masthead. */
+  rangeControl: ReactNode
   place: string
   isDefaultPlace: boolean
   updatedAt: number
@@ -117,8 +120,14 @@ export function Dashboard({
 
   const hourly = { rows: window, bands, now, units }
 
-  // The hero carries at most three flags: what changes what you do today. Rain first,
-  // then UV, then air quality — each only when it is actually worth acting on.
+  /*
+   * The hero carries up to five flags, in two groups.
+   *
+   * Three are alerts — rain, UV, air quality — and each appears only when it is worth
+   * acting on, so most days show fewer. Two are context that is always true and always
+   * wanted: how today compares with the ten-year average, and the next sunrise or sunset.
+   * The alerts come first because they are the ones that change what you do.
+   */
   const flags: { label: string; value: string; color: string }[] = []
   if (wet) {
     flags.push({
@@ -175,12 +184,16 @@ export function Dashboard({
     }
   }
 
+  // A guard rather than a rule: five is the designed maximum, and a sixth should be a
+  // decision someone makes rather than something that appears.
+  const shown = flags.slice(0, 5)
+
   return (
     <main>
       {/* Level one: the answer, before any chart. */}
       <Hero>
         <Place>
-          <Name>{place}</Name>
+          <Name as="h1">{place}</Name>
           <Meta>
             {formatWeekday(now)} {formatHour(now)} local
             {isDefaultPlace ? ' · default location' : ''} · updated{' '}
@@ -221,7 +234,7 @@ export function Dashboard({
         </Cond>
 
         <Flags>
-          {flags.map((flag) => (
+          {shown.map((flag) => (
             <Flag key={flag.label} label={flag.label} value={flag.value} color={flag.color} />
           ))}
         </Flags>
@@ -323,7 +336,7 @@ export function Dashboard({
         </Panel>
       </Section>
 
-      <Section title={`Next ${range} hours`}>
+      <Section title={`Next ${range} hours`} action={rangeControl}>
         <Panel wide title="Temperature" note={u.temp}>
           <TemperatureChart {...hourly} />
         </Panel>
