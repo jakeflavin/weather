@@ -139,90 +139,6 @@ summary {
   border-radius: 2px;
 }
 
-/* ──────────────────────────────────────────────────────────────── days */
-
-/* Capped so a 23-row list does not stretch its row and leave the panel beside it half
-   empty; the daily-range chart above already carries the whole window at a glance. */
-.days {
-  max-height: 330px;
-  overflow-y: auto;
-}
-
-.day {
-  display: grid;
-  grid-template-columns: 62px 20px minmax(70px, 1fr) 34px minmax(80px, 1.3fr) 34px 56px;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: var(--font-small);
-  font-variant-numeric: tabular-nums;
-}
-
-.day:last-child {
-  border-bottom: 0;
-}
-
-.day[data-past='true'] {
-  opacity: 0.55;
-}
-
-.day[data-today='true'] .day-name {
-  font-weight: 600;
-}
-
-.day-glyph {
-  color: var(--dim);
-  text-align: center;
-}
-
-.day-cond,
-.day-low {
-  color: var(--dim);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.day-low,
-.day-high {
-  text-align: right;
-}
-
-/* One shared scale across every row, so the bars are comparable down the column. */
-.range {
-  position: relative;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--surface-hi);
-}
-
-.range-span {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--s-precip), var(--s-temp));
-}
-
-.range-now {
-  position: absolute;
-  top: -3px;
-  bottom: -3px;
-  width: 2px;
-  border-radius: 1px;
-  background: var(--text);
-}
-
-.day-precip {
-  text-align: right;
-  color: var(--s-precip);
-}
-
-.day-precip[data-zero='true'] {
-  color: var(--dim);
-}
-
 /* ─────────────────────────────────────────────────────────────── charts */
 
 .chart {
@@ -481,14 +397,6 @@ summary {
     height: 300px;
   }
 
-  .day {
-    grid-template-columns: 56px 20px 30px minmax(60px, 1fr) 30px 50px;
-    gap: 8px;
-  }
-
-  .day-cond {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
