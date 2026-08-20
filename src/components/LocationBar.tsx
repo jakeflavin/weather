@@ -1,5 +1,17 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button, Dim } from './controls.styled'
+import {
+  Bar,
+  Chip,
+  ChipRemove,
+  Chips,
+  ResultMeta,
+  Results,
+  ResultsEmpty,
+  Search,
+  SearchGlyph,
+  SearchKbd,
+} from './LocationBar.styled'
 import { useQuery } from '@tanstack/react-query'
 import { searchPlaces } from '@/api/openMeteo'
 import { describe, fromPlace, type Location } from '@/hooks/useLocations'
@@ -101,9 +113,9 @@ export function LocationBar({
   const showList = open && debounced.trim().length >= 2
 
   return (
-    <div className="locbar">
-      <div className="search">
-        <span className="search-glyph" aria-hidden="true">
+    <Bar>
+      <Search>
+        <SearchGlyph aria-hidden="true">
           <svg
             width="14"
             height="14"
@@ -115,7 +127,7 @@ export function LocationBar({
             <circle cx="7" cy="7" r="4.5" />
             <path d="M10.5 10.5 14 14" strokeLinecap="round" />
           </svg>
-        </span>
+        </SearchGlyph>
         <input
           ref={inputRef}
           type="search"
@@ -134,12 +146,12 @@ export function LocationBar({
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           onKeyDown={onKeyDown}
         />
-        <span className="search-kbd" aria-hidden="true">
+        <SearchKbd aria-hidden="true">
           /
-        </span>
+        </SearchKbd>
 
         {showList && (
-          <ul className="results" id={listId} role="listbox">
+          <Results id={listId} role="listbox">
             {places.map((place, index) => {
               const location = fromPlace(place)
               return (
@@ -160,21 +172,21 @@ export function LocationBar({
                     </Dim>
                     {/* Kept as a plain decimal for the same reason as the station readout:
                         this is a coordinate people copy elsewhere. */}
-                    <span className="results-meta">
+                    <ResultMeta>
                       {place.latitude.toFixed(2)}, {place.longitude.toFixed(2)}
-                    </span>
+                    </ResultMeta>
                   </button>
                 </li>
               )
             })}
             {!places.length && (
-              <li className="results-empty">
+              <ResultsEmpty>
                 {isFetching ? 'Searching…' : 'No places match that.'}
-              </li>
+              </ResultsEmpty>
             )}
-          </ul>
+          </Results>
         )}
-      </div>
+      </Search>
 
       <Button type="button" onClick={onLocate} disabled={locating}>
         {locating ? 'Locating…' : 'Use my location'}
@@ -188,23 +200,23 @@ export function LocationBar({
         {isSaved ? 'Saved' : 'Save'}
       </Button>
 
-      <div className="chips">
+      <Chips>
         {saved.map((location) => (
-          <span className="chip" key={location.id} data-current={location.id === current.id}>
+          <Chip key={location.id} data-current={location.id === current.id}>
             <button type="button" onClick={() => onSelect(location)}>
               {describe(location)}
             </button>
-            <button
+            <ChipRemove
               type="button"
-              className="chip-remove"
+
               onClick={() => onRemove(location.id)}
               aria-label={`Remove ${location.name}`}
             >
               ×
-            </button>
-          </span>
+            </ChipRemove>
+          </Chip>
         ))}
-      </div>
-    </div>
+      </Chips>
+    </Bar>
   )
 }
