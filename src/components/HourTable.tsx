@@ -1,4 +1,5 @@
 import type { HourRow } from '@/lib/series'
+import { Table, Wrap } from './HourTable.styled'
 import { formatHour, formatWeekday } from '@/lib/time'
 import {
   UNIT_LABELS,
@@ -26,8 +27,8 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
   const digits = precipDigits(units)
 
   return (
-    <div className="table-wrap">
-      <table className="data">
+    <Wrap>
+      <Table>
         <thead>
           <tr>
             <th scope="col">Hour</th>
@@ -71,7 +72,7 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </Wrap>
   )
 }

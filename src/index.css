@@ -139,65 +139,6 @@ summary {
   border-radius: 2px;
 }
 
-/* ────────────────────────────────────────────────────────────── readouts */
-
-/* ──────────────────────────────────────────────────────────────── table */
-
-.table-wrap {
-  overflow-x: auto;
-  max-height: 460px;
-  overflow-y: auto;
-}
-
-table.data {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--font-small);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-table.data th {
-  text-align: right;
-  font-weight: 600;
-  color: var(--dim);
-  padding: 0 0 8px 16px;
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  background: var(--surface);
-  z-index: 1;
-}
-
-table.data th:first-child,
-table.data td:first-child {
-  text-align: left;
-  padding-left: 0;
-  position: sticky;
-  left: 0;
-  background: var(--surface);
-}
-
-table.data td {
-  text-align: right;
-  padding: 6px 0 6px 16px;
-  border-bottom: 1px solid var(--line);
-  color: var(--dim);
-}
-
-table.data td:first-child,
-table.data td.strong {
-  color: var(--text);
-}
-
-table.data tbody tr:hover td {
-  background: var(--surface-hi);
-}
-
-table.data tr[data-daybreak='true'] td {
-  border-top: 1px solid var(--line-strong);
-}
-
 /* ──────────────────────────────────────────────────────────────── days */
 
 /* Capped so a 23-row list does not stretch its row and leave the panel beside it half
