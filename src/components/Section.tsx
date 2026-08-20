@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Band, Bento, Head, Title } from './Section.styled'
 
 /**
  * A band of the page: a sentence-case heading on the sunken background, then a bento of
@@ -10,11 +11,11 @@ import type { ReactNode } from 'react'
  */
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="section">
-      <header className="section-head">
-        <h2 className="section-title">{title}</h2>
-      </header>
-      <div className="bento">{children}</div>
-    </section>
+    <Band>
+      <Head>
+        <Title>{title}</Title>
+      </Head>
+      <Bento>{children}</Bento>
+    </Band>
   )
 }

@@ -1,5 +1,6 @@
 import { Suspense, lazy, useMemo } from 'react'
 import { Cond, Detail, Flags, Hero, Meta, Name, Place, Reading, Summary, Temp } from './Hero.styled'
+import { Bento, Disclosure, DisclosureNote } from './Section.styled'
 import { Sunrise, Sunset } from 'lucide-react'
 import { DayList } from './DayList'
 const RadarPanel = lazy(() => import('./RadarPanel'))
@@ -415,12 +416,12 @@ export function Dashboard({
       )}
 
       {/* Level three: reference data, folded away until asked for. */}
-      <details className="disclosure">
+      <Disclosure>
         <summary>
           Hourly detail
-          <span className="disclosure-note">{window.length} rows</span>
+          <DisclosureNote>{window.length} rows</DisclosureNote>
         </summary>
-        <div className="bento">
+        <Bento>
           <Panel wide>
             <HourTable rows={window} units={units} />
           </Panel>
@@ -458,8 +459,8 @@ export function Dashboard({
               />
             </div>
           </Panel>
-        </div>
-      </details>
+        </Bento>
+      </Disclosure>
     </main>
   )
 }

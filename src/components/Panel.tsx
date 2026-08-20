@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Body, Head, Note, Tile, Title } from './Panel.styled'
 
 /**
  * A tile in a section's bento.
@@ -20,14 +21,14 @@ export function Panel({
   children: ReactNode
 }) {
   return (
-    <article className={wide ? 'panel is-wide' : 'panel'}>
+    <Tile as="article" $wide={wide}>
       {(title || note) && (
-        <header className="panel-head">
-          {title && <h3 className="panel-title">{title}</h3>}
-          {note && <span className="panel-note">{note}</span>}
-        </header>
+        <Head>
+          {title && <Title>{title}</Title>}
+          {note && <Note>{note}</Note>}
+        </Head>
       )}
-      <div className="panel-body">{children}</div>
-    </article>
+      <Body>{children}</Body>
+    </Tile>
   )
 }
