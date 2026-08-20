@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
+import { Button, Dim } from './controls.styled'
 import { useQuery } from '@tanstack/react-query'
 import { searchPlaces } from '@/api/openMeteo'
 import { describe, fromPlace, type Location } from '@/hooks/useLocations'
@@ -154,9 +155,9 @@ export function LocationBar({
                     onClick={() => choose(location)}
                   >
                     <span>{place.name}</span>
-                    <span className="dim">
+                    <Dim>
                       {[place.admin1, place.country].filter(Boolean).join(', ')}
-                    </span>
+                    </Dim>
                     {/* Kept as a plain decimal for the same reason as the station readout:
                         this is a coordinate people copy elsewhere. */}
                     <span className="results-meta">
@@ -175,17 +176,17 @@ export function LocationBar({
         )}
       </div>
 
-      <button type="button" className="button" onClick={onLocate} disabled={locating}>
+      <Button type="button" onClick={onLocate} disabled={locating}>
         {locating ? 'Locating…' : 'Use my location'}
-      </button>
+      </Button>
 
-      <button
+      <Button
         type="button"
-        className="button is-subtle"
+          $subtle
         onClick={() => (isSaved ? onRemove(current.id) : onSave(current))}
       >
         {isSaved ? 'Saved' : 'Save'}
-      </button>
+      </Button>
 
       <div className="chips">
         {saved.map((location) => (

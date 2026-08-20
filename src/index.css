@@ -139,134 +139,6 @@ summary {
   border-radius: 2px;
 }
 
-/* Numbers are tabular wherever they are compared, which is nearly everywhere. */
-.num {
-  font-variant-numeric: tabular-nums;
-}
-
-.dim {
-  color: var(--dim);
-}
-
-/* ─────────────────────────────────────────────────────────────── app bar */
-
-.app {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-}
-
-.appbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 48px;
-  padding: 6px 16px;
-  padding-top: max(6px, env(safe-area-inset-top));
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-}
-
-.appbar-brand {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
-.appbar-spacer {
-  flex: 1;
-}
-
-.appbar-tools {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* Joined segmented control: 30px cells inside a 1px group border (ADS §2). */
-.segmented {
-  display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.segmented button {
-  appearance: none;
-  background: none;
-  border: 0;
-  border-left: 1px solid var(--line);
-  min-height: 30px;
-  padding: 0 10px;
-  font-size: var(--font-small);
-  font-weight: 500;
-  color: var(--dim);
-  cursor: pointer;
-}
-
-.segmented button:first-child {
-  border-left: 0;
-}
-
-.segmented button:hover {
-  background: var(--surface-hi);
-  color: var(--text);
-}
-
-.segmented button:disabled {
-  color: var(--dim);
-  opacity: 0.5;
-  cursor: default;
-}
-
-.segmented button:disabled:hover {
-  background: none;
-}
-
-.segmented button[aria-pressed='true'] {
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-
-.button {
-  appearance: none;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: var(--surface);
-  color: var(--text);
-  min-height: 32px;
-  padding: 0 12px;
-  font-size: var(--font-small);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.button:hover:not(:disabled) {
-  background: var(--surface-hi);
-}
-
-.button:disabled {
-  color: var(--dim);
-  cursor: default;
-}
-
-.button.is-subtle {
-  border-color: transparent;
-  background: none;
-}
-
-.button.is-subtle:hover:not(:disabled) {
-  background: var(--surface-hi);
-}
-
 /* ────────────────────────────────────────────────────────── location bar */
 
 .locbar {
@@ -1073,13 +945,6 @@ table.data tr[data-daybreak='true'] td {
   flex-wrap: wrap;
 }
 
-.radar-play {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex: none;
-}
-
 /* One tick per frame: a scrubber that also shows how much history there is. */
 .radar-timeline {
   display: flex;
@@ -1225,78 +1090,11 @@ table.data tr[data-daybreak='true'] td {
   color: var(--accent);
 }
 
-/* ────────────────────────────────────────────────────── states & footer */
-
-.notice {
-  margin: 0;
-  padding: 40px 16px;
-  text-align: center;
-  color: var(--dim);
-  font-size: var(--font-body);
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-}
-
-.notice-title {
-  display: block;
-  color: var(--text);
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.notice.is-error .notice-title {
-  color: var(--danger);
-}
-
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 20px;
-  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-  font-size: var(--font-small);
-  color: var(--dim);
-  background: var(--surface);
-  border-top: 1px solid var(--line);
-}
-
-.footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.footer a:hover {
-  text-decoration: underline;
-}
-
-.footer-spacer {
-  flex: 1;
-}
-
 /* ────────────────────────────────────────────────────────── narrow view */
 
 @media (max-width: 600px) {
   .radar-map {
     height: 300px;
-  }
-
-  /* The tool groups need a full row of their own here; letting them wrap beside the brand
-     leaves it floating against a two-line block. */
-  .appbar {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .appbar-spacer {
-    display: none;
-  }
-
-  .appbar-tools {
-    width: 100%;
-  }
-
-  .appbar-tools .button {
-    margin-left: auto;
   }
 
   .hero {

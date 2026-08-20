@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Button } from './controls.styled'
+import { PlayButton } from './RadarPanel.styled'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useQuery } from '@tanstack/react-query'
@@ -248,16 +250,15 @@ export default function RadarPanel({
   return (
     <div className="radar">
       <div className="radar-bar">
-        <button
+        <PlayButton
           type="button"
-          className="button radar-play"
           onClick={() => setPlaying((value) => !value)}
           disabled={frames.length < 2}
           aria-label={playing ? 'Pause animation' : 'Play animation'}
         >
           {playing ? <Pause size={14} /> : <Play size={14} />}
           {playing ? 'Pause' : 'Play'}
-        </button>
+        </PlayButton>
 
         <div className="radar-timeline">
           {frames.map((item, position) => (
@@ -296,9 +297,9 @@ export default function RadarPanel({
       {isError && (
         <p className="radar-state">
           Radar is unavailable right now.{' '}
-          <button type="button" className="button is-subtle" onClick={() => refetch()}>
+          <Button type="button" $subtle onClick={() => refetch()}>
             Retry
-          </button>
+          </Button>
         </p>
       )}
 

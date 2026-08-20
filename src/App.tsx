@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { AppBar, Brand, Footer, FooterSpacer, Notice, NoticeTitle, Shell, Spacer, Tools } from './App.styled'
+import { Button, Segmented } from './components/controls.styled'
 import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 import { LocationBar } from './components/LocationBar'
 
@@ -46,12 +48,12 @@ export default function App() {
   }, [queryClient, setTheme, setUnits])
 
   return (
-    <div className="app">
-      <header className="appbar">
-        <span className="appbar-brand">Weather</span>
-        <span className="appbar-spacer" />
-        <div className="appbar-tools">
-          <div className="segmented" role="group" aria-label="Hourly range">
+    <Shell>
+      <AppBar>
+        <Brand>Weather</Brand>
+        <Spacer />
+        <Tools>
+          <Segmented role="group" aria-label="Hourly range">
             {RANGES.map((value) => (
               <button
                 key={value}
@@ -62,8 +64,8 @@ export default function App() {
                 {value}h
               </button>
             ))}
-          </div>
-          <div className="segmented" role="group" aria-label="Units">
+          </Segmented>
+          <Segmented role="group" aria-label="Units">
             {(['metric', 'imperial'] as UnitSystem[]).map((value) => (
               <button
                 key={value}
@@ -74,8 +76,8 @@ export default function App() {
                 {value === 'metric' ? '°C' : '°F'}
               </button>
             ))}
-          </div>
-          <div className="segmented" role="group" aria-label="Theme">
+          </Segmented>
+          <Segmented role="group" aria-label="Theme">
             {(['light', 'system', 'dark'] as Theme[]).map((value) => (
               <button
                 key={value}
@@ -86,17 +88,16 @@ export default function App() {
                 {value === 'light' ? 'Light' : value === 'dark' ? 'Dark' : 'Auto'}
               </button>
             ))}
-          </div>
-          <button
+          </Segmented>
+          <Button
             type="button"
-            className="button"
             onClick={() => queryClient.invalidateQueries()}
             disabled={fetching}
           >
             {fetching ? 'Refreshing…' : 'Refresh'}
-          </button>
-        </div>
-      </header>
+          </Button>
+        </Tools>
+      </AppBar>
 
       <LocationBar
         current={current}
@@ -110,30 +111,30 @@ export default function App() {
       />
 
       {locations.geoError && (
-        <p className="notice" role="status">
+        <Notice as="p" role="status">
           {locations.geoError}
-        </p>
+        </Notice>
       )}
 
       {forecast.isPending && !forecast.data && (
-        <p className="notice">
-          <span className="notice-title">Loading</span>
+        <Notice as="p">
+          <NoticeTitle>Loading</NoticeTitle>
           Fetching the forecast for {describe(current)}.
-        </p>
+        </Notice>
       )}
 
       {forecast.isError && (
-        <div className="notice is-error" role="alert">
-          <span className="notice-title">No data</span>
+        <Notice $error role="alert">
+          <NoticeTitle>No data</NoticeTitle>
           {forecast.error instanceof Error
             ? forecast.error.message
             : 'The forecast request failed.'}
           <div style={{ marginTop: 12 }}>
-            <button type="button" className="button" onClick={() => forecast.refetch()}>
+            <Button type="button" onClick={() => forecast.refetch()}>
               Try again
-            </button>
+            </Button>
           </div>
-        </div>
+        </Notice>
       )}
 
       {forecast.data && (
@@ -150,7 +151,7 @@ export default function App() {
         />
       )}
 
-      <footer className="footer">
+      <Footer>
         <span>
           Data ·{' '}
           <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
@@ -158,13 +159,13 @@ export default function App() {
           </a>
         </span>
         <span>Shortcuts · / search · u units · t theme · r refresh</span>
-        <span className="footer-spacer" />
+        <FooterSpacer />
         <span>
           {forecast.data
             ? `${forecast.data.timezone} · ${forecast.data.timezone_abbreviation}`
             : 'Awaiting position'}
         </span>
-      </footer>
-    </div>
+      </Footer>
+    </Shell>
   )
 }
