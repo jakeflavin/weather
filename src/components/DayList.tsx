@@ -95,7 +95,7 @@ export function DayList({
             </High>
             <Precip data-zero={precip < 0.05}>
               {precip < 0.05 ? '—' : `${num(precip, digits)}`}
-              <span className="unit">{precip < 0.05 ? '' : u.precip}</span>
+              <span>{precip < 0.05 ? '' : u.precip}</span>
             </Precip>
           </Day>
         )

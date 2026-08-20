@@ -2,6 +2,7 @@ import { Suspense, lazy, useMemo } from 'react'
 import { Cond, Detail, Flags, Hero, Meta, Name, Place, Reading, Summary, Temp } from './Hero.styled'
 import { Bento, Disclosure, DisclosureNote } from './Section.styled'
 import { Stats } from './Readouts.styled'
+import { State } from './RadarPanel.styled'
 import { Sunrise, Sunset } from 'lucide-react'
 import { DayList } from './DayList'
 const RadarPanel = lazy(() => import('./RadarPanel'))
@@ -311,7 +312,7 @@ export function Dashboard({
 
       <Section title="Radar">
         <Panel wide title="Precipitation mosaic" note="2h observed · nowcast where available">
-          <Suspense fallback={<p className="radar-state">Loading radar…</p>}>
+          <Suspense fallback={<State>Loading radar…</State>}>
             <RadarPanel
               lat={forecast.latitude}
               lon={forecast.longitude}

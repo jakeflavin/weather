@@ -57,7 +57,7 @@ export function HourTable({ rows, units }: { rows: HourRow[]; units: UnitSystem 
               <td title={weatherCode(row.code).label}>
                 <WeatherIcon code={row.code} isDay={row.isDay} size={15} />
               </td>
-              <td className="strong">{num(toTemp(row.temp ?? NaN, units))}</td>
+              <td data-strong>{num(toTemp(row.temp ?? NaN, units))}</td>
               <td>{num(toTemp(row.apparent ?? NaN, units))}</td>
               <td>{num(toTemp(row.dewPoint ?? NaN, units))}</td>
               <td>{num(row.humidity)}</td>

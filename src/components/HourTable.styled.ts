@@ -43,7 +43,7 @@ export const Table = styled.table`
   }
 
   td:first-child,
-  td.strong {
+  td[data-strong] {
     color: var(--text);
   }
 

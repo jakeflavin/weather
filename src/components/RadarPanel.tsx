@@ -1,6 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from './controls.styled'
-import { PlayButton } from './RadarPanel.styled'
+import {
+  Badge,
+  Bar,
+  Check,
+  Field,
+  MapBox,
+  Options,
+  PlayButton,
+  Radar,
+  State,
+  Tick,
+  Time,
+  Timeline,
+} from './RadarPanel.styled'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useQuery } from '@tanstack/react-query'
@@ -248,8 +261,8 @@ export default function RadarPanel({
     : '—'
 
   return (
-    <div className="radar">
-      <div className="radar-bar">
+    <Radar>
+      <Bar>
         <PlayButton
           type="button"
           onClick={() => setPlaying((value) => !value)}
@@ -260,12 +273,11 @@ export default function RadarPanel({
           {playing ? 'Pause' : 'Play'}
         </PlayButton>
 
-        <div className="radar-timeline">
+        <Timeline>
           {frames.map((item, position) => (
-            <button
+            <Tick
               type="button"
               key={item.path}
-              className="radar-tick"
               data-active={position === index}
               data-forecast={item.forecast}
               onClick={() => {
@@ -276,35 +288,34 @@ export default function RadarPanel({
               title={formatHour(item.time * 1000 + utcOffsetSeconds * 1000)}
             />
           ))}
-        </div>
+        </Timeline>
 
-        <span className="radar-time">
+        <Time>
           {frameLabel}
-          {frame?.forecast && <span className="radar-badge">forecast</span>}
-        </span>
-      </div>
+          {frame?.forecast && <Badge>forecast</Badge>}
+        </Time>
+      </Bar>
 
-      <div
-        className="radar-map"
+      <MapBox
         ref={containerRef}
         aria-label={`Precipitation radar near ${place}`}
       />
 
-      {isPending && <p className="radar-state">Loading radar frames…</p>}
+      {isPending && <State>Loading radar frames…</State>}
       {!isPending && !isError && frames.length === 0 && (
-        <p className="radar-state">No radar frames are published right now.</p>
+        <State>No radar frames are published right now.</State>
       )}
       {isError && (
-        <p className="radar-state">
+        <State>
           Radar is unavailable right now.{' '}
           <Button type="button" $subtle onClick={() => refetch()}>
             Retry
           </Button>
-        </p>
+        </State>
       )}
 
-      <div className="radar-options">
-        <label className="radar-field">
+      <Options>
+        <Field>
           <span>Palette</span>
           <select
             value={settings.color}
@@ -316,9 +327,9 @@ export default function RadarPanel({
               </option>
             ))}
           </select>
-        </label>
+        </Field>
 
-        <label className="radar-field">
+        <Field>
           <span>Opacity</span>
           <input
             type="range"
@@ -328,26 +339,26 @@ export default function RadarPanel({
             value={settings.opacity}
             onChange={(event) => update({ opacity: Number(event.target.value) })}
           />
-        </label>
+        </Field>
 
-        <label className="radar-check">
+        <Check>
           <input
             type="checkbox"
             checked={settings.smooth}
             onChange={(event) => update({ smooth: event.target.checked })}
           />
           Smooth
-        </label>
+        </Check>
 
-        <label className="radar-check">
+        <Check>
           <input
             type="checkbox"
             checked={settings.snow}
             onChange={(event) => update({ snow: event.target.checked })}
           />
           Mark snow
-        </label>
-      </div>
-    </div>
+        </Check>
+      </Options>
+    </Radar>
   )
 }
