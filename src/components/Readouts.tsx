@@ -1,5 +1,13 @@
 import type { ReactNode } from 'react'
 import { FlagLabel, FlagRow, FlagValue } from './Hero.styled'
+import {
+  MeterFill,
+  MeterTrack,
+  StatLabel,
+  StatNote,
+  StatUnit,
+  StatValue,
+} from './Readouts.styled'
 import { Navigation } from 'lucide-react'
 
 /** Label, value, footnote — the atom the condition tiles are built from. */
@@ -28,15 +36,12 @@ export function Stat({
 }) {
   return (
     <div>
-      <div className="stat-label">{label}</div>
-      <div
-        className={small ? 'stat-value is-sm' : 'stat-value'}
-        style={color ? { color } : undefined}
-      >
+      <StatLabel>{label}</StatLabel>
+      <StatValue $small={small} style={color ? { color } : undefined}>
         {value}
-        {unit && <span className="stat-unit">{unit}</span>}
-      </div>
-      {note && <div className="stat-note">{note}</div>}
+        {unit && <StatUnit>{unit}</StatUnit>}
+      </StatValue>
+      {note && <StatNote>{note}</StatNote>}
       {meter}
     </div>
   )
@@ -49,9 +54,9 @@ export function Stat({
 export function Meter({ value, color }: { value: number; color?: string }) {
   const pct = Math.max(0, Math.min(1, value)) * 100
   return (
-    <div className="meter">
-      <div className="meter-fill" style={{ width: `${pct}%`, background: color }} />
-    </div>
+    <MeterTrack>
+      <MeterFill style={{ width: `${pct}%`, background: color }} />
+    </MeterTrack>
   )
 }
 

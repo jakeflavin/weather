@@ -1,6 +1,7 @@
 import { Suspense, lazy, useMemo } from 'react'
 import { Cond, Detail, Flags, Hero, Meta, Name, Place, Reading, Summary, Temp } from './Hero.styled'
 import { Bento, Disclosure, DisclosureNote } from './Section.styled'
+import { Stats } from './Readouts.styled'
 import { Sunrise, Sunset } from 'lucide-react'
 import { DayList } from './DayList'
 const RadarPanel = lazy(() => import('./RadarPanel'))
@@ -229,7 +230,7 @@ export function Dashboard({
 
       <Section title="Right now">
         <Panel wide>
-          <div className="stats is-fixed">
+          <Stats $fixed>
             <Stat
               label="Wind"
               value={num(toSpeed(current.wind_speed_10m, units))}
@@ -304,7 +305,7 @@ export function Dashboard({
               }
               color={colors['s-precip']}
             />
-          </div>
+          </Stats>
         </Panel>
       </Section>
 
@@ -365,7 +366,7 @@ export function Dashboard({
         >
           <DaylightChart rows={days} now={now} height={214} />
           {todayRow?.sunrise && todayRow.sunset && (
-            <div className="stats" style={{ marginTop: 16 }}>
+            <Stats style={{ marginTop: 16 }}>
               <Stat
                 label="Sunrise"
                 value={
@@ -398,7 +399,7 @@ export function Dashboard({
               />
               <Stat label="Daylight" value={duration(todayRow.daylight)} small />
               <Stat label="Sunshine" value={duration(todayRow.sunshine)} small />
-            </div>
+            </Stats>
           )}
         </Panel>
       </Section>
@@ -426,7 +427,7 @@ export function Dashboard({
             <HourTable rows={window} units={units} />
           </Panel>
           <Panel wide title="Station">
-            <div className="stats">
+            <Stats>
               {/* Not Intl: a coordinate is something people copy into a map or a
                   script, and a comma decimal breaks it wherever they paste it. */}
               <Stat label="Latitude" value={forecast.latitude.toFixed(3)} small />
@@ -457,7 +458,7 @@ export function Dashboard({
                 unit={u.precip}
                 small
               />
-            </div>
+            </Stats>
           </Panel>
         </Bento>
       </Disclosure>
