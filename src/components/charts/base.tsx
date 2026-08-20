@@ -1,4 +1,14 @@
 import type { ReactNode } from 'react'
+import {
+  Chart,
+  Legend as LegendBox,
+  LegendItem,
+  LegendKey,
+  Tip as TipBox,
+  TipHead,
+  TipRow as TipLine,
+  TipSwatch,
+} from './charts.styled'
 import { ReferenceArea, ReferenceLine } from 'recharts'
 import type { Band } from '@/lib/series'
 import type { ChartColors } from './theme'
@@ -63,18 +73,18 @@ export interface TipRow {
 /** The shared tooltip shell — charts supply their own rows so units stay correct. */
 export function Tip({ heading, rows }: { heading: string; rows: TipRow[] }) {
   return (
-    <div className="tip">
-      <div className="tip-head">{heading}</div>
+    <TipBox>
+      <TipHead>{heading}</TipHead>
       {rows.map((row) => (
-        <div className="tip-row" key={row.label}>
+        <TipLine key={row.label}>
           {/* The swatch keeps its space when a row has no series colour, so the labels in
               a tooltip stay in one column. */}
-          <i className="tip-swatch" style={{ background: row.color ?? 'transparent' }} />
+          <TipSwatch as="i" style={{ background: row.color ?? 'transparent' }} />
           <span>{row.label}</span>
           <span>{row.value}</span>
-        </div>
+        </TipLine>
       ))}
-    </div>
+    </TipBox>
   )
 }
 
@@ -84,11 +94,11 @@ export function Legend({
   items: { label: string; color: string; shape?: 'line' | 'dash' | 'box' }[]
 }) {
   return (
-    <div className="legend">
+    <LegendBox>
       {items.map((item) => (
-        <span className="legend-item" key={item.label}>
-          <i
-            className="legend-key"
+        <LegendItem key={item.label}>
+          <LegendKey
+            as="i"
             data-shape={item.shape ?? 'line'}
             style={{
               background: item.shape === 'dash' ? undefined : item.color,
@@ -96,16 +106,16 @@ export function Legend({
             }}
           />
           {item.label}
-        </span>
+        </LegendItem>
       ))}
-    </div>
+    </LegendBox>
   )
 }
 
 export function ChartFrame({ height, children }: { height: number; children: ReactNode }) {
   return (
-    <div className="chart" style={{ height }}>
+    <Chart style={{ height }}>
       {children}
-    </div>
+    </Chart>
   )
 }
